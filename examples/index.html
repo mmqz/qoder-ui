@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="forest-light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Qoder UI - 原生组件库</title>
+  <link rel="stylesheet" href="../src/themes/qoder-themes.css">
+  <link rel="stylesheet" href="../src/styles/base.css">
+  <link rel="stylesheet" href="../src/components/qoder-components.css">
+  <style>
+    .demo-layout { display: flex; min-height: 100vh; }
+    .demo-main { flex: 1; padding: 32px 40px; overflow-y: auto; max-width: 1200px; margin: 0 auto; width: 100%; }
+    .demo-section { margin-bottom: 48px; }
+    .demo-section-title { font-size: 20px; font-weight: 700; margin-bottom: 8px; color: var(--text-primary); }
+    .demo-section-desc { font-size: 13px; color: var(--text-secondary); margin-bottom: 20px; }
+    .demo-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 16px; }
+    .demo-label { font-size: 11px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; font-weight: 600; }
+    .demo-box { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 20px; }
+    .demo-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; padding-bottom: 20px; border-bottom: 1px solid var(--border-subtle); }
+    .demo-logo { display: flex; align-items: center; gap: 12px; }
+    .demo-logo-icon { width: 40px; height: 40px; border-radius: 10px; background: linear-gradient(135deg, var(--accent), var(--accent-deep)); display: flex; align-items: center; justify-content: center; color: var(--text-on-accent); font-weight: 800; font-size: 18px; }
+    .demo-logo-text h1 { font-size: 18px; font-weight: 700; margin: 0; }
+    .demo-logo-text p { font-size: 12px; color: var(--text-tertiary); margin: 2px 0 0; }
+    .theme-selector { display: flex; gap: 6px; flex-wrap: wrap; }
+    .theme-btn { padding: 5px 12px; font-size: 11px; border-radius: 20px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-secondary); cursor: pointer; transition: all 0.15s; font-weight: 500; }
+    .theme-btn:hover { border-color: var(--border-strong); color: var(--text-primary); }
+    .theme-btn.active { background: var(--accent); color: var(--text-on-accent); border-color: var(--accent); }
+    .chat-demo { max-width: 500px; }
+    .sidebar-demo { height: 320px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-subtle); display: flex; }
+    .sidebar-content { flex: 1; padding: 16px; background: var(--bg-page); }
+  </style>
+</head>
+<body>
+  <div class="demo-layout">
+    <div class="demo-main">
+      <!-- Header -->
+      <div class="demo-header">
+        <div class="demo-logo">
+          <div class="demo-logo-icon">Q</div>
+          <div class="demo-logo-text">
+            <h1>Qoder UI</h1>
+            <p>原汁原味的 Qoder 前端风格 · 原生组件库 · 8 主题</p>
+          </div>
+        </div>
+        <div class="theme-selector" id="themeSelector">
+          <button class="theme-btn active" data-theme="forest-light">Forest Light</button>
+          <button class="theme-btn" data-theme="forest-dark">Forest Dark</button>
+          <button class="theme-btn" data-theme="bee-light">Bee Light</button>
+          <button class="theme-btn" data-theme="bee-dark">Bee Dark</button>
+          <button class="theme-btn" data-theme="mint-light">Mint Light</button>
+          <button class="theme-btn" data-theme="mint-dark">Mint Dark</button>
+          <button class="theme-btn" data-theme="light-parchment">Parchment</button>
+          <button class="theme-btn" data-theme="parchment-dark">Parchment Dark</button>
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="demo-section">
+        <div class="demo-section-title">Button 按钮</div>
+        <div class="demo-section-desc">四种变体：Primary、Secondary、Ghost、Danger，支持三种尺寸和禁用状态。</div>
+        <div class="demo-label">变体</div>
+        <div class="demo-row">
+          <button class="qoder-btn qoder-btn-primary">Primary</button>
+          <button class="qoder-btn qoder-btn-secondary">Secondary</button>
+          <button class="qoder-btn qoder-btn-ghost">Ghost</button>
+          <button class="qoder-btn qoder-btn-danger">Danger</button>
+        </div>
+        <div class="demo-label">尺寸</div>
+        <div class="demo-row">
+          <button class="qoder-btn qoder-btn-primary qoder-btn-sm">Small</button>
+          <button class="qoder-btn qoder-btn-primary">Default</button>
+          <button class="qoder-btn qoder-btn-primary qoder-btn-lg">Large</button>
+          <button class="qoder-btn qoder-btn-primary qoder-btn-icon" title="Icon">⚙</button>
+        </div>
+        <div class="demo-label">状态</div>
+        <div class="demo-row">
+          <button class="qoder-btn qoder-btn-primary" disabled>Disabled</button>
+          <button class="qoder-btn qoder-btn-primary qoder-btn-block" style="max-width:200px">Block Button</button>
+        </div>
+      </div>
+
+      <!-- Input -->
+      <div class="demo-section">
+        <div class="demo-section-title">Input 输入框</div>
+        <div class="demo-section-desc">支持图标、错误状态、多行文本。</div>
+        <div class="demo-row" style="max-width:400px;flex-direction:column;align-items:stretch;">
+          <input class="qoder-input" placeholder="默认输入框">
+          <div class="qoder-input-wrapper">
+            <span class="qoder-input-icon-left">🔍</span>
+            <input class="qoder-input" placeholder="带搜索图标">
+          </div>
+          <input class="qoder-input qoder-input-error" placeholder="错误状态" value="输入有误">
+          <textarea class="qoder-textarea" placeholder="多行文本输入..."></textarea>
+        </div>
+      </div>
+
+      <!-- Badge -->
+      <div class="demo-section">
+        <div class="demo-section-title">Badge 徽章</div>
+        <div class="demo-section-desc">六种语义色，支持圆点指示器。</div>
+        <div class="demo-row">
+          <span class="qoder-badge qoder-badge-default">Default</span>
+          <span class="qoder-badge qoder-badge-primary">Primary</span>
+          <span class="qoder-badge qoder-badge-success">Success</span>
+          <span class="qoder-badge qoder-badge-warning">Warning</span>
+          <span class="qoder-badge qoder-badge-error">Error</span>
+          <span class="qoder-badge qoder-badge-info">Info</span>
+        </div>
+        <div class="demo-row">
+          <span class="qoder-badge qoder-badge-success qoder-badge-dot">在线</span>
+          <span class="qoder-badge qoder-badge-warning qoder-badge-dot">待处理</span>
+          <span class="qoder-badge qoder-badge-error qoder-badge-dot">异常</span>
+        </div>
+      </div>
+
+      <!-- Switch -->
+      <div class="demo-section">
+        <div class="demo-section-title">Switch 开关</div>
+        <div class="demo-section-desc">平滑过渡的开关组件。</div>
+        <div class="demo-row">
+          <label class="qoder-switch">
+            <input type="checkbox" class="qoder-switch-input" checked>
+            <span class="qoder-switch-track"><span class="qoder-switch-thumb"></span></span>
+            <span class="qoder-switch-label">已开启</span>
+          </label>
+          <label class="qoder-switch">
+            <input type="checkbox" class="qoder-switch-input">
+            <span class="qoder-switch-track"><span class="qoder-switch-thumb"></span></span>
+            <span class="qoder-switch-label">已关闭</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Card -->
+      <div class="demo-section">
+        <div class="demo-section-title">Card 卡片</div>
+        <div class="demo-section-desc">支持头部、内容、底部结构，悬停效果。</div>
+        <div class="qoder-grid qoder-grid-cols-3" style="gap:16px;">
+          <div class="qoder-card qoder-card-hover">
+            <div class="qoder-card-header">
+              <h3 class="qoder-card-title">项目卡片</h3>
+              <p class="qoder-card-description">卡片描述信息</p>
+            </div>
+            <div class="qoder-card-body">
+              <p style="font-size:13px;color:var(--text-secondary);">这是卡片内容区域，可以放置任意内容。</p>
+            </div>
+            <div class="qoder-card-footer" style="display:flex;justify-content:flex-end;gap:8px;">
+              <button class="qoder-btn qoder-btn-ghost qoder-btn-sm">取消</button>
+              <button class="qoder-btn qoder-btn-primary qoder-btn-sm">确认</button>
+            </div>
+          </div>
+          <div class="qoder-card qoder-card-hover">
+            <div class="qoder-card-body">
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+                <div class="qoder-avatar qoder-avatar-lg">JD</div>
+                <div>
+                  <div style="font-weight:600;font-size:14px;">John Doe</div>
+                  <div style="font-size:12px;color:var(--text-tertiary);">高级开发者</div>
+                </div>
+              </div>
+              <p style="font-size:12px;color:var(--text-secondary);">专注于前端架构与设计系统建设。</p>
+            </div>
+          </div>
+          <div class="qoder-card qoder-card-hover">
+            <div class="qoder-card-body" style="text-align:center;padding:24px;">
+              <div style="font-size:32px;font-weight:800;color:var(--accent);">87%</div>
+              <div style="font-size:12px;color:var(--text-tertiary);margin-top:4px;">任务完成率</div>
+              <div class="qoder-progress" style="margin-top:12px;">
+                <div class="qoder-progress-bar" style="width:87%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="demo-section">
+        <div class="demo-section-title">Tabs 标签页</div>
+        <div class="demo-section-desc">底部指示线风格的标签切换。</div>
+        <div class="qoder-tabs">
+          <button class="qoder-tab qoder-tab-active">概览</button>
+          <button class="qoder-tab">项目</button>
+          <button class="qoder-tab">设置</button>
+          <button class="qoder-tab">关于</button>
+        </div>
+        <div class="qoder-tab-content">
+          <p style="font-size:13px;color:var(--text-secondary);">这是「概览」标签页的内容。点击上方标签切换。</p>
+        </div>
+      </div>
+
+      <!-- Avatar -->
+      <div class="demo-section">
+        <div class="demo-section-title">Avatar 头像</div>
+        <div class="demo-section-desc">四种尺寸，支持在线状态指示器。</div>
+        <div class="demo-row" style="align-items:flex-end;">
+          <div class="qoder-avatar qoder-avatar-sm">SM</div>
+          <div class="qoder-avatar qoder-avatar-md">MD</div>
+          <div class="qoder-avatar qoder-avatar-lg">LG</div>
+          <div class="qoder-avatar qoder-avatar-xl">XL</div>
+          <div class="qoder-avatar qoder-avatar-lg qoder-avatar-status" style="background:var(--accent-subtle);color:var(--accent-deep);">ON</div>
+        </div>
+      </div>
+
+      <!-- Alert -->
+      <div class="demo-section">
+        <div class="demo-section-title">Alert 提示框</div>
+        <div class="demo-section-desc">四种语义类型的提示框。</div>
+        <div style="display:flex;flex-direction:column;gap:12px;max-width:500px;">
+          <div class="qoder-alert qoder-alert-info">
+            <span class="qoder-alert-icon">ℹ</span>
+            <div class="qoder-alert-content">
+              <div class="qoder-alert-title">信息提示</div>
+              <div>这是一条信息提示，用于展示一般性通知。</div>
+            </div>
+          </div>
+          <div class="qoder-alert qoder-alert-success">
+            <span class="qoder-alert-icon">✓</span>
+            <div class="qoder-alert-content">
+              <div class="qoder-alert-title">操作成功</div>
+              <div>你的操作已成功完成。</div>
+            </div>
+          </div>
+          <div class="qoder-alert qoder-alert-warning">
+            <span class="qoder-alert-icon">⚠</span>
+            <div class="qoder-alert-content">
+              <div class="qoder-alert-title">警告</div>
+              <div>请注意，此操作可能产生不可逆的影响。</div>
+            </div>
+          </div>
+          <div class="qoder-alert qoder-alert-error">
+            <span class="qoder-alert-icon">✕</span>
+            <div class="qoder-alert-content">
+              <div class="qoder-alert-title">错误</div>
+              <div>操作失败，请检查后重试。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chat Bubble -->
+      <div class="demo-section">
+        <div class="demo-section-title">Chat Bubble 聊天气泡</div>
+        <div class="demo-section-desc">Qoder 核心组件，AI 与用户消息的气泡样式。</div>
+        <div class="demo-box chat-demo">
+          <div class="qoder-chat">
+            <div class="qoder-chat-message qoder-chat-message-ai">
+              <div class="qoder-chat-avatar">
+                <div class="qoder-avatar qoder-avatar-md" style="background:var(--accent-subtle);color:var(--accent-deep);">AI</div>
+              </div>
+              <div>
+                <div class="qoder-chat-bubble">你好！我是 Qoder AI 助手。有什么可以帮你的吗？我可以帮你写代码、调试问题、解释代码逻辑。</div>
+                <div class="qoder-chat-meta">AI 助手 · 刚刚</div>
+              </div>
+            </div>
+            <div class="qoder-chat-message qoder-chat-message-user">
+              <div class="qoder-chat-avatar">
+                <div class="qoder-avatar qoder-avatar-md">我</div>
+              </div>
+              <div>
+                <div class="qoder-chat-bubble">帮我写一个 React 组件</div>
+                <div class="qoder-chat-meta" style="text-align:right;">我 · 刚刚</div>
+              </div>
+            </div>
+            <div class="qoder-chat-message qoder-chat-message-ai">
+              <div class="qoder-chat-avatar">
+                <div class="qoder-avatar qoder-avatar-md" style="background:var(--accent-subtle);color:var(--accent-deep);">AI</div>
+              </div>
+              <div>
+                <div class="qoder-chat-bubble">
+                  好的，这是一个简单的 React 组件示例：
+                  <div class="qoder-code" style="margin-top:8px;">
+                    <div class="qoder-code-header">
+                      <span>Button.jsx</span>
+                      <span>复制</span>
+                    </div>
+                    <div class="qoder-code-body"><pre>function Button({ children }) {
+  return &lt;button className="btn"&gt;
+    {children}
+  &lt;/button&gt;;
+}</pre></div>
+                  </div>
+                </div>
+                <div class="qoder-chat-meta">AI 助手 · 刚刚</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="demo-section">
+        <div class="demo-section-title">Sidebar 侧边栏</div>
+        <div class="demo-section-desc">导航侧边栏，支持激活状态和悬停效果。</div>
+        <div class="sidebar-demo">
+          <div class="qoder-sidebar" style="width:200px;">
+            <div class="qoder-sidebar-header">
+              <div class="qoder-avatar qoder-avatar-sm">Q</div>
+              <span style="font-weight:600;font-size:13px;">工作区</span>
+            </div>
+            <div class="qoder-sidebar-nav">
+              <div class="qoder-sidebar-item qoder-sidebar-item-active">
+                <span class="qoder-sidebar-item-icon">🏠</span>首页
+              </div>
+              <div class="qoder-sidebar-item">
+                <span class="qoder-sidebar-item-icon">📁</span>项目
+              </div>
+              <div class="qoder-sidebar-item">
+                <span class="qoder-sidebar-item-icon">💬</span>对话
+                <span class="qoder-badge qoder-badge-primary" style="margin-left:auto;">3</span>
+              </div>
+              <div class="qoder-sidebar-item">
+                <span class="qoder-sidebar-item-icon">📊</span>统计
+              </div>
+              <div class="qoder-sidebar-item">
+                <span class="qoder-sidebar-item-icon">⚙</span>设置
+              </div>
+            </div>
+            <div class="qoder-sidebar-footer">
+              <div class="qoder-avatar qoder-avatar-sm qoder-avatar-status">U</div>
+              <span style="font-size:12px;">用户名</span>
+            </div>
+          </div>
+          <div class="sidebar-content">
+            <h3 style="font-size:16px;margin-bottom:8px;">主内容区域</h3>
+            <p style="font-size:13px;color:var(--text-secondary);">侧边栏导航与主内容区的布局演示。</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="demo-section">
+        <div class="demo-section-title">Table 表格</div>
+        <div class="demo-section-desc">简洁的表格样式，支持行悬停。</div>
+        <div class="qoder-card">
+          <div class="qoder-card-body" style="padding:0;">
+            <table class="qoder-table">
+              <thead>
+                <tr>
+                  <th>名称</th>
+                  <th>状态</th>
+                  <th>进度</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="font-weight:500;">项目 Alpha</td>
+                  <td><span class="qoder-badge qoder-badge-success qoder-badge-dot">进行中</span></td>
+                  <td style="min-width:120px;"><div class="qoder-progress"><div class="qoder-progress-bar" style="width:75%"></div></div></td>
+                  <td><button class="qoder-btn qoder-btn-ghost qoder-btn-sm">查看</button></td>
+                </tr>
+                <tr>
+                  <td style="font-weight:500;">项目 Beta</td>
+                  <td><span class="qoder-badge qoder-badge-warning qoder-badge-dot">待审核</span></td>
+                  <td><div class="qoder-progress qoder-progress-warning"><div class="qoder-progress-bar" style="width:45%"></div></div></td>
+                  <td><button class="qoder-btn qoder-btn-ghost qoder-btn-sm">查看</button></td>
+                </tr>
+                <tr>
+                  <td style="font-weight:500;">项目 Gamma</td>
+                  <td><span class="qoder-badge qoder-badge-error qoder-badge-dot">已暂停</span></td>
+                  <td><div class="qoder-progress qoder-progress-error"><div class="qoder-progress-bar" style="width:20%"></div></div></td>
+                  <td><button class="qoder-btn qoder-btn-ghost qoder-btn-sm">查看</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Theme Grid -->
+      <div class="demo-section">
+        <div class="demo-section-title">主题预览</div>
+        <div class="demo-section-desc">8 个官方主题的可视化预览，点击切换。</div>
+        <div class="qoder-theme-grid" id="themeGrid"></div>
+      </div>
+
+      <div style="text-align:center;padding:32px 0;border-top:1px solid var(--border-subtle);margin-top:48px;">
+        <p style="font-size:12px;color:var(--text-tertiary);">Qoder UI · 从 Qoder v0.1.6 反编译提取设计语言 · 纯原生 CSS 实现</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 主题切换
+    const themes = [
+      { id: 'forest-light', name: 'Forest Light', desc: '森林绿 · 浅色', sidebar: '#eef6f3', main: '#ffffff', accent: '#358e62', text: '#1c4432' },
+      { id: 'forest-dark', name: 'Forest Dark', desc: '森林绿 · 深色', sidebar: '#151e1a', main: '#121a16', accent: '#62c9a8', text: '#eaf3ef' },
+      { id: 'bee-light', name: 'Bee Light', desc: '蜜蜂黄 · 浅色', sidebar: '#faf6e6', main: '#ffffff', accent: '#e0c65c', text: '#202116' },
+      { id: 'bee-dark', name: 'Bee Dark', desc: '蜜蜂黄 · 深色', sidebar: '#1a1c17', main: '#171814', accent: '#e0c65c', text: '#f2f1e8' },
+      { id: 'mint-light', name: 'Mint Light', desc: '薄荷绿 · 浅色', sidebar: '#eef6f3', main: '#ffffff', accent: '#4fa98f', text: '#2f4b2d' },
+      { id: 'mint-dark', name: 'Mint Dark', desc: '薄荷绿 · 深色', sidebar: '#151e1a', main: '#121a16', accent: '#62c9a8', text: '#eaf3ef' },
+      { id: 'light-parchment', name: 'Parchment', desc: '羊皮纸 · 浅色', sidebar: '#f3efe8', main: '#ffffff', accent: '#c96442', text: '#202116' },
+      { id: 'parchment-dark', name: 'Parchment Dark', desc: '羊皮纸 · 深色', sidebar: '#181c18', main: '#151815', accent: '#8ee5a1', text: '#f4f5f3' },
+    ];
+
+    function setTheme(themeId) {
+      document.documentElement.setAttribute('data-theme', themeId);
+      document.querySelectorAll('.theme-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.theme === themeId);
+      });
+      document.querySelectorAll('.qoder-theme-card').forEach(card => {
+        card.classList.toggle('qoder-theme-card-active', card.dataset.theme === themeId);
+      });
+      try { localStorage.setItem('qoder-theme', themeId); } catch(e) {}
+    }
+
+    // 顶部主题按钮
+    document.querySelectorAll('.theme-btn').forEach(btn => {
+      btn.addEventListener('click', () => setTheme(btn.dataset.theme));
+    });
+
+    // 主题预览卡片
+    const themeGrid = document.getElementById('themeGrid');
+    themes.forEach(theme => {
+      const card = document.createElement('div');
+      card.className = 'qoder-theme-card';
+      card.dataset.theme = theme.id;
+      card.innerHTML = `
+        <div class="qoder-theme-preview" style="background:${theme.main};">
+          <div class="qoder-theme-preview-sidebar" style="background:${theme.sidebar};"></div>
+          <div class="qoder-theme-preview-main">
+            <div class="qoder-theme-preview-line" style="width:60%;background:${theme.accent};"></div>
+            <div class="qoder-theme-preview-line" style="width:90%;background:${theme.text};opacity:0.3;"></div>
+            <div class="qoder-theme-preview-line" style="width:75%;background:${theme.text};opacity:0.2;"></div>
+          </div>
+        </div>
+        <div class="qoder-theme-name">${theme.name}</div>
+        <div class="qoder-theme-desc">${theme.desc}</div>
+      `;
+      card.addEventListener('click', () => setTheme(theme.id));
+      themeGrid.appendChild(card);
+    });
+
+    // 恢复保存的主题
+    try {
+      const saved = localStorage.getItem('qoder-theme');
+      if (saved && themes.find(t => t.id === saved)) {
+        setTheme(saved);
+      }
+    } catch(e) {}
+
+    // Tabs 交互
+    document.querySelectorAll('.qoder-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.qoder-tab').forEach(t => t.classList.remove('qoder-tab-active'));
+        tab.classList.add('qoder-tab-active');
+      });
+    });
+
+    // Sidebar 交互
+    document.querySelectorAll('.qoder-sidebar-item').forEach(item => {
+      item.addEventListener('click', () => {
+        document.querySelectorAll('.qoder-sidebar-item').forEach(i => i.classList.remove('qoder-sidebar-item-active'));
+        item.classList.add('qoder-sidebar-item-active');
+      });
+    });
+  </script>
+</body>
+</html>

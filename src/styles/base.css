@@ -1,0 +1,158 @@
+/* ============================================================
+   Qoder UI - 基础样式重置与通用类
+   ============================================================ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: var(--qoder-font-sans);
+  font-size: var(--qoder-font-base);
+  line-height: 1.5;
+  color: var(--text-primary);
+  background-color: var(--bg-page);
+  transition: background-color var(--qoder-transition-base),
+              color var(--qoder-transition-base);
+  overflow-x: hidden;
+}
+
+/* 滚动条 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: var(--qoder-radius-full);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-tertiary);
+}
+
+/* 选中文本 */
+::selection {
+  background: var(--accent-subtle);
+  color: var(--text-primary);
+}
+
+/* 焦点环 */
+:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+/* 通用工具类 */
+.qoder-text-primary { color: var(--text-primary); }
+.qoder-text-secondary { color: var(--text-secondary); }
+.qoder-text-tertiary { color: var(--text-tertiary); }
+.qoder-text-placeholder { color: var(--text-placeholder); }
+.qoder-text-link { color: var(--text-link); text-decoration: none; cursor: pointer; }
+.qoder-text-link:hover { text-decoration: underline; }
+
+.qoder-bg-page { background-color: var(--bg-page); }
+.qoder-bg-card { background-color: var(--bg-card); }
+.qoder-bg-surface { background-color: var(--bg-surface); }
+.qoder-bg-hover { background-color: var(--bg-hover); }
+.qoder-bg-popup { background-color: var(--bg-popup); }
+
+.qoder-border { border: 1px solid var(--border); }
+.qoder-border-subtle { border: 1px solid var(--border-subtle); }
+
+.qoder-rounded-xs { border-radius: var(--qoder-radius-xs); }
+.qoder-rounded-sm { border-radius: var(--qoder-radius-sm); }
+.qoder-rounded-md { border-radius: var(--qoder-radius-md); }
+.qoder-rounded-lg { border-radius: var(--qoder-radius-lg); }
+.qoder-rounded-xl { border-radius: var(--qoder-radius-xl); }
+.qoder-rounded-full { border-radius: var(--qoder-radius-full); }
+
+.qoder-shadow-sm { box-shadow: var(--qoder-shadow-sm); }
+.qoder-shadow-md { box-shadow: var(--qoder-shadow-md); }
+.qoder-shadow-lg { box-shadow: var(--qoder-shadow-lg); }
+.qoder-shadow-xl { box-shadow: var(--qoder-shadow-xl); }
+
+/* 间距 */
+.qoder-p-1 { padding: var(--qoder-space-1); }
+.qoder-p-2 { padding: var(--qoder-space-2); }
+.qoder-p-3 { padding: var(--qoder-space-3); }
+.qoder-p-4 { padding: var(--qoder-space-4); }
+.qoder-p-5 { padding: var(--qoder-space-5); }
+.qoder-p-6 { padding: var(--qoder-space-6); }
+
+.qoder-px-3 { padding-left: var(--qoder-space-3); padding-right: var(--qoder-space-3); }
+.qoder-px-4 { padding-left: var(--qoder-space-4); padding-right: var(--qoder-space-4); }
+.qoder-py-2 { padding-top: var(--qoder-space-2); padding-bottom: var(--qoder-space-2); }
+.qoder-py-3 { padding-top: var(--qoder-space-3); padding-bottom: var(--qoder-space-3); }
+
+.qoder-mt-2 { margin-top: var(--qoder-space-2); }
+.qoder-mt-3 { margin-top: var(--qoder-space-3); }
+.qoder-mt-4 { margin-top: var(--qoder-space-4); }
+.qoder-mb-2 { margin-bottom: var(--qoder-space-2); }
+.qoder-mb-3 { margin-bottom: var(--qoder-space-3); }
+.qoder-mb-4 { margin-bottom: var(--qoder-space-4); }
+
+/* 布局 */
+.qoder-flex { display: flex; }
+.qoder-flex-col { display: flex; flex-direction: column; }
+.qoder-items-center { align-items: center; }
+.qoder-justify-center { justify-content: center; }
+.qoder-justify-between { justify-content: space-between; }
+.qoder-gap-1 { gap: var(--qoder-space-1); }
+.qoder-gap-2 { gap: var(--qoder-space-2); }
+.qoder-gap-3 { gap: var(--qoder-space-3); }
+.qoder-gap-4 { gap: var(--qoder-space-4); }
+.qoder-flex-1 { flex: 1; }
+.qoder-flex-wrap { flex-wrap: wrap; }
+
+.qoder-grid { display: grid; }
+.qoder-grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+.qoder-grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+.qoder-grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+
+/* 文字 */
+.qoder-text-xs { font-size: var(--qoder-font-xs); }
+.qoder-text-sm { font-size: var(--qoder-font-sm); }
+.qoder-text-base { font-size: var(--qoder-font-base); }
+.qoder-text-md { font-size: var(--qoder-font-md); }
+.qoder-text-lg { font-size: var(--qoder-font-lg); }
+.qoder-text-xl { font-size: var(--qoder-font-xl); }
+.qoder-text-2xl { font-size: var(--qoder-font-2xl); }
+.qoder-font-medium { font-weight: 500; }
+.qoder-font-semibold { font-weight: 600; }
+.qoder-font-bold { font-weight: 700; }
+.qoder-font-mono { font-family: var(--qoder-font-mono); }
+.qoder-text-center { text-align: center; }
+.qoder-leading-tight { line-height: 1.25; }
+.qoder-leading-normal { line-height: 1.5; }
+
+/* 状态 */
+.qoder-truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.qoder-pointer { cursor: pointer; }
+.qoder-select-none { user-select: none; }
+.qoder-opacity-50 { opacity: 0.5; }
+.qoder-opacity-70 { opacity: 0.7; }
+
+/* 过渡 */
+.qoder-transition { transition: all var(--qoder-transition-base); }
+.qoder-transition-colors { transition: background-color var(--qoder-transition-base),
+                                          border-color var(--qoder-transition-base),
+                                          color var(--qoder-transition-base); }
+
+/* 玻璃效果 */
+.qoder-glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+}

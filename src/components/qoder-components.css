@@ -1,0 +1,924 @@
+/* ============================================================
+   Qoder UI - 原生组件库
+   从 Qoder v0.1.6 反编译提取设计语言，纯原生实现
+   ============================================================ */
+
+/* ============================================================
+   Button 按钮
+   ============================================================ */
+.qoder-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--qoder-space-2);
+  padding: 6px 14px;
+  font-family: var(--qoder-font-sans);
+  font-size: var(--qoder-font-sm);
+  font-weight: 500;
+  line-height: 1.4;
+  border: 1px solid transparent;
+  border-radius: var(--qoder-radius-md);
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  transition: all var(--qoder-transition-fast);
+  text-decoration: none;
+}
+
+.qoder-btn:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+.qoder-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Primary 主要按钮 */
+.qoder-btn-primary {
+  background: var(--accent);
+  color: var(--text-on-accent);
+  border-color: var(--accent);
+}
+.qoder-btn-primary:hover:not(:disabled) {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+.qoder-btn-primary:active:not(:disabled) {
+  background: var(--accent-active);
+  border-color: var(--accent-active);
+}
+
+/* Secondary 次要按钮 */
+.qoder-btn-secondary {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  border-color: var(--border);
+}
+.qoder-btn-secondary:hover:not(:disabled) {
+  background: var(--bg-hover);
+  border-color: var(--border-strong);
+}
+.qoder-btn-secondary:active:not(:disabled) {
+  background: var(--bg-active);
+}
+
+/* Ghost 幽灵按钮 */
+.qoder-btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+  border-color: transparent;
+}
+.qoder-btn-ghost:hover:not(:disabled) {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+.qoder-btn-ghost:active:not(:disabled) {
+  background: var(--bg-active);
+}
+
+/* Danger 危险按钮 */
+.qoder-btn-danger {
+  background: var(--error);
+  color: #fff;
+  border-color: var(--error);
+}
+.qoder-btn-danger:hover:not(:disabled) {
+  background: #d4383d;
+  border-color: #d4383d;
+}
+
+/* 尺寸 */
+.qoder-btn-sm { padding: 4px 10px; font-size: var(--qoder-font-xs); }
+.qoder-btn-lg { padding: 10px 20px; font-size: var(--qoder-font-md); }
+.qoder-btn-icon { padding: 6px; width: 32px; height: 32px; }
+.qoder-btn-block { width: 100%; }
+
+/* ============================================================
+   Input 输入框
+   ============================================================ */
+.qoder-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.qoder-input {
+  width: 100%;
+  padding: 7px 12px;
+  font-family: var(--qoder-font-sans);
+  font-size: var(--qoder-font-sm);
+  color: var(--text-primary);
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--qoder-radius-md);
+  outline: none;
+  transition: all var(--qoder-transition-fast);
+  line-height: 1.4;
+}
+
+.qoder-input::placeholder {
+  color: var(--text-placeholder);
+}
+
+.qoder-input:hover:not(:disabled):not(:focus) {
+  border-color: var(--border-strong);
+}
+
+.qoder-input:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px var(--accent-subtle);
+}
+
+.qoder-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--bg-surface);
+}
+
+.qoder-input-error {
+  border-color: var(--error) !important;
+}
+.qoder-input-error:focus {
+  box-shadow: 0 0 0 3px var(--error-bg) !important;
+}
+
+.qoder-input-icon-left {
+  position: absolute;
+  left: 10px;
+  color: var(--text-placeholder);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+}
+.qoder-input-icon-left + .qoder-input {
+  padding-left: 34px;
+}
+
+.qoder-input-icon-right {
+  position: absolute;
+  right: 10px;
+  color: var(--text-placeholder);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+/* Textarea */
+.qoder-textarea {
+  width: 100%;
+  padding: 8px 12px;
+  font-family: var(--qoder-font-sans);
+  font-size: var(--qoder-font-sm);
+  color: var(--text-primary);
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--qoder-radius-md);
+  outline: none;
+  transition: all var(--qoder-transition-fast);
+  resize: vertical;
+  min-height: 80px;
+  line-height: 1.5;
+}
+.qoder-textarea::placeholder { color: var(--text-placeholder); }
+.qoder-textarea:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px var(--accent-subtle);
+}
+
+/* ============================================================
+   Card 卡片
+   ============================================================ */
+.qoder-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--qoder-radius-lg);
+  overflow: hidden;
+  transition: all var(--qoder-transition-base);
+}
+
+.qoder-card-hover:hover {
+  border-color: var(--border);
+  box-shadow: var(--qoder-shadow-md);
+  transform: translateY(-1px);
+}
+
+.qoder-card-header {
+  padding: var(--qoder-space-4) var(--qoder-space-4) var(--qoder-space-3);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.qoder-card-body {
+  padding: var(--qoder-space-4);
+}
+
+.qoder-card-footer {
+  padding: var(--qoder-space-3) var(--qoder-space-4);
+  border-top: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+}
+
+.qoder-card-title {
+  font-size: var(--qoder-font-md);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.qoder-card-description {
+  font-size: var(--qoder-font-sm);
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+/* ============================================================
+   Badge 徽章/标签
+   ============================================================ */
+.qoder-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  font-size: var(--qoder-font-xs);
+  font-weight: 500;
+  line-height: 1.5;
+  border-radius: var(--qoder-radius-full);
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.qoder-badge-default {
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+
+.qoder-badge-primary {
+  background: var(--accent-subtle);
+  color: var(--accent-deep);
+  border: 1px solid var(--accent-border);
+}
+
+.qoder-badge-success {
+  background: var(--success-bg);
+  color: var(--success);
+  border: 1px solid transparent;
+}
+
+.qoder-badge-warning {
+  background: var(--warning-bg);
+  color: var(--warning);
+  border: 1px solid transparent;
+}
+
+.qoder-badge-error {
+  background: var(--error-bg);
+  color: var(--error);
+  border: 1px solid transparent;
+}
+
+.qoder-badge-info {
+  background: var(--info-bg);
+  color: var(--info);
+  border: 1px solid transparent;
+}
+
+.qoder-badge-dot::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* ============================================================
+   Switch 开关
+   ============================================================ */
+.qoder-switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.qoder-switch-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.qoder-switch-track {
+  width: 36px;
+  height: 20px;
+  background: var(--border-strong);
+  border-radius: var(--qoder-radius-full);
+  position: relative;
+  transition: background var(--qoder-transition-fast);
+  flex-shrink: 0;
+}
+
+.qoder-switch-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform var(--qoder-transition-fast);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.qoder-switch-input:checked + .qoder-switch-track {
+  background: var(--accent);
+}
+
+.qoder-switch-input:checked + .qoder-switch-track .qoder-switch-thumb {
+  transform: translateX(16px);
+}
+
+.qoder-switch-input:focus-visible + .qoder-switch-track {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+.qoder-switch-label {
+  margin-left: 8px;
+  font-size: var(--qoder-font-sm);
+  color: var(--text-primary);
+}
+
+/* ============================================================
+   Tabs 标签页
+   ============================================================ */
+.qoder-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border-subtle);
+  gap: 2px;
+}
+
+.qoder-tab {
+  position: relative;
+  padding: 8px 14px;
+  font-size: var(--qoder-font-sm);
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all var(--qoder-transition-fast);
+  white-space: nowrap;
+}
+
+.qoder-tab:hover {
+  color: var(--text-primary);
+  background: var(--bg-hover);
+}
+
+.qoder-tab-active {
+  color: var(--accent-deep);
+  font-weight: 600;
+}
+
+.qoder-tab-active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 12px;
+  right: 12px;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 2px 2px 0 0;
+}
+
+.qoder-tab-content {
+  padding: var(--qoder-space-4) 0;
+}
+
+/* ============================================================
+   Avatar 头像
+   ============================================================ */
+.qoder-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--accent-subtle);
+  color: var(--accent-deep);
+  font-weight: 600;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.qoder-avatar-sm { width: 24px; height: 24px; font-size: 10px; }
+.qoder-avatar-md { width: 32px; height: 32px; font-size: 12px; }
+.qoder-avatar-lg { width: 40px; height: 40px; font-size: 14px; }
+.qoder-avatar-xl { width: 56px; height: 56px; font-size: 18px; }
+
+.qoder-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.qoder-avatar-status {
+  position: relative;
+}
+.qoder-avatar-status::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--success);
+  border: 2px solid var(--bg-card);
+}
+
+/* ============================================================
+   Progress 进度条
+   ============================================================ */
+.qoder-progress {
+  width: 100%;
+  height: 6px;
+  background: var(--bg-surface);
+  border-radius: var(--qoder-radius-full);
+  overflow: hidden;
+}
+
+.qoder-progress-bar {
+  height: 100%;
+  background: var(--accent);
+  border-radius: var(--qoder-radius-full);
+  transition: width var(--qoder-transition-slow);
+}
+
+.qoder-progress-success .qoder-progress-bar { background: var(--success); }
+.qoder-progress-warning .qoder-progress-bar { background: var(--warning); }
+.qoder-progress-error .qoder-progress-bar { background: var(--error); }
+
+/* ============================================================
+   Tooltip 提示
+   ============================================================ */
+.qoder-tooltip {
+  position: relative;
+  display: inline-flex;
+}
+
+.qoder-tooltip-content {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  padding: 6px 10px;
+  font-size: var(--qoder-font-xs);
+  color: var(--text-on-accent);
+  background: var(--text-primary);
+  border-radius: var(--qoder-radius-sm);
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all var(--qoder-transition-fast);
+  pointer-events: none;
+  z-index: 1000;
+  box-shadow: var(--qoder-shadow-md);
+}
+
+.qoder-tooltip:hover .qoder-tooltip-content {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+.qoder-tooltip-content::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 4px solid transparent;
+  border-top-color: var(--text-primary);
+}
+
+/* ============================================================
+   Divider 分割线
+   ============================================================ */
+.qoder-divider {
+  height: 1px;
+  background: var(--border-subtle);
+  margin: var(--qoder-space-4) 0;
+  border: none;
+}
+
+.qoder-divider-vertical {
+  width: 1px;
+  height: auto;
+  align-self: stretch;
+  background: var(--border-subtle);
+  margin: 0 var(--qoder-space-3);
+}
+
+/* ============================================================
+   Chat Bubble 聊天气泡 (Qoder 核心组件)
+   ============================================================ */
+.qoder-chat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--qoder-space-4);
+}
+
+.qoder-chat-message {
+  display: flex;
+  gap: var(--qoder-space-3);
+  max-width: 100%;
+}
+
+.qoder-chat-message-user {
+  flex-direction: row-reverse;
+}
+
+.qoder-chat-avatar {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.qoder-chat-bubble {
+  position: relative;
+  max-width: 75%;
+  padding: 10px 14px;
+  font-size: var(--qoder-font-sm);
+  line-height: 1.6;
+  word-break: break-word;
+}
+
+.qoder-chat-message-ai .qoder-chat-bubble {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px var(--qoder-radius-lg) var(--qoder-radius-lg) var(--qoder-radius-lg);
+  color: var(--text-primary);
+}
+
+.qoder-chat-message-user .qoder-chat-bubble {
+  background: var(--accent);
+  color: var(--text-on-accent);
+  border-radius: var(--qoder-radius-lg) 4px var(--qoder-radius-lg) var(--qoder-radius-lg);
+}
+
+.qoder-chat-meta {
+  font-size: var(--qoder-font-xs);
+  color: var(--text-tertiary);
+  margin-top: 4px;
+}
+
+/* ============================================================
+   Code Block 代码块
+   ============================================================ */
+.qoder-code {
+  background: var(--bg-base);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--qoder-radius-md);
+  overflow: hidden;
+  font-family: var(--qoder-font-mono);
+  font-size: var(--qoder-font-sm);
+}
+
+.qoder-code-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px;
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: var(--qoder-font-xs);
+  color: var(--text-tertiary);
+}
+
+.qoder-code-body {
+  padding: 12px;
+  overflow-x: auto;
+  line-height: 1.6;
+  color: var(--text-primary);
+}
+
+.qoder-code-body pre {
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/* 行内代码 */
+.qoder-code-inline {
+  display: inline;
+  padding: 2px 6px;
+  font-family: var(--qoder-font-mono);
+  font-size: 0.875em;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--qoder-radius-xs);
+  color: var(--accent-deep);
+}
+
+/* ============================================================
+   Sidebar 侧边栏
+   ============================================================ */
+.qoder-sidebar {
+  display: flex;
+  flex-direction: column;
+  width: 240px;
+  background: var(--bg-surface);
+  border-right: 1px solid var(--border-subtle);
+  height: 100%;
+  overflow: hidden;
+}
+
+.qoder-sidebar-header {
+  padding: var(--qoder-space-3) var(--qoder-space-4);
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  gap: var(--qoder-space-2);
+}
+
+.qoder-sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--qoder-space-2);
+}
+
+.qoder-sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: var(--qoder-space-2);
+  padding: 7px 10px;
+  font-size: var(--qoder-font-sm);
+  color: var(--text-secondary);
+  border-radius: var(--qoder-radius-md);
+  cursor: pointer;
+  transition: all var(--qoder-transition-fast);
+  margin-bottom: 2px;
+}
+
+.qoder-sidebar-item:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.qoder-sidebar-item-active {
+  background: var(--accent-subtle);
+  color: var(--accent-deep);
+  font-weight: 500;
+}
+
+.qoder-sidebar-item-icon {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qoder-sidebar-footer {
+  padding: var(--qoder-space-3) var(--qoder-space-4);
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  gap: var(--qoder-space-2);
+}
+
+/* ============================================================
+   Dropdown 下拉菜单
+   ============================================================ */
+.qoder-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.qoder-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  min-width: 180px;
+  background: var(--bg-popup);
+  border: 1px solid var(--border);
+  border-radius: var(--qoder-radius-md);
+  box-shadow: var(--qoder-shadow-lg);
+  padding: 4px;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-4px);
+  transition: all var(--qoder-transition-fast);
+}
+
+.qoder-dropdown:hover .qoder-dropdown-menu,
+.qoder-dropdown-open .qoder-dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.qoder-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: var(--qoder-space-2);
+  padding: 7px 10px;
+  font-size: var(--qoder-font-sm);
+  color: var(--text-primary);
+  border-radius: var(--qoder-radius-sm);
+  cursor: pointer;
+  transition: all var(--qoder-transition-fast);
+}
+
+.qoder-dropdown-item:hover {
+  background: var(--bg-hover);
+}
+
+.qoder-dropdown-item-danger {
+  color: var(--error);
+}
+.qoder-dropdown-item-danger:hover {
+  background: var(--error-bg);
+}
+
+.qoder-dropdown-divider {
+  height: 1px;
+  background: var(--border-subtle);
+  margin: 4px 0;
+}
+
+/* ============================================================
+   Alert 提示框
+   ============================================================ */
+.qoder-alert {
+  display: flex;
+  gap: var(--qoder-space-3);
+  padding: 12px 14px;
+  border-radius: var(--qoder-radius-md);
+  border: 1px solid transparent;
+  font-size: var(--qoder-font-sm);
+  line-height: 1.5;
+}
+
+.qoder-alert-icon {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+}
+
+.qoder-alert-content {
+  flex: 1;
+}
+
+.qoder-alert-title {
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.qoder-alert-info {
+  background: var(--info-bg);
+  border-color: var(--info);
+  color: var(--info);
+}
+.qoder-alert-success {
+  background: var(--success-bg);
+  border-color: var(--success);
+  color: var(--success);
+}
+.qoder-alert-warning {
+  background: var(--warning-bg);
+  border-color: var(--warning);
+  color: var(--warning);
+}
+.qoder-alert-error {
+  background: var(--error-bg);
+  border-color: var(--error);
+  color: var(--error);
+}
+
+/* ============================================================
+   Table 表格
+   ============================================================ */
+.qoder-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--qoder-font-sm);
+}
+
+.qoder-table th {
+  padding: 10px 12px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.qoder-table td {
+  padding: 10px 12px;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.qoder-table tbody tr:hover {
+  background: var(--bg-hover);
+}
+
+.qoder-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* ============================================================
+   Theme Switcher 主题切换器
+   ============================================================ */
+.qoder-theme-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: var(--qoder-space-3);
+}
+
+.qoder-theme-card {
+  position: relative;
+  padding: 12px;
+  background: var(--bg-card);
+  border: 2px solid var(--border-subtle);
+  border-radius: var(--qoder-radius-lg);
+  cursor: pointer;
+  transition: all var(--qoder-transition-fast);
+  overflow: hidden;
+}
+
+.qoder-theme-card:hover {
+  border-color: var(--border-strong);
+  transform: translateY(-2px);
+  box-shadow: var(--qoder-shadow-md);
+}
+
+.qoder-theme-card-active {
+  border-color: var(--accent) !important;
+}
+
+.qoder-theme-card-active::after {
+  content: '✓';
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 20px;
+  height: 20px;
+  background: var(--accent);
+  color: var(--text-on-accent);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.qoder-theme-preview {
+  height: 60px;
+  border-radius: var(--qoder-radius-md);
+  margin-bottom: 8px;
+  display: flex;
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+}
+
+.qoder-theme-preview-sidebar {
+  width: 30%;
+  border-right: 1px solid rgba(128,128,128,0.2);
+}
+
+.qoder-theme-preview-main {
+  flex: 1;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.qoder-theme-preview-line {
+  height: 6px;
+  border-radius: 3px;
+  opacity: 0.6;
+}
+
+.qoder-theme-name {
+  font-size: var(--qoder-font-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.qoder-theme-desc {
+  font-size: var(--qoder-font-xs);
+  color: var(--text-tertiary);
+  margin-top: 2px;
+}
