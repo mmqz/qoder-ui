@@ -1,6 +1,6 @@
 {
   "name": "qoder-ui",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "原汁原味的 Qoder 前端风格原生组件库，8 个官方主题，400+ 图标，50+ 组件（聊天/命令面板/侧边栏/设置/表单/终端/通知/Diff/Agent工作流/数据可视化），21 个 Web Components，完整交互逻辑（拖拽/快捷键/a11y/响应式），零依赖纯 CSS+JS 实现",
   "main": "src/index.css",
   "style": "src/index.css",

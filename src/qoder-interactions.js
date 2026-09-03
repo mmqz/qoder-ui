@@ -516,28 +516,48 @@
 
   // <qoder-button>
   class QoderButton extends HTMLElement {
-    connectedCallback() {
+    static get observedAttributes() { return ['variant', 'size', 'disabled']; }
+    connectedCallback() { this._render(); }
+    attributeChangedCallback() { if (this._rendered) this._render(); }
+    _render() {
       const variant = this.getAttribute('variant') || 'primary';
       const size = this.getAttribute('size') || '';
       const disabled = this.hasAttribute('disabled') ? 'disabled' : '';
       const sizeClass = size ? ` qoder-btn--${size}` : '';
-      this.innerHTML = `<button class="qoder-btn qoder-btn--${variant}${sizeClass}" ${disabled}>${this.innerHTML}</button>`;
+      const text = this._originalText || this.textContent;
+      this._originalText = text;
+      this.innerHTML = `<button class="qoder-btn qoder-btn--${variant}${sizeClass}" ${disabled}>${text}</button>`;
+      this._rendered = true;
+      this.querySelector('button').addEventListener('click', (e) => {
+        this.dispatchEvent(new CustomEvent('click', { detail: e, bubbles: true }));
+      });
     }
   }
 
   // <qoder-input>
   class QoderInput extends HTMLElement {
-    connectedCallback() {
+    static get observedAttributes() { return ['placeholder', 'type', 'value', 'error']; }
+    connectedCallback() { this._render(); }
+    attributeChangedCallback(name) { if (this._rendered && name !== 'value') this._render(); }
+    _render() {
       const placeholder = this.getAttribute('placeholder') || '';
       const type = this.getAttribute('type') || 'text';
       const value = this.getAttribute('value') || '';
       const error = this.hasAttribute('error');
       this.innerHTML = `<div class="qoder-input-wrap ${error ? 'qoder-input-wrap--error' : ''}">
-        <input class="qoder-input" type="${type}" placeholder="${placeholder}" value="${value}">
+        <input class="qoder-input" type="${type}" placeholder="${placeholder}" value="${value}" aria-invalid="${error}">
       </div>`;
+      this._rendered = true;
+      this.querySelector('input').addEventListener('input', (e) => {
+        this.dispatchEvent(new CustomEvent('input', { detail: { value: e.target.value } }));
+      });
+      this.querySelector('input').addEventListener('change', (e) => {
+        this.setAttribute('value', e.target.value);
+        this.dispatchEvent(new CustomEvent('change', { detail: { value: e.target.value } }));
+      });
     }
     get value() { return this.querySelector('input')?.value || ''; }
-    set value(v) { if (this.querySelector('input')) this.querySelector('input').value = v; }
+    set value(v) { if (this.querySelector('input')) this.querySelector('input').value = v; this.setAttribute('value', v); }
   }
 
   // <qoder-badge>
@@ -576,28 +596,38 @@
 
   // <qoder-switch>
   class QoderSwitch extends HTMLElement {
-    connectedCallback() {
+    static get observedAttributes() { return ['checked']; }
+    connectedCallback() { this._render(); }
+    attributeChangedCallback() { if (this._rendered && this.querySelector('input')) this.querySelector('input').checked = this.hasAttribute('checked'); }
+    _render() {
       const checked = this.hasAttribute('checked') ? 'checked' : '';
       this.innerHTML = `<label class="qoder-switch"><input type="checkbox" ${checked}><span class="qoder-switch__slider"></span></label>`;
+      this._rendered = true;
       this.querySelector('input').addEventListener('change', (e) => {
+        if (e.target.checked) this.setAttribute('checked', ''); else this.removeAttribute('checked');
         this.dispatchEvent(new CustomEvent('change', { detail: { checked: e.target.checked } }));
       });
     }
     get checked() { return this.querySelector('input')?.checked || false; }
+    set checked(v) { if (v) this.setAttribute('checked', ''); else this.removeAttribute('checked'); }
   }
 
   // <qoder-tabs>
   class QoderTabs extends HTMLElement {
-    connectedCallback() {
+    static get observedAttributes() { return ['items', 'active']; }
+    connectedCallback() { this._render(); }
+    attributeChangedCallback() { if (this._rendered) this._render(); }
+    _render() {
       const items = (this.getAttribute('items') || '').split(',').map(s => s.trim());
       const active = parseInt(this.getAttribute('active') || 0);
-      this.innerHTML = `<div class="qoder-tabs">${items.map((item, i) =>
-        `<div class="qoder-tabs__item ${i === active ? 'qoder-tabs__item--active' : ''}" data-index="${i}">${item}</div>`
+      this.innerHTML = `<div class="qoder-tabs" role="tablist">${items.map((item, i) =>
+        `<div class="qoder-tabs__item ${i === active ? 'qoder-tabs__item--active' : ''}" data-index="${i}" role="tab" aria-selected="${i === active}">${item}</div>`
       ).join('')}</div>`;
+      this._rendered = true;
       this.querySelectorAll('.qoder-tabs__item').forEach(tab => {
         tab.addEventListener('click', () => {
-          this.querySelectorAll('.qoder-tabs__item').forEach(t => t.classList.remove('qoder-tabs__item--active'));
-          tab.classList.add('qoder-tabs__item--active');
+          this.setAttribute('active', tab.dataset.index);
+          this._render();
           this.dispatchEvent(new CustomEvent('change', { detail: { index: parseInt(tab.dataset.index) } }));
         });
       });
@@ -606,14 +636,16 @@
 
   // <qoder-progress>
   class QoderProgress extends HTMLElement {
-    connectedCallback() {
+    static get observedAttributes() { return ['value']; }
+    connectedCallback() { this._render(); }
+    attributeChangedCallback() { if (this._rendered) this._render(); }
+    _render() {
       const value = parseInt(this.getAttribute('value') || 0);
-      this.innerHTML = `<div class="qoder-progress"><div class="qoder-progress__bar" style="width:${value}%"></div></div>`;
+      this.innerHTML = `<div class="qoder-progress" role="progressbar" aria-valuenow="${value}" aria-valuemin="0" aria-valuemax="100"><div class="qoder-progress__bar" style="width:${value}%"></div></div>`;
+      this._rendered = true;
     }
-    set value(v) {
-      const bar = this.querySelector('.qoder-progress__bar');
-      if (bar) bar.style.width = v + '%';
-    }
+    get value() { return parseInt(this.getAttribute('value') || 0); }
+    set value(v) { this.setAttribute('value', v); }
   }
 
   // <qoder-spinner>
@@ -781,8 +813,8 @@
       ['qoder-tabs', QoderTabs],
       ['qoder-progress', QoderProgress],
       ['qoder-spinner', QoderSpinner],
-      ['qoder-select-wc', QoderSelect],
-      ['qoder-slider-wc', QoderSliderEl],
+      ['qoder-select', QoderSelect],
+      ['qoder-slider', QoderSliderEl],
       ['qoder-tooltip', QoderTooltip],
       ['qoder-card', QoderCard],
       ['qoder-breadcrumb', QoderBreadcrumb],

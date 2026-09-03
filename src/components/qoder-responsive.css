@@ -1,0 +1,190 @@
+/* ============================================================
+   Qoder UI - 响应式适配模块
+   断点：1200px / 1024px / 768px / 480px
+   ============================================================ */
+
+/* 大屏优化 */
+@media (min-width: 1400px) {
+  .qoder-chat__messages-inner { max-width: 900px; margin: 0 auto; }
+  .qoder-stat-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* 平板横屏 */
+@media (max-width: 1024px) {
+  .qoder-agent-grid { grid-template-columns: 1fr; }
+  .qoder-settings { flex-direction: column; }
+  .qoder-settings__sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex;
+    overflow-x: auto;
+    padding: 8px;
+  }
+  .qoder-settings__nav-item { white-space: nowrap; padding: 6px 12px; }
+  .qoder-stat-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* 平板竖屏 / 大手机 */
+@media (max-width: 768px) {
+  /* 侧边栏布局 */
+  .qoder-sidebar-layout { flex-direction: column; }
+  .qoder-activity-bar {
+    width: 100%;
+    height: 48px;
+    flex-direction: row;
+    border-right: none;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .qoder-activity-bar__item--active::before {
+    left: 50%;
+    top: auto;
+    bottom: -8px;
+    transform: translateX(-50%);
+    width: 24px;
+    height: 2px;
+    border-radius: 2px 2px 0 0;
+  }
+  .qoder-activity-bar__item--bottom { margin-top: 0; margin-left: auto; }
+  .qoder-sidebar-panel {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--border-subtle);
+    max-height: 250px;
+  }
+
+  /* 聊天 */
+  .qoder-chat { height: auto; min-height: 400px; }
+  .qoder-chat__messages-inner { padding: 0 12px; }
+  .qoder-chat__welcome-suggestions { grid-template-columns: 1fr 1fr; }
+  .qoder-chat-input { padding: 8px 12px 12px; }
+  .qoder-chat__msg-avatar { width: 28px; height: 28px; font-size: 12px; }
+
+  /* 命令面板 */
+  .qoder-palette__modal { max-width: calc(100vw - 32px); margin: 10vh auto; }
+
+  /* 通知中心 */
+  .qoder-notification-center { width: 100vw; right: 0; }
+
+  /* 数据可视化 */
+  .qoder-stat-card__value { font-size: 22px; }
+  .qoder-heatmap__label { font-size: 10px; }
+
+  /* 终端 */
+  .qoder-terminal__body { font-size: 12px; }
+
+  /* Diff */
+  .qoder-diff__gutter { min-width: 32px; font-size: 10px; }
+
+  /* 表单 */
+  .qoder-upload__area { padding: 20px; }
+
+  /* 布局组件 */
+  .qoder-steps { flex-wrap: wrap; gap: 12px; }
+  .qoder-step__line { display: none; }
+  .qoder-descriptions__label { width: 90px; font-size: 12px; }
+}
+
+/* 手机 */
+@media (max-width: 480px) {
+  /* 聊天 */
+  .qoder-chat__welcome-suggestions { grid-template-columns: 1fr; }
+  .qoder-chat__welcome-title { font-size: 20px; }
+  .qoder-chat__msg-content { font-size: 13px; }
+  .qoder-code-block { font-size: 11px; }
+  .qoder-code-block__code { padding: 10px; }
+  .qoder-chat__msg-actions { flex-wrap: wrap; }
+
+  /* 命令面板 */
+  .qoder-palette__modal { max-width: calc(100vw - 16px); margin: 5vh auto; }
+  .qoder-palette__input { font-size: 14px; }
+
+  /* 数据可视化 */
+  .qoder-stat-grid { grid-template-columns: 1fr 1fr; }
+  .qoder-stat-card { padding: 12px; }
+  .qoder-stat-card__value { font-size: 18px; }
+
+  /* 表单 */
+  .qoder-select { width: 100%; }
+  .qoder-datepicker { width: 100%; }
+  .qoder-slider { width: 100%; }
+
+  /* 布局 */
+  .qoder-descriptions { font-size: 12px; }
+  .qoder-descriptions__label { width: 80px; }
+  .qoder-pagination__item { min-width: 32px; height: 32px; font-size: 13px; }
+  .qoder-timeline { padding-left: 20px; }
+
+  /* 终端 */
+  .qoder-terminal__tab { padding: 6px 10px; font-size: 11px; }
+
+  /* Agent */
+  .qoder-agent-card { padding: 12px; }
+  .qoder-run-result__metrics { flex-direction: column; gap: 12px; }
+  .qoder-run-result__metric { text-align: left; }
+
+  /* 按钮 */
+  .qoder-btn { min-height: 40px; padding: 8px 16px; font-size: 14px; }
+  .qoder-btn--sm { min-height: 32px; padding: 4px 10px; font-size: 12px; }
+
+  /* 输入 */
+  .qoder-input { font-size: 14px; padding: 10px 12px; }
+}
+
+/* 超小屏 */
+@media (max-width: 360px) {
+  .qoder-stat-grid { grid-template-columns: 1fr; }
+  .qoder-chat__msg-avatar { display: none; }
+  .qoder-chat__msg-body { margin-left: 0; }
+}
+
+/* 触控设备优化 */
+@media (hover: none) and (pointer: coarse) {
+  .qoder-btn, .qoder-tabs__item, .qoder-select__option,
+  .qoder-session-item, .qoder-settings__nav-item,
+  .qoder-palette__item, .qoder-context-menu__item {
+    min-height: 44px;
+  }
+  .qoder-chat__action { min-height: 36px; min-width: 36px; }
+  .qoder-code-block__copy { min-height: 28px; }
+  /* 取消 hover 效果，改用 active */
+  .qoder-btn:hover { transform: none; }
+  .qoder-btn:active { transform: scale(0.97); }
+}
+
+/* 打印样式 */
+@media print {
+  .qoder-activity-bar, .qoder-chat-input, .qoder-terminal,
+  .qoder-palette, .qoder-notification-center, .qoder-context-menu {
+    display: none !important;
+  }
+  .qoder-chat { height: auto; }
+  .qoder-chat__messages { overflow: visible; }
+}
+
+/* 减少动画偏好 */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .qoder-typing-cursor { animation: none; border-right: 2px solid var(--accent); }
+  .qoder-spinner { animation: none; border-top-color: var(--accent); }
+  .qoder-terminal__cursor { animation: none; opacity: 1; }
+}
+
+/* 深色模式对比度增强 */
+[data-theme$="-dark"] {
+  --qoder-focus-ring: 2px solid var(--accent);
+}
+[data-theme$="-dark"] .qoder-code-block {
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06);
+}
+
+/* 高对比度模式 */
+@media (prefers-contrast: high) {
+  .qoder-btn--ghost { border: 1px solid var(--text-primary); }
+  .qoder-input-wrap { border-width: 2px; }
+  .qoder-tabs__item--active { border-bottom-width: 3px; }
+}

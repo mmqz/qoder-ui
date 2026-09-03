@@ -14,8 +14,10 @@
   <link rel="stylesheet" href="../src/components/qoder-panels.css">
   <link rel="stylesheet" href="../src/components/qoder-extras.css">
   <link rel="stylesheet" href="../src/components/qoder-viz.css">
+  <link rel="stylesheet" href="../src/components/qoder-responsive.css">
   <script src="../src/qoder-ui.js"></script>
   <script src="../src/qoder-interactions.js"></script>
+  <script src="../src/qoder-features.js"></script>
   <style>
     * { box-sizing: border-box; }
     body { margin: 0; font-family: 'Instrument Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg-page); color: var(--text-primary); transition: background 0.3s, color 0.3s; }
@@ -71,7 +73,7 @@
     <h1>
       <span class="qoder-icon qoder-icon--sparkle" style="color: var(--accent);"></span>
       Qoder UI 完整组件库
-      <span class="badge">v3.0</span>
+      <span class="badge">v3.1</span>
     </h1>
     <div class="theme-switcher" id="themeSwitcher">
       <div class="theme-btn active" data-theme="forest-light" data-name="Forest" style="background: linear-gradient(135deg, #e8f5ee, #358e62);"></div>
@@ -958,23 +960,35 @@ function hello() {
   </div>
 
   <script>
-    // 主题切换
-    const themeBtns = document.querySelectorAll('.theme-btn');
-    themeBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const theme = btn.dataset.theme;
-        document.documentElement.setAttribute('data-theme', theme);
-        localStorage.setItem('qoder-theme', theme);
-        themeBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+    // 主题切换 - 统一事件机制
+    function applyTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('qoder-theme', theme);
+      document.querySelectorAll('.theme-btn').forEach(b => b.classList.toggle('active', b.dataset.theme === theme));
+      // 同步 theme-switcher 组件
+      document.querySelectorAll('qoder-theme-switcher button').forEach(b => {
+        b.classList.toggle('qoder-theme-switcher__btn--active', b.dataset.theme === theme);
       });
+      window.dispatchEvent(new CustomEvent('qoder-theme-change', { detail: { theme } }));
+    }
+    document.querySelectorAll('.theme-btn').forEach(btn => {
+      btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
+    });
+    // 监听 theme-switcher 的切换
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('qoder-theme-switcher button');
+      if (btn && btn.dataset.theme) applyTheme(btn.dataset.theme);
     });
     // 恢复保存的主题
-    const savedTheme = localStorage.getItem('qoder-theme');
-    if (savedTheme) {
-      document.documentElement.setAttribute('data-theme', savedTheme);
-      themeBtns.forEach(b => b.classList.toggle('active', b.dataset.theme === savedTheme));
-    }
+    const savedTheme = localStorage.getItem('qoder-theme') || 'forest-light';
+    applyTheme(savedTheme);
+    // 快捷键帮助按钮
+    document.addEventListener('keydown', (e) => {
+      if (e.key === '?' && !e.ctrlKey && !e.metaKey && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA' && !document.activeElement.isContentEditable) {
+        e.preventDefault();
+        if (window.QoderUI && QoderUI.shortcutsPanel) QoderUI.shortcutsPanel.open();
+      }
+    });
   </script>
 </body>
 </html>
