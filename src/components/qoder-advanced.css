@@ -1,0 +1,964 @@
+/* ============================================================
+   Qoder UI - 高级组件库
+   从 Qoder v0.1.6 反编译提取的复杂组件
+   包含：全息用户卡片、窗口Chrome、语音胶囊、涟漪动画、
+        变更树、桌面宠物活动栈、滚动渐隐、纹理表面等
+   ============================================================ */
+
+/* ============================================================
+   Squircle 超椭圆圆角
+   ============================================================ */
+.qoder-squircle { corner-shape: squircle; }
+.qoder-squircle-sm { corner-shape: squircle; border-radius: 4px; }
+.qoder-squircle-md { corner-shape: squircle; border-radius: 6px; }
+.qoder-squircle-lg { corner-shape: squircle; border-radius: 8px; }
+.qoder-squircle-xl { corner-shape: squircle; border-radius: 12px; }
+.qoder-squircle-2xl { corner-shape: squircle; border-radius: 16px; }
+.qoder-squircle-full { corner-shape: squircle; border-radius: 9999px; }
+
+/* ============================================================
+   Scroll Fade 滚动渐隐
+   ============================================================ */
+.qoder-scroll-fade {
+  --qoder-fade-size: min(12%, 40px);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, black var(--qoder-fade-size), black calc(100% - var(--qoder-fade-size)), transparent);
+  mask-image: linear-gradient(to bottom, transparent, black var(--qoder-fade-size), black calc(100% - var(--qoder-fade-size)), transparent);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+.qoder-scroll-fade-top {
+  --qoder-fade-size: min(12%, 40px);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, black var(--qoder-fade-size));
+  mask-image: linear-gradient(to bottom, transparent, black var(--qoder-fade-size));
+}
+
+.qoder-scroll-fade-bottom {
+  --qoder-fade-size: min(12%, 40px);
+  -webkit-mask-image: linear-gradient(to top, transparent, black var(--qoder-fade-size));
+  mask-image: linear-gradient(to top, transparent, black var(--qoder-fade-size));
+}
+
+.qoder-scroll-fade-x {
+  --qoder-fade-size: min(12%, 40px);
+  -webkit-mask-image: linear-gradient(to right, transparent, black var(--qoder-fade-size), black calc(100% - var(--qoder-fade-size)), transparent);
+  mask-image: linear-gradient(to right, transparent, black var(--qoder-fade-size), black calc(100% - var(--qoder-fade-size)), transparent);
+}
+
+/* ============================================================
+   Texture Surface 纹理表面
+   ============================================================ */
+.qoder-texture-dots {
+  background-image: radial-gradient(circle, var(--border) 0 0.75px, transparent 1px);
+  background-repeat: repeat;
+  background-size: 8px 8px;
+}
+
+.qoder-texture-dots-fade {
+  background-image: radial-gradient(circle, var(--border) 0 0.75px, transparent 1px);
+  background-repeat: repeat;
+  background-size: 8px 8px;
+  -webkit-mask-image: linear-gradient(to bottom, var(--text-primary) 0%, transparent 62%);
+  mask-image: linear-gradient(to bottom, var(--text-primary) 0%, transparent 62%);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+/* ============================================================
+   Window Chrome 窗口标题栏（玻璃效果）
+   ============================================================ */
+.qoder-chrome-window {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--bg-popup);
+  border-radius: var(--qoder-radius-lg);
+  overflow: hidden;
+  box-shadow: var(--qoder-shadow-xl);
+}
+
+.qoder-chrome-titlebar {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  padding: 0 12px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border-bottom: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+  user-select: none;
+  -webkit-app-region: drag;
+}
+
+.qoder-chrome-traffic-lights {
+  display: flex;
+  gap: 8px;
+  margin-right: 12px;
+}
+
+.qoder-chrome-traffic-light {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.qoder-chrome-traffic-light:hover { opacity: 0.8; }
+.qoder-chrome-traffic-light.close { background: #ff5f57; }
+.qoder-chrome-traffic-light.minimize { background: #febc2e; }
+.qoder-chrome-traffic-light.maximize { background: #28c840; }
+
+.qoder-chrome-title {
+  flex: 1;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.qoder-chrome-actions {
+  display: flex;
+  gap: 4px;
+  margin-left: 12px;
+}
+
+.qoder-chrome-action {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  transition: all 0.15s;
+  -webkit-app-region: no-drag;
+}
+.qoder-chrome-action:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.qoder-chrome-sidebar {
+  width: 200px;
+  background: var(--bg-surface);
+  border-right: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+}
+
+.qoder-chrome-content {
+  flex: 1;
+  overflow: auto;
+  background: var(--bg-page);
+}
+
+.qoder-chrome-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ============================================================
+   Holographic User Card 全息用户卡片
+   ============================================================ */
+.qoder-user-card {
+  position: relative;
+  isolation: isolate;
+  width: min(100%, 320px);
+  aspect-ratio: 23 / 32;
+  flex: none;
+  border-radius: 16px;
+  background: transparent;
+  container-type: inline-size;
+  transform-style: preserve-3d;
+  overflow: hidden;
+}
+
+.qoder-user-card__frame {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  background: var(--bg-card);
+}
+
+.qoder-user-card__surface {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  background: var(--bg-card);
+}
+
+/* 多层光晕 */
+.qoder-user-card__glow {
+  position: absolute;
+  display: block;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.qoder-user-card__glow--soft {
+  top: 20%; left: 0; width: 165%; height: 168%;
+  background: var(--bg-surface);
+  filter: blur(22px);
+  opacity: 0.5;
+}
+.qoder-user-card__glow--medium {
+  top: 0; left: 32%; width: 134%; height: 137%;
+  background: var(--border);
+  filter: blur(22px);
+}
+.qoder-user-card__glow--strong {
+  top: 20%; left: 55%; width: 89%; height: 90%;
+  background: var(--border-strong);
+  filter: blur(16px);
+}
+.qoder-user-card__glow--deep {
+  top: 7%; left: 87%; width: 60%; height: 62%;
+  background: var(--accent-subtle);
+  filter: blur(16px);
+}
+
+/* 全息效果层 */
+.qoder-user-card__holographic {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.qoder-user-card__holographic-spectrum {
+  position: absolute;
+  inset: -14%;
+  background-image:
+    repeating-linear-gradient(-33deg,
+      var(--error) 0%, var(--info) 6%, var(--accent) 12%,
+      var(--success) 18%, var(--warning) 24%, var(--error) 30%),
+    radial-gradient(farthest-corner circle at 50% 50%,
+      color-mix(in srgb, var(--accent) 66%, transparent) 0%,
+      color-mix(in srgb, var(--info) 38%, transparent) 24%,
+      transparent 72%);
+  background-size: 1100% 1100%, 180% 180%;
+  background-blend-mode: luminosity, normal;
+  filter: brightness(0.68) contrast(1.45) saturate(1.05);
+  mix-blend-mode: color-dodge;
+  opacity: 0.38;
+}
+
+.qoder-user-card__holographic-glare {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(farthest-corner circle at 50% 50%,
+    color-mix(in srgb, var(--text-on-accent) 76%, transparent) 0%,
+    color-mix(in srgb, var(--info) 20%, transparent) 24%,
+    transparent 64%);
+  mix-blend-mode: hard-light;
+  opacity: 0.36;
+}
+
+/* 文字层 */
+.qoder-user-card__text-layer {
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  display: flex;
+  width: 85%;
+  transform: translate(-50%);
+  flex-direction: column;
+  gap: 10px;
+  color: var(--text-primary);
+  z-index: 2;
+}
+
+.qoder-user-card__identity {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.qoder-user-card__email {
+  overflow: hidden;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin: 0;
+}
+
+.qoder-user-card__label {
+  color: var(--text-tertiary);
+  font-family: var(--qoder-font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.qoder-user-card__footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.qoder-user-card__time {
+  color: var(--text-secondary);
+  font-family: var(--qoder-font-mono);
+  font-size: 10px;
+  margin: 0;
+}
+
+.qoder-user-card__signature {
+  width: 60px;
+  height: 25px;
+  color: var(--accent);
+  opacity: 0.6;
+}
+
+/* 标准变体 */
+.qoder-user-card--standard {
+  border-radius: 20px;
+  box-shadow: 0 98px 198px 0 var(--shadow-color);
+}
+
+.qoder-user-card__standard {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  color: var(--text-primary);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.qoder-user-card__standard-welcome {
+  position: absolute;
+  top: 5%;
+  right: 5%;
+  width: 20%;
+  overflow: hidden;
+  color: var(--text-tertiary);
+  font-family: var(--qoder-font-mono);
+  font-size: 10px;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.qoder-user-card__standard-logo {
+  position: absolute;
+  top: 18%;
+  left: 50%;
+  width: 65%;
+  height: 65%;
+  transform: translate(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  font-weight: 800;
+  color: var(--accent);
+  opacity: 0.15;
+}
+
+.qoder-user-card__standard-identity {
+  position: absolute;
+  top: 91%;
+  left: 5%;
+  display: flex;
+  width: 63%;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.qoder-user-card__standard-name {
+  overflow: hidden;
+  font-size: 16px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin: 0;
+}
+
+.qoder-user-card__standard-role {
+  overflow: hidden;
+  color: var(--text-tertiary);
+  font-family: var(--qoder-font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin: 0;
+}
+
+.qoder-user-card__standard-metadata {
+  position: absolute;
+  top: 125%;
+  left: 5%;
+  display: flex;
+  width: 63%;
+  flex-direction: column;
+  gap: 1px;
+  color: var(--text-tertiary);
+  font-family: var(--qoder-font-mono);
+  font-size: 9px;
+}
+
+/* ============================================================
+   Voice Capsule 语音胶囊
+   ============================================================ */
+.qoder-capsule {
+  position: relative;
+  width: 68px;
+  height: 68px;
+}
+
+.qoder-capsule-core {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 68px;
+  height: 68px;
+  overflow: hidden;
+  border: 1px solid transparent;
+  border-radius: 16px;
+  background: var(--bg-card);
+  box-shadow: 0 4.333px 6px color-mix(in srgb, var(--shadow-color) 5%, transparent);
+  transition: background 0.35s ease, border-color 0.18s ease, border-radius 0.35s ease;
+}
+
+.qoder-capsule-core::before {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  inset: -20%;
+  background-image: radial-gradient(circle, color-mix(in srgb, var(--text-tertiary) 50%, transparent) 1px, transparent 1.5px);
+  background-size: 13.5px 13.5px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.qoder-capsule-core::after {
+  content: '';
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  border-radius: inherit;
+  background-image:
+    repeating-radial-gradient(circle at 28% 34%,
+      color-mix(in srgb, var(--text-tertiary) 20%, transparent) 0 0.55px,
+      transparent 0.8px 2.3px),
+    repeating-linear-gradient(112deg,
+      color-mix(in srgb, var(--bg-card) 16%, transparent) 0 0.45px,
+      transparent 0.8px 2px);
+  opacity: 0;
+}
+
+.qoder-capsule--active .qoder-capsule-core {
+  border-color: var(--accent);
+  border-radius: 50%;
+}
+
+.qoder-capsule--active .qoder-capsule-core::before,
+.qoder-capsule--active .qoder-capsule-core::after {
+  opacity: 0.3;
+}
+
+.qoder-capsule-blobs {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.qoder-capsule-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(14px);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.qoder-capsule--active .qoder-capsule-blob {
+  opacity: 0.6;
+  animation: qoder-capsule-pulse 2s ease-in-out infinite;
+}
+
+.qoder-capsule-blob--primary {
+  top: -30%; left: -30%;
+  width: 160%; height: 160%;
+  background: var(--accent);
+}
+.qoder-capsule-blob--mint {
+  top: -26%; left: 52%;
+  width: 70%; height: 70%;
+  background: var(--success);
+}
+.qoder-capsule-blob--light {
+  top: -30%; left: 0;
+  width: 60%; height: 60%;
+  background: var(--info);
+}
+
+@keyframes qoder-capsule-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.4; }
+  50% { transform: scale(1.1); opacity: 0.7; }
+}
+
+/* ============================================================
+   Classic Ripple 经典涟漪
+   ============================================================ */
+.qoder-classic {
+  position: relative;
+  width: 68px;
+  height: 68px;
+}
+
+.qoder-classic-core {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  width: 68px;
+  height: 68px;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--bg-card);
+  box-shadow: 0 4.333px 6px color-mix(in srgb, var(--shadow-color) 5%, transparent);
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.qoder-classic-core::after {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  border-radius: inherit;
+  background-image:
+    repeating-radial-gradient(circle at 28% 34%,
+      color-mix(in srgb, var(--text-tertiary) 20%, transparent) 0 0.55px,
+      transparent 0.8px 2.3px);
+  opacity: 0;
+}
+
+.qoder-classic--active .qoder-classic-core::after {
+  opacity: 0.25;
+}
+
+.qoder-classic-ripple {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  border: 1px solid color-mix(in srgb, var(--accent) 24%, transparent);
+  background: transparent;
+  opacity: 0;
+  pointer-events: none;
+  width: 74px;
+  height: 74px;
+}
+
+.qoder-classic--active .qoder-classic-ripple {
+  animation: qoder-classic-ripple 2s ease-out infinite;
+}
+
+.qoder-classic--active .qoder-classic-ripple:nth-child(2) {
+  animation-delay: 0.4s;
+}
+.qoder-classic--active .qoder-classic-ripple:nth-child(3) {
+  animation-delay: 0.8s;
+}
+
+@keyframes qoder-classic-ripple {
+  0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.8; }
+  100% { transform: translate(-50%, -50%) scale(1.8); opacity: 0; }
+}
+
+.qoder-classic-blobs {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.qoder-classic-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(9px);
+  opacity: 0;
+}
+
+.qoder-classic--active .qoder-classic-blob {
+  opacity: 0.5;
+  animation: qoder-classic-blob-move 3s ease-in-out infinite;
+}
+
+.qoder-classic-blob--primary {
+  top: -22%; left: -22%;
+  width: 140%; height: 140%;
+  background: var(--accent);
+}
+
+@keyframes qoder-classic-blob-move {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(10%, -10%); }
+}
+
+/* ============================================================
+   Change Tree 变更树（文件树缩进线）
+   ============================================================ */
+.qoder-change-tree {
+  font-size: 13px;
+}
+
+.qoder-change-tree-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.qoder-change-tree-item:hover {
+  background: var(--bg-hover);
+}
+
+.qoder-change-tree-item--depth-1::before,
+.qoder-change-tree-item--depth-2::before,
+.qoder-change-tree-item--depth-3::before,
+.qoder-change-tree-item--depth-4::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 128px;
+  background-repeat: no-repeat;
+  background-size: 1px 100%;
+  pointer-events: none;
+}
+
+.qoder-change-tree-item--depth-1::before {
+  background-image: linear-gradient(var(--border-subtle), var(--border-subtle));
+  background-position: 18px 0;
+}
+.qoder-change-tree-item--depth-2::before {
+  background-image:
+    linear-gradient(var(--border-subtle), var(--border-subtle)),
+    linear-gradient(var(--border-subtle), var(--border-subtle));
+  background-position: 18px 0, 32px 0;
+}
+.qoder-change-tree-item--depth-3::before {
+  background-image:
+    linear-gradient(var(--border-subtle), var(--border-subtle)),
+    linear-gradient(var(--border-subtle), var(--border-subtle)),
+    linear-gradient(var(--border-subtle), var(--border-subtle));
+  background-position: 18px 0, 32px 0, 46px 0;
+}
+
+.qoder-change-tree-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  margin-right: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-tertiary);
+}
+
+.qoder-change-tree-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-primary);
+}
+
+.qoder-change-tree-status {
+  margin-left: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+.qoder-change-tree-status--added { background: var(--success-bg); color: var(--success); }
+.qoder-change-tree-status--modified { background: var(--warning-bg); color: var(--warning); }
+.qoder-change-tree-status--deleted { background: var(--error-bg); color: var(--error); }
+
+/* ============================================================
+   Desktop Pet Activity Stack 桌面宠物活动栈
+   ============================================================ */
+.qoder-pet-stack {
+  position: relative;
+  height: 68px;
+  transform-origin: bottom center;
+}
+
+.qoder-pet-stack-item {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  transform-origin: bottom center;
+}
+
+.qoder-pet-stack-item:nth-child(1) { z-index: 2; }
+.qoder-pet-stack-item:nth-child(2) {
+  z-index: 1;
+  bottom: 10px;
+  pointer-events: none;
+  opacity: 0.82;
+  transform: scale(0.965);
+}
+
+.qoder-pet-stack--expanded .qoder-pet-stack-item:nth-child(2) {
+  bottom: calc(68px + 8px);
+  pointer-events: auto;
+  opacity: 1;
+  transform: scale(1);
+}
+
+.qoder-pet-bubble {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 14px;
+  box-shadow: var(--qoder-shadow-md);
+  font-size: 12px;
+  color: var(--text-primary);
+  position: relative;
+}
+
+.qoder-pet-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  right: 20px;
+  width: 12px;
+  height: 12px;
+  background: var(--bg-card);
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  transform: rotate(45deg);
+}
+
+/* ============================================================
+   Feedback Dialog 反馈对话框
+   ============================================================ */
+.qoder-dialog-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: qoder-dialog-fade-in 0.2s ease;
+}
+
+@keyframes qoder-dialog-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.qoder-dialog {
+  background: var(--bg-popup);
+  border-radius: 12px;
+  box-shadow: var(--qoder-shadow-xl);
+  width: min(100%, 480px);
+  max-height: 80vh;
+  overflow: hidden;
+  animation: qoder-dialog-scale-in 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes qoder-dialog-scale-in {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.qoder-dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.qoder-dialog-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.qoder-dialog-close {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  transition: all 0.15s;
+  border: none;
+  background: transparent;
+  font-size: 18px;
+}
+.qoder-dialog-close:hover {
+  color: var(--text-primary);
+  background: var(--bg-hover);
+}
+
+.qoder-dialog-body {
+  padding: 16px 20px;
+  max-height: 50vh;
+  overflow-y: auto;
+}
+
+.qoder-dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 12px 20px;
+  border-top: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+}
+
+.qoder-dialog-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 18px;
+  margin-bottom: 6px;
+  color: var(--text-secondary);
+}
+
+/* ============================================================
+   Rich Editor Placeholder 富文本编辑器占位
+   ============================================================ */
+.qoder-rich-editor {
+  position: relative;
+  min-height: 80px;
+  padding: 8px 12px;
+  font-size: 14px;
+  line-height: 24px;
+  color: var(--text-primary);
+  outline: none;
+}
+
+.qoder-rich-editor:empty::before {
+  content: attr(data-placeholder);
+  color: var(--text-placeholder);
+  pointer-events: none;
+  user-select: none;
+  display: block;
+  position: absolute;
+  inset: 8px 12px;
+}
+
+/* ============================================================
+   Update Notification Card 更新通知卡片
+   ============================================================ */
+.qoder-update-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 16px;
+  box-shadow: var(--qoder-shadow-md);
+}
+
+.qoder-update-card__title {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: var(--text-primary);
+}
+
+.qoder-update-card__description {
+  font-size: 11px;
+  line-height: 16px;
+  color: var(--text-tertiary);
+}
+
+.qoder-update-card__description p {
+  margin: 0;
+}
+
+.qoder-update-card__actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+/* ============================================================
+   Workbench Content Corner 工作台内容角
+   ============================================================ */
+.qoder-workbench-corner {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.qoder-workbench-corner--large {
+  border-radius: 16px;
+}
+
+/* ============================================================
+   High Contrast 高对比度模式
+   ============================================================ */
+.qoder-high-contrast .qoder-capsule-core,
+.qoder-high-contrast .qoder-classic-core {
+  border-width: 2px;
+  border-color: var(--accent);
+  box-shadow: none;
+}
+
+.qoder-high-contrast .qoder-capsule-core::before,
+.qoder-high-contrast .qoder-capsule-core::after,
+.qoder-high-contrast .qoder-capsule-blobs,
+.qoder-high-contrast .qoder-classic-core::after,
+.qoder-high-contrast .qoder-classic-blobs,
+.qoder-high-contrast .qoder-user-card__holographic,
+.qoder-high-contrast .qoder-user-card__glow {
+  display: none !important;
+}
+
+/* ============================================================
+   Thin Scrollbar 细滚动条
+   ============================================================ */
+.qoder-scrollbar-thin {
+  scrollbar-width: thin;
+}
+
+.qoder-scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.qoder-scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.qoder-scrollbar-thin::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 3px;
+}
+
+.qoder-scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: var(--text-tertiary);
+}

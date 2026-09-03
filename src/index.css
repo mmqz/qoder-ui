@@ -6,3 +6,5 @@
 @import './themes/qoder-themes.css';
 @import './styles/base.css';
 @import './components/qoder-components.css';
+@import './components/qoder-advanced.css';
+@import './components/qoder-icons.css';

@@ -1,7 +1,7 @@
 {
   "name": "qoder-ui",
-  "version": "1.0.0",
-  "description": "原汁原味的 Qoder 前端风格原生组件库，8 个官方主题，零依赖纯 CSS 实现",
+  "version": "2.0.0",
+  "description": "原汁原味的 Qoder 前端风格原生组件库，8 个官方主题，400+ 图标，全息卡片/语音胶囊/窗口Chrome等高级组件，零依赖纯 CSS 实现",
   "main": "src/index.css",
   "style": "src/index.css",
   "files": [

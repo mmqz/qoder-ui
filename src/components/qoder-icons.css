@@ -1,0 +1,505 @@
+/* ============================================================
+   Qoder UI - 图标系统
+   从 Qoder v0.1.6 提取的 codicon + seti 图标字体
+   ============================================================ */
+
+/* Codicon 字体定义 */
+@font-face {
+  font-family: 'qoder-codicon';
+  src: url('../fonts/codicon.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+/* Seti 字体定义（文件类型图标） */
+@font-face {
+  font-family: 'qoder-seti';
+  src: url('../fonts/qoder-seti.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+/* 基础图标类 */
+.qoder-icon {
+  font-family: 'qoder-codicon';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: none;
+  letter-spacing: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.qoder-icon--sm { font-size: 14px; }
+.qoder-icon--lg { font-size: 20px; }
+.qoder-icon--xl { font-size: 24px; }
+
+/* ============================================================
+   Codicon 常用图标映射
+   ============================================================ */
+
+/* 导航/操作 */
+.qoder-icon--account::before { content: '\e970'; }
+.qoder-icon--activate-breakpoints::before { content: '\ea01'; }
+.qoder-icon--add::before { content: '\ea03'; }
+.qoder-icon--archive::before { content: '\ea06'; }
+.qoder-icon--arrow-both::before { content: '\ea07'; }
+.qoder-icon--arrow-down::before { content: '\ea08'; }
+.qoder-icon--arrow-left::before { content: '\ea09'; }
+.qoder-icon--arrow-right::before { content: '\ea0a'; }
+.qoder-icon--arrow-small-down::before { content: '\ea0b'; }
+.qoder-icon--arrow-small-left::before { content: '\ea0c'; }
+.qoder-icon--arrow-small-right::before { content: '\ea0d'; }
+.qoder-icon--arrow-small-up::before { content: '\ea0e'; }
+.qoder-icon--arrow-up::before { content: '\ea0f'; }
+.qoder-icon--beaker::before { content: '\ea18'; }
+.qoder-icon--bell::before { content: '\ea19'; }
+.qoder-icon--bell-dot::before { content: '\ea1a'; }
+.qoder-icon--bold::before { content: '\ea1c'; }
+.qoder-icon--book::before { content: '\ea1d'; }
+.qoder-icon--bookmark::before { content: '\ea1e'; }
+.qoder-icon--briefcase::before { content: '\ea21'; }
+.qoder-icon--broadcast::before { content: '\ea22'; }
+.qoder-icon--browser::before { content: '\ea23'; }
+.qoder-icon--bug::before { content: '\ea25'; }
+.qoder-icon--calendar::before { content: '\ea27'; }
+.qoder-icon--call-incoming::before { content: '\ea28'; }
+.qoder-icon--call-outgoing::before { content: '\ea29'; }
+.qoder-icon--case-sensitive::before { content: '\ea2a'; }
+.qoder-icon--check::before { content: '\ea2b'; }
+.qoder-icon--check-all::before { content: '\ea2c'; }
+.qoder-icon--checklist::before { content: '\ea2d'; }
+.qoder-icon--chevron-down::before { content: '\ea2e'; }
+.qoder-icon--chevron-left::before { content: '\ea2f'; }
+.qoder-icon--chevron-right::before { content: '\ea30'; }
+.qoder-icon--chevron-up::before { content: '\ea31'; }
+.qoder-icon--chrome-close::before { content: '\ea32'; }
+.qoder-icon--chrome-maximize::before { content: '\ea33'; }
+.qoder-icon--chrome-minimize::before { content: '\ea34'; }
+.qoder-icon--chrome-restore::before { content: '\ea35'; }
+.qoder-icon--circle-filled::before { content: '\ea36'; }
+.qoder-icon--circle-outline::before { content: '\ea37'; }
+.qoder-icon--circle-slash::before { content: '\ea38'; }
+.qoder-icon--clear-all::before { content: '\ea39'; }
+.qoder-icon--clippy::before { content: '\ea3a'; }
+.qoder-icon--clock::before { content: '\ea3b'; }
+.qoder-icon--close::before { content: '\ea3c'; }
+.qoder-icon--close-all::before { content: '\ea3d'; }
+.qoder-icon--cloud::before { content: '\ea3e'; }
+.qoder-icon--cloud-download::before { content: '\ea3f'; }
+.qoder-icon--cloud-upload::before { content: '\ea40'; }
+.qoder-icon--code::before { content: '\ea41'; }
+.qoder-icon--coffee::before { content: '\ea42'; }
+.qoder-icon--color-mode::before { content: '\ea43'; }
+.qoder-icon--comment::before { content: '\ea44'; }
+.qoder-icon--comment-discussion::before { content: '\ea45'; }
+.qoder-icon--compare-changes::before { content: '\ea46'; }
+.qoder-icon--compass::before { content: '\ea47'; }
+.qoder-icon--copy::before { content: '\ea48'; }
+.qoder-icon--credit-card::before { content: '\ea49'; }
+.qoder-icon--cut::before { content: '\ea4a'; }
+.qoder-icon--dashboard::before { content: '\ea4b'; }
+.qoder-icon--database::before { content: '\ea4c'; }
+.qoder-icon--debug::before { content: '\ea4d'; }
+.qoder-icon--debug-alt::before { content: '\ea4e'; }
+.qoder-icon--debug-breakpoint::before { content: '\ea4f'; }
+.qoder-icon--debug-breakpoint-conditional::before { content: '\ea50'; }
+.qoder-icon--debug-breakpoint-data::before { content: '\ea51'; }
+.qoder-icon--debug-breakpoint-function::before { content: '\ea52'; }
+.qoder-icon--debug-breakpoint-log::before { content: '\ea53'; }
+.qoder-icon--debug-continue::before { content: '\ea54'; }
+.qoder-icon--debug-disconnect::before { content: '\ea55'; }
+.qoder-icon--debug-pause::before { content: '\ea56'; }
+.qoder-icon--debug-restart::before { content: '\ea57'; }
+.qoder-icon--debug-start::before { content: '\ea58'; }
+.qoder-icon--debug-step-back::before { content: '\ea59'; }
+.qoder-icon--debug-step-into::before { content: '\ea5a'; }
+.qoder-icon--debug-step-out::before { content: '\ea5b'; }
+.qoder-icon--debug-step-over::before { content: '\ea5c'; }
+.qoder-icon--debug-stop::before { content: '\ea5d'; }
+.qoder-icon--desktop-download::before { content: '\ea5e'; }
+.qoder-icon--device-camera::before { content: '\ea5f'; }
+.qoder-icon--device-camera-video::before { content: '\ea60'; }
+.qoder-icon--device-desktop::before { content: '\ea61'; }
+.qoder-icon--device-mobile::before { content: '\ea62'; }
+.qoder-icon--diff::before { content: '\ea63'; }
+.qoder-icon--diff-added::before { content: '\ea64'; }
+.qoder-icon--diff-ignored::before { content: '\ea65'; }
+.qoder-icon--diff-modified::before { content: '\ea66'; }
+.qoder-icon--diff-removed::before { content: '\ea67'; }
+.qoder-icon--diff-renamed::before { content: '\ea68'; }
+.qoder-icon--discard::before { content: '\ea69'; }
+.qoder-icon--edit::before { content: '\ea6f'; }
+.qoder-icon--editor-layout::before { content: '\ea70'; }
+.qoder-icon--ellipsis::before { content: '\ea71'; }
+.qoder-icon--empty-window::before { content: '\ea72'; }
+.qoder-icon--error::before { content: '\ea73'; }
+.qoder-icon--exclude::before { content: '\ea74'; }
+.qoder-icon--expand-all::before { content: '\ea75'; }
+.qoder-icon--export::before { content: '\ea76'; }
+.qoder-icon--extensions::before { content: '\ea77'; }
+.qoder-icon--eye::before { content: '\ea78'; }
+.qoder-icon--eye-closed::before { content: '\ea79'; }
+.qoder-icon--feedback::before { content: '\ea7a'; }
+.qoder-icon--file::before { content: '\ea7b'; }
+.qoder-icon--file-add::before { content: '\ea7c'; }
+.qoder-icon--file-binary::before { content: '\ea7d'; }
+.qoder-icon--file-code::before { content: '\ea7e'; }
+.qoder-icon--file-media::before { content: '\ea80'; }
+.qoder-icon--file-pdf::before { content: '\ea81'; }
+.qoder-icon--file-submodule::before { content: '\ea82'; }
+.qoder-icon--file-symlink-directory::before { content: '\ea83'; }
+.qoder-icon--file-symlink-file::before { content: '\ea84'; }
+.qoder-icon--file-text::before { content: '\ea85'; }
+.qoder-icon--file-zip::before { content: '\ea86'; }
+.qoder-icon--files::before { content: '\ea87'; }
+.qoder-icon--filter::before { content: '\ea88'; }
+.qoder-icon--filter-filled::before { content: '\ea89'; }
+.qoder-icon--find-replace::before { content: '\ea8a'; }
+.qoder-icon--flag::before { content: '\ea8b'; }
+.qoder-icon--folder::before { content: '\ea8c'; }
+.qoder-icon--folder-active::before { content: '\ea8d'; }
+.qoder-icon--folder-add::before { content: '\ea8e'; }
+.qoder-icon--folder-opened::before { content: '\ea8f'; }
+.qoder-icon--fold-down::before { content: '\ea90'; }
+.qoder-icon--fold-up::before { content: '\ea91'; }
+.qoder-icon--gather::before { content: '\ea92'; }
+.qoder-icon--gear::before { content: '\ea93'; }
+.qoder-icon--gift::before { content: '\ea94'; }
+.qoder-icon--git-branch::before { content: '\ea95'; }
+.qoder-icon--git-commit::before { content: '\ea96'; }
+.qoder-icon--git-compare::before { content: '\ea97'; }
+.qoder-icon--git-fetch::before { content: '\ea98'; }
+.qoder-icon--git-merge::before { content: '\ea99'; }
+.qoder-icon--git-pull-request::before { content: '\ea9a'; }
+.qoder-icon--github::before { content: '\ea9b'; }
+.qoder-icon--github-action::before { content: '\ea9c'; }
+.qoder-icon--github-inverted::before { content: '\ea9d'; }
+.qoder-icon--globe::before { content: '\ea9e'; }
+.qoder-icon--go-to-file::before { content: '\ea9f'; }
+.qoder-icon--grabber::before { content: '\eaa0'; }
+.qoder-icon--graph::before { content: '\eaa1'; }
+.qoder-icon--graph-left::before { content: '\eaa2'; }
+.qoder-icon--gripper::before { content: '\eaa3'; }
+.qoder-icon--group-by-ref-type::before { content: '\eaa4'; }
+.qoder-icon--heart::before { content: '\eaa5'; }
+.qoder-icon--history::before { content: '\eaa6'; }
+.qoder-icon--home::before { content: '\eaa7'; }
+.qoder-icon--horizontal-rule::before { content: '\eaa8'; }
+.qoder-icon--hubot::before { content: '\eaa9'; }
+.qoder-icon--inbox::before { content: '\eaaa'; }
+.qoder-icon--info::before { content: '\eaab'; }
+.qoder-icon--insert::before { content: '\eaac'; }
+.qoder-icon--inspect::before { content: '\eaad'; }
+.qoder-icon--issue-closed::before { content: '\eaae'; }
+.qoder-icon--issue-reopened::before { content: '\eaaf'; }
+.qoder-icon--issues::before { content: '\eab0'; }
+.qoder-icon--italic::before { content: '\eab1'; }
+.qoder-icon--jersey::before { content: '\eab2'; }
+.qoder-icon--json::before { content: '\eab3'; }
+.qoder-icon--kebab-horizontal::before { content: '\eab4'; }
+.qoder-icon--kebab-vertical::before { content: '\eab5'; }
+.qoder-icon--key::before { content: '\eab6'; }
+.qoder-icon--keyboard::before { content: '\eab7'; }
+.qoder-icon--law::before { content: '\eab8'; }
+.qoder-icon--layout::before { content: '\eab9'; }
+.qoder-icon--layout-activitybar-left::before { content: '\eaba'; }
+.qoder-icon--layout-activitybar-right::before { content: '\eabb'; }
+.qoder-icon--layout-centered::before { content: '\eabc'; }
+.qoder-icon--layout-editor-left::before { content: '\eabd'; }
+.qoder-icon--layout-editor-right::before { content: '\eabe'; }
+.qoder-icon--layout-menubar::before { content: '\eabf'; }
+.qoder-icon--layout-panel::before { content: '\eac0'; }
+.qoder-icon--layout-panel-bottom::before { content: '\eac1'; }
+.qoder-icon--layout-panel-left::before { content: '\eac2'; }
+.qoder-icon--layout-panel-right::before { content: '\eac3'; }
+.qoder-icon--layout-sidebar-left::before { content: '\eac4'; }
+.qoder-icon--layout-sidebar-right::before { content: '\eac5'; }
+.qoder-icon--layout-statusbar::before { content: '\eac6'; }
+.qoder-icon--layout-tray::before { content: '\eac7'; }
+.qoder-icon--library::before { content: '\eac8'; }
+.qoder-icon--lightbulb::before { content: '\eac9'; }
+.qoder-icon--lightbulb-autofix::before { content: '\eaca'; }
+.qoder-icon--link::before { content: '\eacb'; }
+.qoder-icon--list-filter::before { content: '\eacc'; }
+.qoder-icon--list-flat::before { content: '\eacd'; }
+.qoder-icon--list-ordered::before { content: '\eace'; }
+.qoder-icon--list-selection::before { content: '\eacf'; }
+.qoder-icon--list-tree::before { content: '\ead0'; }
+.qoder-icon--list-unordered::before { content: '\ead1'; }
+.qoder-icon--live-share::before { content: '\ead2'; }
+.qoder-icon--loading::before { content: '\ead3'; }
+.qoder-icon--location::before { content: '\ead4'; }
+.qoder-icon--lock::before { content: '\ead5'; }
+.qoder-icon--log-in::before { content: '\ead6'; }
+.qoder-icon--log-out::before { content: '\ead7'; }
+.qoder-icon--mail::before { content: '\ead8'; }
+.qoder-icon--mail-read::before { content: '\ead9'; }
+.qoder-icon--map::before { content: '\eada'; }
+.qoder-icon--map-filled::before { content: '\eadb'; }
+.qoder-icon--markdown::before { content: '\eadc'; }
+.qoder-icon--megaphone::before { content: '\eadd'; }
+.qoder-icon--mention::before { content: '\eade'; }
+.qoder-icon--menu::before { content: '\eadf'; }
+.qoder-icon--merge::before { content: '\eae0'; }
+.qoder-icon--microscope::before { content: '\eae1'; }
+.qoder-icon--milestone::before { content: '\eae2'; }
+.qoder-icon--mirror::before { content: '\eae3'; }
+.qoder-icon--more::before { content: '\eae4'; }
+.qoder-icon--mortar-board::before { content: '\eae5'; }
+.qoder-icon--move::before { content: '\eae6'; }
+.qoder-icon--multiple-windows::before { content: '\eae7'; }
+.qoder-icon--mute::before { content: '\eae8'; }
+.qoder-icon--new-file::before { content: '\eae9'; }
+.qoder-icon--new-folder::before { content: '\eaea'; }
+.qoder-icon--no-edit::before { content: '\eaeb'; }
+.qoder-icon--notebook::before { content: '\eaec'; }
+.qoder-icon--notebook-template::before { content: '\eaed'; }
+.qoder-icon--note::before { content: '\eaee'; }
+.qoder-icon--octoface::before { content: '\eaef'; }
+.qoder-icon--open-preview::before { content: '\eaf0'; }
+.qoder-icon--organization::before { content: '\eaf1'; }
+.qoder-icon--output::before { content: '\eaf2'; }
+.qoder-icon--package::before { content: '\eaf3'; }
+.qoder-icon--paintcan::before { content: '\eaf4'; }
+.qoder-icon--panel-left::before { content: '\eaf5'; }
+.qoder-icon--panel-right::before { content: '\eaf6'; }
+.qoder-icon--pass::before { content: '\eaf7'; }
+.qoder-icon--paste::before { content: '\eaf8'; }
+.qoder-icon--pause::before { content: '\eaf9'; }
+.qoder-icon--pencil::before { content: '\eafa'; }
+.qoder-icon--person::before { content: '\eafb'; }
+.qoder-icon--person-add::before { content: '\eafc'; }
+.qoder-icon--person-filled::before { content: '\eafd'; }
+.qoder-icon--phone::before { content: '\eafe'; }
+.qoder-icon--pie-chart::before { content: '\eaff'; }
+.qoder-icon--pin::before { content: '\eb00'; }
+.qoder-icon--pinned::before { content: '\eb01'; }
+.qoder-icon--pinned-dirty::before { content: '\eb02'; }
+.qoder-icon--play::before { content: '\eb03'; }
+.qoder-icon--play-circle::before { content: '\eb04'; }
+.qoder-icon--plug::before { content: '\eb05'; }
+.qoder-icon--plus::before { content: '\eb06'; }
+.qoder-icon--preserve-case::before { content: '\eb07'; }
+.qoder-icon--preview::before { content: '\eb08'; }
+.qoder-icon--primitive-dot::before { content: '\eb09'; }
+.qoder-icon--primitive-square::before { content: '\eb0a'; }
+.qoder-icon--project::before { content: '\eb0b'; }
+.qoder-icon--pull-request::before { content: '\eb0c'; }
+.qoder-icon--pull-request-closed::before { content: '\eb0d'; }
+.qoder-icon--pull-request-create::before { content: '\eb0e'; }
+.qoder-icon--pull-request-draft::before { content: '\eb0f'; }
+.qoder-icon--question::before { content: '\eb10'; }
+.qoder-icon--quote::before { content: '\eb11'; }
+.qoder-icon--radio-tower::before { content: '\eb12'; }
+.qoder-icon--reactions::before { content: '\eb13'; }
+.qoder-icon--record::before { content: '\eb14'; }
+.qoder-icon--record-keys::before { content: '\eb15'; }
+.qoder-icon--redo::before { content: '\eb16'; }
+.qoder-icon--regex::before { content: '\eb17'; }
+.qoder-icon--remote::before { content: '\eb18'; }
+.qoder-icon--remote-explorer::before { content: '\eb19'; }
+.qoder-icon--remove::before { content: '\eb1a'; }
+.qoder-icon--remove-close::before { content: '\eb1b'; }
+.qoder-icon--rename::before { content: '\eb1c'; }
+.qoder-icon--replace::before { content: '\eb1d'; }
+.qoder-icon--replace-all::before { content: '\eb1e'; }
+.qoder-icon--reply::before { content: '\eb1f'; }
+.qoder-icon--repo::before { content: '\eb20'; }
+.qoder-icon--repo-clone::before { content: '\eb21'; }
+.qoder-icon--repo-force-push::before { content: '\eb22'; }
+.qoder-icon--repo-fetch::before { content: '\eb23'; }
+.qoder-icon--repo-pull::before { content: '\eb24'; }
+.qoder-icon--repo-push::before { content: '\eb25'; }
+.qoder-icon--report::before { content: '\eb26'; }
+.qoder-icon--request-changes::before { content: '\eb27'; }
+.qoder-icon--rocket::before { content: '\eb28'; }
+.qoder-icon--root-folder::before { content: '\eb29'; }
+.qoder-icon--root-folder-opened::before { content: '\eb2a'; }
+.qoder-icon--run::before { content: '\eb2b'; }
+.qoder-icon--run-all::before { content: '\eb2c'; }
+.qoder-icon--run-above::before { content: '\eb2d'; }
+.qoder-icon--run-below::before { content: '\eb2e'; }
+.qoder-icon--run-errors::before { content: '\eb2f'; }
+.qoder-icon--run-slow::before { content: '\eb30'; }
+.qoder-icon--save::before { content: '\eb31'; }
+.qoder-icon--save-all::before { content: '\eb32'; }
+.qoder-icon--save-as::before { content: '\eb33'; }
+.qoder-icon--screen-full::before { content: '\eb34'; }
+.qoder-icon--search::before { content: '\eb35'; }
+.qoder-icon--search-fuzzy::before { content: '\eb36'; }
+.qoder-icon--search-stop::before { content: '\eb37'; }
+.qoder-icon--send::before { content: '\eb38'; }
+.qoder-icon--server::before { content: '\eb39'; }
+.qoder-icon--server-environment::before { content: '\eb3a'; }
+.qoder-icon--server-process::before { content: '\eb3b'; }
+.qoder-icon--settings::before { content: '\eb3c'; }
+.qoder-icon--settings-gear::before { content: '\eb3d'; }
+.qoder-icon--shield::before { content: '\eb3e'; }
+.qoder-icon--sign-in::before { content: '\eb3f'; }
+.qoder-icon--sign-out::before { content: '\eb40'; }
+.qoder-icon--smiley::before { content: '\eb41'; }
+.qoder-icon--sort-precedence::before { content: '\eb42'; }
+.qoder-icon--source-control::before { content: '\eb43'; }
+.qoder-icon--sparkle::before { content: '\eb44'; }
+.qoder-icon--speaker-less::before { content: '\eb45'; }
+.qoder-icon--speaker-more::before { content: '\eb46'; }
+.qoder-icon--split-horizontal::before { content: '\eb47'; }
+.qoder-icon--split-vertical::before { content: '\eb48'; }
+.qoder-icon--spreadsheet::before { content: '\eb49'; }
+.qoder-icon--square::before { content: '\eb4a'; }
+.qoder-icon--square-filled::before { content: '\eb4b'; }
+.qoder-icon--stack::before { content: '\eb4c'; }
+.qoder-icon--star::before { content: '\eb4d'; }
+.qoder-icon--star-empty::before { content: '\eb4e'; }
+.qoder-icon--star-full::before { content: '\eb4f'; }
+.qoder-icon--star-half::before { content: '\eb50'; }
+.qoder-icon--stop::before { content: '\eb51'; }
+.qoder-icon--stop-circle::before { content: '\eb52'; }
+.qoder-icon--symbol-array::before { content: '\eb53'; }
+.qoder-icon--symbol-boolean::before { content: '\eb54'; }
+.qoder-icon--symbol-class::before { content: '\eb55'; }
+.qoder-icon--symbol-color::before { content: '\eb56'; }
+.qoder-icon--symbol-constant::before { content: '\eb57'; }
+.qoder-icon--symbol-enum::before { content: '\eb58'; }
+.qoder-icon--symbol-enum-member::before { content: '\eb59'; }
+.qoder-icon--symbol-event::before { content: '\eb5a'; }
+.qoder-icon--symbol-field::before { content: '\eb5b'; }
+.qoder-icon--symbol-file::before { content: '\eb5c'; }
+.qoder-icon--symbol-folder::before { content: '\eb5d'; }
+.qoder-icon--symbol-function::before { content: '\eb5e'; }
+.qoder-icon--symbol-interface::before { content: '\eb5f'; }
+.qoder-icon--symbol-key::before { content: '\eb60'; }
+.qoder-icon--symbol-keyword::before { content: '\eb61'; }
+.qoder-icon--symbol-method::before { content: '\eb62'; }
+.qoder-icon--symbol-misc::before { content: '\eb63'; }
+.qoder-icon--symbol-module::before { content: '\eb64'; }
+.qoder-icon--symbol-namespace::before { content: '\eb65'; }
+.qoder-icon--symbol-null::before { content: '\eb66'; }
+.qoder-icon--symbol-number::before { content: '\eb67'; }
+.qoder-icon--symbol-object::before { content: '\eb68'; }
+.qoder-icon--symbol-operator::before { content: '\eb69'; }
+.qoder-icon--symbol-package::before { content: '\eb6a'; }
+.qoder-icon--symbol-parameter::before { content: '\eb6b'; }
+.qoder-icon--symbol-property::before { content: '\eb6c'; }
+.qoder-icon--symbol-reference::before { content: '\eb6d'; }
+.qoder-icon--symbol-ruler::before { content: '\eb6e'; }
+.qoder-icon--symbol-snippet::before { content: '\eb6f'; }
+.qoder-icon--symbol-string::before { content: '\eb70'; }
+.qoder-icon--symbol-structure::before { content: '\eb71'; }
+.qoder-icon--symbol-text::before { content: '\eb72'; }
+.qoder-icon--symbol-type-parameter::before { content: '\eb73'; }
+.qoder-icon--symbol-unit::before { content: '\eb74'; }
+.qoder-icon--symbol-variable::before { content: '\eb75'; }
+.qoder-icon--sync::before { content: '\eb76'; }
+.qoder-icon--sync-ignored::before { content: '\eb77'; }
+.qoder-icon--table::before { content: '\eb78'; }
+.qoder-icon--tag::before { content: '\eb79'; }
+.qoder-icon--target::before { content: '\eb7a'; }
+.qoder-icon--tasklist::before { content: '\eb7b'; }
+.qoder-icon--telescope::before { content: '\eb7c'; }
+.qoder-icon--terminal::before { content: '\eb7d'; }
+.qoder-icon--terminal-bash::before { content: '\eb7e'; }
+.qoder-icon--terminal-cmd::before { content: '\eb7f'; }
+.qoder-icon--terminal-debian::before { content: '\eb80'; }
+.qoder-icon--terminal-linux::before { content: '\eb81'; }
+.qoder-icon--terminal-powershell::before { content: '\eb82'; }
+.qoder-icon--terminal-tmux::before { content: '\eb83'; }
+.qoder-icon--terminal-ubuntu::before { content: '\eb84'; }
+.qoder-icon--terminal-zsh::before { content: '\eb85'; }
+.qoder-icon--text-size::before { content: '\eb86'; }
+.qoder-icon--three-bars::before { content: '\eb87'; }
+.qoder-icon--thumbsdown::before { content: '\eb88'; }
+.qoder-icon--thumbsup::before { content: '\eb89'; }
+.qoder-icon--tools::before { content: '\eb8a'; }
+.qoder-icon--trash::before { content: '\eb8b'; }
+.qoder-icon--triangle-down::before { content: '\eb8c'; }
+.qoder-icon--triangle-left::before { content: '\eb8d'; }
+.qoder-icon--triangle-right::before { content: '\eb8e'; }
+.qoder-icon--triangle-up::before { content: '\eb8f'; }
+.qoder-icon--twitter::before { content: '\eb90'; }
+.qoder-icon--twitter-inverted::before { content: '\eb91'; }
+.qoder-icon--unlock::before { content: '\eb92'; }
+.qoder-icon--unmute::before { content: '\eb93'; }
+.qoder-icon--unverified::before { content: '\eb94'; }
+.qoder-icon--verified::before { content: '\eb95'; }
+.qoder-icon--versions::before { content: '\eb96'; }
+.qoder-icon--vm::before { content: '\eb97'; }
+.qoder-icon--vm-active::before { content: '\eb98'; }
+.qoder-icon--vm-connect::before { content: '\eb99'; }
+.qoder-icon--vm-outline::before { content: '\eb9a'; }
+.qoder-icon--vm-running::before { content: '\eb9b'; }
+.qoder-icon--wand::before { content: '\eb9c'; }
+.qoder-icon--warning::before { content: '\eb9d'; }
+.qoder-icon--watch::before { content: '\eb9e'; }
+.qoder-icon--whitespace::before { content: '\eb9f'; }
+.qoder-icon--whole-word::before { content: '\eba0'; }
+.qoder-icon--window::before { content: '\eba1'; }
+.qoder-icon--word-wrap::before { content: '\eba2'; }
+.qoder-icon--workspace-trusted::before { content: '\eba3'; }
+.qoder-icon--workspace-untrusted::before { content: '\eba4'; }
+.qoder-icon--zoom-in::before { content: '\eba5'; }
+.qoder-icon--zoom-out::before { content: '\eba6'; }
+
+/* AI 相关图标（Qoder 特有） */
+.qoder-icon--sparkle-filled::before { content: '\eb44'; }
+.qoder-icon--robot::before { content: '\eaa9'; }
+.qoder-icon--ai-chat::before { content: '\ea44'; }
+.qoder-icon--copilot::before { content: '\eac9'; }
+
+/* ============================================================
+   Seti 文件类型图标
+   ============================================================ */
+.qoder-seti {
+  font-family: 'qoder-seti';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: none;
+  letter-spacing: 0;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.qoder-seti--js::before { content: 'J'; }
+.qoder-seti--ts::before { content: 'T'; }
+.qoder-seti--jsx::before { content: 'X'; }
+.qoder-seti--tsx::before { content: 'X'; }
+.qoder-seti--html::before { content: 'H'; }
+.qoder-seti--css::before { content: 'C'; }
+.qoder-seti--json::before { content: 'N'; }
+.qoder-seti--md::before { content: 'M'; }
+.qoder-seti--py::before { content: 'P'; }
+.qoder-seti--go::before { content: 'G'; }
+.qoder-seti--rust::before { content: 'R'; }
+.qoder-seti--java::before { content: 'A'; }
+.qoder-seti--cpp::before { content: 'C'; }
+.qoder-seti--c::before { content: 'C'; }
+.qoder-seti--php::before { content: 'B'; }
+.qoder-seti--ruby::before { content: 'D'; }
+.qoder-seti--swift::before { content: 'S'; }
+.qoder-seti--kotlin::before { content: 'K'; }
+.qoder-seti--vue::before { content: 'V'; }
+.qoder-seti--angular::before { content: 'N'; }
+.qoder-seti--docker::before { content: 'D'; }
+.qoder-seti--git::before { content: 'G'; }
+.qoder-seti--yaml::before { content: 'Y'; }
+.qoder-seti--xml::before { content: 'X'; }
+.qoder-seti--sql::before { content: 'S'; }
+.qoder-seti--sh::before { content: 'S'; }
+.qoder-seti--folder::before { content: 'F'; }
+.qoder-seti--folder-open::before { content: 'O'; }
