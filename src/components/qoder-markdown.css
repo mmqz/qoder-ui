@@ -1,0 +1,935 @@
+/* ============================================================
+   Qoder UI - Markdown 编辑器/渲染样式
+   从 Qoder WorkspaceMarkdownEditor.css 逆向提取
+   基于 Milkdown/ProseMirror 编辑器
+   ============================================================ */
+
+/* ============================================================
+   编辑器容器
+   ============================================================ */
+.qoder-markdown-editor {
+  min-height: 100%;
+  color: var(--text-primary);
+  font-family: var(--qoder-font-sans);
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.qoder-markdown-editor .md-editor {
+  display: flow-root;
+  outline: none;
+  caret-color: transparent;
+}
+
+.qoder-markdown-editor .md-editor-content {
+  position: relative;
+  margin-inline: auto;
+  padding-block: 20px 24px;
+  padding-inline: 24px;
+}
+
+.qoder-markdown-editor .md-editor-a11y-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.qoder-markdown-editor .md-pending-paragraph {
+  min-height: 1em;
+}
+
+/* ============================================================
+   块级元素
+   ============================================================ */
+.qoder-markdown-editor .md-block-active {
+  background: var(--bg-hover);
+  border-radius: 8px;
+  box-shadow: 0 0 0 8px var(--bg-hover);
+}
+
+.qoder-markdown-editor .md-paragraph {
+  margin: 8px 0;
+}
+
+.qoder-markdown-editor .md-paragraph:empty {
+  min-height: 1lh;
+}
+
+.qoder-markdown-editor .md-paragraph:empty.md-block-active {
+  background: transparent;
+  box-shadow: none;
+}
+
+/* 标题 */
+.qoder-markdown-editor .md-heading {
+  color: var(--text-primary);
+  margin: 16px 0 8px;
+  font-weight: 600;
+  position: relative;
+}
+
+.qoder-markdown-editor h1.md-heading {
+  font-size: 20px;
+  line-height: 32px;
+}
+
+.qoder-markdown-editor h2.md-heading {
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.qoder-markdown-editor :is(h3, h4, h5, h6).md-heading {
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.qoder-markdown-editor .md-heading > .md-marker:first-child {
+  position: absolute;
+  right: 100%;
+  white-space: pre;
+  top: 0;
+  font-size: inherit;
+  line-height: inherit;
+  height: 1lh;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  transform: scale(0.85);
+  transform-origin: right center;
+}
+
+/* 引用块 */
+.qoder-markdown-editor .md-blockquote {
+  position: relative;
+  margin: 8px 0;
+  border-left: 2px solid var(--accent);
+  padding-left: 16px;
+  color: var(--text-secondary);
+}
+
+.qoder-markdown-editor .md-blockquote > .md-marker-blockQuoteMarker {
+  position: absolute;
+  right: calc(100% - 16px);
+  top: auto;
+  white-space: pre;
+}
+
+/* 列表 */
+.qoder-markdown-editor .md-list {
+  margin: 8px 0;
+  padding-left: 24px;
+}
+
+.qoder-markdown-editor ul.md-list {
+  list-style-type: disc;
+}
+
+.qoder-markdown-editor ol.md-list {
+  list-style-type: decimal;
+}
+
+.qoder-markdown-editor .md-list li > .md-paragraph {
+  margin: 0;
+}
+
+.qoder-markdown-editor .md-list li > .md-block {
+  margin: 0;
+}
+
+.qoder-markdown-editor .md-list li > .md-block + .md-block {
+  margin-top: 0.25em;
+}
+
+.qoder-markdown-editor .md-list-item-active {
+  list-style: none;
+  position: relative;
+}
+
+.qoder-markdown-editor .md-list-item-active > .md-marker-listItemMarker {
+  position: absolute;
+  right: 100%;
+  top: 0;
+  line-height: inherit;
+  white-space: pre;
+}
+
+.qoder-markdown-editor .md-list-gutter {
+  position: absolute;
+  right: 100%;
+  display: flex;
+  white-space: pre;
+}
+
+/* 任务列表 */
+.qoder-markdown-editor .md-task-list-item {
+  list-style: none;
+  position: relative;
+  --md-task-marker-width: 1.75em;
+}
+
+.qoder-markdown-editor .md-task-list-item .md-paragraph > .md-glue:first-child {
+  display: inline-block;
+  width: var(--md-task-marker-width);
+}
+
+.qoder-markdown-editor .md-task-list-item > .md-block + .md-block {
+  padding-left: var(--md-task-marker-width);
+}
+
+.qoder-markdown-editor .md-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  margin: 0;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--border-strong);
+  border-radius: 3px;
+  position: absolute;
+  left: 0;
+  top: 0.25em;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.qoder-markdown-editor .md-checkbox:checked {
+  background-color: var(--accent);
+  border-color: var(--accent);
+}
+
+.qoder-markdown-editor .md-checkbox:checked::after {
+  content: "";
+  position: absolute;
+  left: 2.5px;
+  top: -1px;
+  width: 5px;
+  height: 9px;
+  border: solid var(--text-on-accent);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.qoder-markdown-editor .md-checkbox:hover {
+  border-color: var(--text-tertiary);
+}
+
+.qoder-markdown-editor .md-checkbox:checked:hover {
+  background-color: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+.qoder-markdown-editor .md-checkbox:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+/* 代码块 */
+.qoder-markdown-editor .md-code-block,
+.qoder-markdown-editor .md-math-block,
+.qoder-markdown-editor .md-unhandled-block {
+  margin: 8px 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-surface);
+  padding: 12px 16px;
+  overflow-x: auto;
+}
+
+.qoder-markdown-editor .md-unhandled-block {
+  border-color: var(--warning);
+}
+
+.qoder-markdown-editor .md-code-block code,
+.qoder-markdown-editor .md-math-block code,
+.qoder-markdown-editor code {
+  font-family: var(--qoder-font-mono);
+  font-size: 12px;
+  line-height: 20px;
+}
+
+.qoder-markdown-editor :not(pre) > code {
+  border-radius: 4px;
+  background: var(--bg-surface);
+  padding: 2px 4px;
+  color: var(--text-primary);
+}
+
+.qoder-markdown-editor .md-fence-spacer {
+  visibility: hidden;
+  font-family: var(--qoder-font-mono);
+  font-size: 0.85em;
+}
+
+/* 表格 */
+.qoder-markdown-editor .md-table-wrapper {
+  margin: 8px 0;
+  overflow-x: auto;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.qoder-markdown-editor .md-table {
+  width: auto;
+  border-collapse: collapse;
+}
+
+.qoder-markdown-editor .md-table :is(th, td) {
+  border: 1px solid var(--border);
+  padding: 6px 12px;
+  text-align: left;
+}
+
+.qoder-markdown-editor .md-table th {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.qoder-markdown-editor .md-table.md-block-active :is(th, td) {
+  border-color: transparent;
+  background: transparent;
+}
+
+.qoder-markdown-editor .md-table-delimiter-row {
+  display: none;
+}
+
+.qoder-markdown-editor .md-block-active .md-table-delimiter-row {
+  display: table-row;
+}
+
+.qoder-markdown-editor .md-table-delimiter-row td {
+  padding: 0;
+  font-size: 11px;
+  line-height: 1;
+  height: 16px;
+}
+
+.qoder-markdown-editor .md-table-wrapper:has(> .md-table.md-block-active) {
+  background: var(--bg-hover);
+  border-radius: 8px;
+  box-shadow: 0 0 0 8px var(--bg-hover);
+}
+
+/* 分割线 */
+.qoder-markdown-editor .md-thematic-break {
+  margin: 16px 0;
+  border: 0;
+  border-top: 1px solid var(--border);
+}
+
+.qoder-markdown-editor .md-thematic-break-source {
+  display: inline-block;
+  color: var(--text-tertiary);
+  font-family: var(--qoder-font-mono);
+  font-size: 0.85em;
+  white-space: pre-wrap;
+}
+
+/* 链接 */
+.qoder-markdown-editor a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.qoder-markdown-editor a:hover {
+  text-decoration: underline;
+}
+
+/* ============================================================
+   标记符号（编辑模式显示）
+   ============================================================ */
+.qoder-markdown-editor .md-marker {
+  color: var(--text-tertiary);
+  font-family: var(--qoder-font-mono);
+  font-size: 0.85em;
+  display: inline;
+  overflow: hidden;
+  max-width: 100px;
+  opacity: 1;
+  line-height: 1;
+}
+
+.qoder-markdown-editor .md-marker-hidden {
+  display: none;
+}
+
+.qoder-markdown-editor .md-marker-checkbox.md-marker-hidden,
+.qoder-markdown-editor .md-marker-openFence.md-marker-hidden,
+.qoder-markdown-editor .md-marker-closeFence.md-marker-hidden {
+  display: inline;
+  visibility: hidden;
+}
+
+/* ============================================================
+   空白字符显示
+   ============================================================ */
+.qoder-markdown-editor .md-ws-space,
+.qoder-markdown-editor .md-ws-tab {
+  position: relative;
+  white-space: pre;
+}
+
+.qoder-markdown-editor .md-ws-space::before,
+.qoder-markdown-editor .md-ws-tab::before {
+  position: absolute;
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: var(--text-tertiary);
+  pointer-events: none;
+}
+
+.qoder-markdown-editor .md-ws-space::before {
+  content: "·";
+}
+
+.qoder-markdown-editor .md-ws-tab::before {
+  content: "⇥";
+}
+
+.qoder-markdown-editor .md-ws-newline::before {
+  content: "↵";
+  color: var(--text-tertiary);
+  pointer-events: none;
+}
+
+.qoder-markdown-editor .md-ws-newline-glyph {
+  color: var(--text-tertiary);
+}
+
+.qoder-markdown-editor .md-ws-blockbreak-glyph,
+.qoder-markdown-editor .md-hardbreak-src {
+  color: var(--info);
+}
+
+/* ============================================================
+   光标和选区
+   ============================================================ */
+.qoder-markdown-editor .md-cursor {
+  position: absolute;
+  width: 2px;
+  background: var(--text-primary);
+  pointer-events: none;
+}
+
+.qoder-markdown-editor .md-editor:not(.md-focused) .md-cursor {
+  visibility: hidden;
+}
+
+.qoder-markdown-editor .md-editor.md-focused .md-cursor {
+  animation: md-cursor-blink 1s step-end infinite;
+}
+
+.qoder-markdown-editor .md-editor.md-readonly .md-cursor {
+  visibility: hidden;
+}
+
+@keyframes md-cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.qoder-markdown-editor .md-selection-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.qoder-markdown-editor .md-selection-path {
+  fill: var(--accent-bg);
+}
+
+/* ============================================================
+   行号标记（Git 变更）
+   ============================================================ */
+.qoder-markdown-editor .md-gutter-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.qoder-markdown-editor .md-gutter-marker {
+  position: absolute;
+  left: 18px;
+  width: 3px;
+  border-radius: 2px;
+}
+
+.qoder-markdown-editor .md-gutter-marker-added {
+  background: var(--success);
+}
+
+.qoder-markdown-editor .md-gutter-marker-modified {
+  background: var(--info);
+}
+
+.qoder-markdown-editor .md-gutter-marker-deleted {
+  width: 0;
+  height: 0;
+  border-radius: 0;
+  border-left: 3px solid var(--error);
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  transform: translateY(-4px);
+}
+
+/* ============================================================
+   只读/编辑切换开关
+   ============================================================ */
+.qoder-markdown-editor .md-readonly-toggle-host {
+  position: sticky;
+  top: 0;
+  width: calc(100% + var(--md-editor-content-inline-end-padding, 0px));
+  height: 0;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.qoder-markdown-editor .md-readonly-toggle {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  pointer-events: auto;
+  display: inline-grid;
+  grid-template-columns: repeat(2, 24px);
+  align-items: center;
+  justify-items: center;
+  gap: 2px;
+  box-sizing: border-box;
+  width: 58px;
+  height: 32px;
+  padding: 3px;
+  overflow: hidden;
+  direction: ltr;
+  appearance: none;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.qoder-markdown-editor .md-readonly-toggle:hover {
+  border-color: var(--border-strong);
+  background: var(--bg-hover);
+  box-shadow: var(--qoder-shadow-md);
+}
+
+.qoder-markdown-editor .md-readonly-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.qoder-markdown-editor .md-readonly-toggle .md-readonly-toggle-indicator {
+  position: absolute;
+  top: 50%;
+  left: 3px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: var(--qoder-shadow-sm);
+  transform: translate(26px, -50%);
+  transition: background-color 0.12s ease, transform 0.16s ease;
+}
+
+.qoder-markdown-editor .md-readonly-toggle.md-readonly-toggle-locked .md-readonly-toggle-indicator {
+  transform: translateY(-50%);
+}
+
+.qoder-markdown-editor .md-readonly-toggle .md-readonly-toggle-icon {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 16px;
+  height: 16px;
+  color: var(--text-secondary);
+  opacity: 0.62;
+  pointer-events: none;
+  transition: color 0.12s ease, opacity 0.12s ease;
+}
+
+.qoder-markdown-editor .md-readonly-toggle:not(.md-readonly-toggle-locked) .md-readonly-toggle-icon-editing,
+.qoder-markdown-editor .md-readonly-toggle.md-readonly-toggle-locked .md-readonly-toggle-icon-locked {
+  color: var(--text-on-accent);
+  opacity: 1;
+}
+
+/* 光泽动画 */
+.qoder-markdown-editor .md-readonly-toggle::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  top: -8px;
+  bottom: -8px;
+  left: -30px;
+  width: 24px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.16) 24%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0.16) 76%, transparent);
+  box-shadow: 0 0 8px 2px rgba(255,255,255,0.3);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.qoder-markdown-editor .md-readonly-toggle.md-readonly-toggle-shine::after {
+  animation: md-readonly-toggle-shine 2s linear;
+  will-change: transform, opacity;
+}
+
+@keyframes md-readonly-toggle-shine {
+  0% { transform: translateX(0); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateX(120px); opacity: 0; }
+}
+
+.qoder-markdown-editor .md-editor.md-readonly-editing-attempt {
+  animation: md-readonly-editing-attempt 0.3s ease-out;
+}
+
+@keyframes md-readonly-editing-attempt {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+/* ============================================================
+   查找替换小部件
+   ============================================================ */
+.qoder-markdown-editor .md-find-widget-host {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  height: 0;
+  justify-content: flex-end;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.qoder-markdown-editor .md-find-widget-host[hidden] {
+  display: none;
+}
+
+.qoder-markdown-editor .md-editor.md-find-visible .md-find-widget-host {
+  height: auto;
+}
+
+.qoder-markdown-editor .md-find-widget {
+  display: flex;
+  box-sizing: border-box;
+  width: min(420px, calc(100% - 8px));
+  margin: 4px 4px 0 0;
+  padding: 3px 4px;
+  align-self: flex-start;
+  flex: none;
+  flex-direction: column;
+  gap: 0;
+  color: var(--text-secondary);
+  background: var(--bg-popup);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--qoder-shadow-lg);
+  font: inherit;
+  pointer-events: auto;
+}
+
+.qoder-markdown-editor .md-find-row {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 2px;
+}
+
+.qoder-markdown-editor .md-find-input-shell {
+  display: flex;
+  box-sizing: border-box;
+  height: 26px;
+  min-width: 0;
+  flex: 1 1 auto;
+  align-items: center;
+  color: var(--text-primary);
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+.qoder-markdown-editor .md-find-input-shell:focus-within {
+  border-color: var(--accent);
+  outline: 1px solid var(--accent);
+  outline-offset: -1px;
+}
+
+.qoder-markdown-editor .md-find-input-shell.md-find-input-invalid {
+  border-color: var(--error);
+  outline-color: var(--error);
+}
+
+.qoder-markdown-editor .md-find-input {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 48px;
+  height: 24px;
+  min-height: 24px;
+  max-height: 80px;
+  margin: 0;
+  padding: 2px 4px;
+  flex: 1 1 auto;
+  resize: none;
+  overflow: auto;
+  color: inherit;
+  caret-color: var(--text-primary);
+  background: transparent;
+  border: 0;
+  border-radius: inherit;
+  outline: 0;
+  font: inherit;
+  line-height: 20px;
+}
+
+.qoder-markdown-editor .md-find-input::placeholder {
+  color: var(--text-placeholder);
+  opacity: 1;
+}
+
+.qoder-markdown-editor .md-find-options {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0;
+  padding-right: 1px;
+}
+
+.qoder-markdown-editor .md-find-button {
+  display: inline-flex;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  font: inherit;
+  flex: 0 0 24px;
+  cursor: pointer;
+}
+
+.qoder-markdown-editor .md-find-button:hover:not(:disabled) {
+  background: var(--bg-hover);
+}
+
+.qoder-markdown-editor .md-find-button:disabled {
+  color: var(--text-tertiary);
+  cursor: default;
+}
+
+.qoder-markdown-editor .md-find-option {
+  width: 24px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: -0.04em;
+}
+
+.qoder-markdown-editor .md-find-option-active {
+  color: var(--accent);
+  background: var(--accent-bg);
+  border-color: var(--accent);
+}
+
+.qoder-markdown-editor .md-find-count {
+  min-width: 54px;
+  padding-inline: 2px;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+  line-height: 22px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.qoder-markdown-editor .md-find-error {
+  padding: 2px 6px 3px;
+  color: var(--error);
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.qoder-markdown-editor .md-find-no-results .md-find-count {
+  color: var(--error);
+}
+
+/* 查找高亮层 */
+.qoder-markdown-editor .md-find-highlight-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.qoder-markdown-editor .md-find-match-rect,
+.qoder-markdown-editor .md-find-current-rect {
+  position: absolute;
+  border-radius: 2px;
+}
+
+.qoder-markdown-editor .md-find-match-rect {
+  background: transparent;
+  outline: 1px solid var(--warning);
+  outline-offset: -1px;
+}
+
+.qoder-markdown-editor .md-find-current-rect {
+  background: transparent;
+  outline: 2px solid var(--accent);
+  outline-offset: -1px;
+}
+
+/* ============================================================
+   未处理块
+   ============================================================ */
+.qoder-markdown-editor .md-unhandled-block {
+  margin: 0.5em 0;
+  border: 1px dashed var(--warning);
+  border-radius: 4px;
+}
+
+.qoder-markdown-editor pre.md-unhandled-scroll.md-code-block {
+  margin: 0;
+  border: 0;
+  border-radius: 4px;
+}
+
+/* ============================================================
+   渲染模式（非编辑）简化样式
+   ============================================================ */
+.qoder-markdown-render {
+  color: var(--text-primary);
+  font-family: var(--qoder-font-sans);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.qoder-markdown-render h1 {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 24px 0 12px;
+  color: var(--text-primary);
+}
+
+.qoder-markdown-render h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 20px 0 10px;
+  color: var(--text-primary);
+}
+
+.qoder-markdown-render h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 16px 0 8px;
+  color: var(--text-primary);
+}
+
+.qoder-markdown-render p {
+  margin: 8px 0;
+}
+
+.qoder-markdown-render a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.qoder-markdown-render a:hover {
+  text-decoration: underline;
+}
+
+.qoder-markdown-render blockquote {
+  margin: 8px 0;
+  border-left: 2px solid var(--accent);
+  padding-left: 16px;
+  color: var(--text-secondary);
+}
+
+.qoder-markdown-render ul,
+.qoder-markdown-render ol {
+  margin: 8px 0;
+  padding-left: 24px;
+}
+
+.qoder-markdown-render li {
+  margin: 2px 0;
+}
+
+.qoder-markdown-render code {
+  font-family: var(--qoder-font-mono);
+  font-size: 12px;
+  background: var(--bg-surface);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.qoder-markdown-render pre {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  overflow-x: auto;
+  margin: 8px 0;
+}
+
+.qoder-markdown-render pre code {
+  background: transparent;
+  padding: 0;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.qoder-markdown-render table {
+  border-collapse: collapse;
+  margin: 8px 0;
+  width: 100%;
+}
+
+.qoder-markdown-render th,
+.qoder-markdown-render td {
+  border: 1px solid var(--border);
+  padding: 6px 12px;
+  text-align: left;
+}
+
+.qoder-markdown-render th {
+  background: var(--bg-surface);
+  font-weight: 600;
+}
+
+.qoder-markdown-render hr {
+  margin: 16px 0;
+  border: 0;
+  border-top: 1px solid var(--border);
+}
+
+.qoder-markdown-render img {
+  max-width: 100%;
+  border-radius: 8px;
+}
+
+.qoder-markdown-render input[type="checkbox"] {
+  margin-right: 6px;
+  accent-color: var(--accent);
+}
