@@ -2,10 +2,13 @@
    原汁原味的 Qoder 前端风格原生组件库
    从 Qoder v0.1.6 反编译提取设计语言
 */
-
 @import './themes/qoder-themes.css';
 @import './styles/base.css';
 @import './components/qoder-components.css';
 @import './components/qoder-advanced.css';
 @import './components/qoder-icons.css';
 @import './components/qoder-markdown.css';
+@import './components/qoder-chat.css';
+@import './components/qoder-panels.css';
+@import './components/qoder-extras.css';
+@import './components/qoder-viz.css';

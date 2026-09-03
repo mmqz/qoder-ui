@@ -1,0 +1,1330 @@
+/* ============================================================
+   Qoder Forms - 表单组件补全
+   Select / Radio / DatePicker / Slider / Upload / ColorPicker
+   ============================================================ */
+
+/* ---------- Select 下拉选择 ---------- */
+.qoder-select {
+  position: relative;
+  display: inline-block;
+  min-width: 180px;
+}
+
+.qoder-select__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 7px 12px;
+  background: var(--bg-surface, #fff);
+  border: 1px solid var(--border, #e4e3dd);
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--text-primary, #1a1b1c);
+  cursor: pointer;
+  transition: all 0.15s;
+  user-select: none;
+}
+
+.qoder-select__trigger:hover {
+  border-color: var(--text-tertiary, #9ca3af);
+}
+
+.qoder-select--open .qoder-select__trigger,
+.qoder-select__trigger:focus {
+  border-color: var(--accent, #358e62);
+  box-shadow: 0 0 0 3px var(--accent-bg, rgba(53, 142, 98, 0.1));
+  outline: none;
+}
+
+.qoder-select__value {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.qoder-select__value--placeholder {
+  color: var(--text-tertiary, #9ca3af);
+}
+
+.qoder-select__chevron {
+  font-size: 10px;
+  color: var(--text-tertiary, #9ca3af);
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+
+.qoder-select--open .qoder-select__chevron {
+  transform: rotate(180deg);
+}
+
+.qoder-select__dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: var(--bg-surface, #fff);
+  border: 1px solid var(--border, #e4e3dd);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  padding: 4px;
+  max-height: 240px;
+  overflow-y: auto;
+  z-index: 100;
+  display: none;
+  animation: qoder-select-in 0.15s ease;
+}
+
+.qoder-select--open .qoder-select__dropdown {
+  display: block;
+}
+
+@keyframes qoder-select-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.qoder-select__option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: 5px;
+  font-size: 13px;
+  color: var(--text-primary, #1a1b1c);
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.qoder-select__option:hover {
+  background: var(--bg-tertiary, #f0efeb);
+}
+
+.qoder-select__option--selected {
+  background: var(--accent-bg, rgba(53, 142, 98, 0.1));
+  color: var(--accent, #358e62);
+  font-weight: 500;
+}
+
+.qoder-select__option-check {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--accent, #358e62);
+}
+
+.qoder-select__option--disabled {
+  color: var(--text-tertiary, #9ca3af);
+  cursor: not-allowed;
+}
+
+.qoder-select__option--disabled:hover {
+  background: transparent;
+}
+
+/* ---------- Radio 单选框 ---------- */
+.qoder-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.qoder-radio-group--inline {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.qoder-radio {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text-primary, #1a1b1c);
+  user-select: none;
+}
+
+.qoder-radio input {
+  display: none;
+}
+
+.qoder-radio__circle {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--border, #e4e3dd);
+  border-radius: 50%;
+  flex-shrink: 0;
+  position: relative;
+  transition: all 0.15s;
+}
+
+.qoder-radio:hover .qoder-radio__circle {
+  border-color: var(--accent, #358e62);
+}
+
+.qoder-radio input:checked + .qoder-radio__circle {
+  border-color: var(--accent, #358e62);
+}
+
+.qoder-radio input:checked + .qoder-radio__circle::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  background: var(--accent, #358e62);
+  border-radius: 50%;
+}
+
+.qoder-radio input:disabled + .qoder-radio__circle {
+  border-color: var(--border-subtle, #e4e3dd);
+  background: var(--bg-tertiary, #f0efeb);
+}
+
+.qoder-radio--disabled {
+  color: var(--text-tertiary, #9ca3af);
+  cursor: not-allowed;
+}
+
+/* ---------- DatePicker 日期选择 ---------- */
+.qoder-datepicker {
+  position: relative;
+  display: inline-block;
+}
+
+.qoder-datepicker__input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  background: var(--bg-surface, #fff);
+  border: 1px solid var(--border, #e4e3dd);
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--text-primary, #1a1b1c);
+  cursor: pointer;
+  transition: all 0.15s;
+  min-width: 160px;
+}
+
+.qoder-datepicker__input:hover {
+  border-color: var(--text-tertiary, #9ca3af);
+}
+
+.qoder-datepicker--open .qoder-datepicker__input {
+  border-color: var(--accent, #358e62);
+  box-shadow: 0 0 0 3px var(--accent-bg, rgba(53, 142, 98, 0.1));
+}
+
+.qoder-datepicker__icon {
+  font-size: 14px;
+  color: var(--text-tertiary, #9ca3af);
+}
+
+.qoder-datepicker__value {
+  flex: 1;
+}
+
+.qoder-datepicker__value--placeholder {
+  color: var(--text-tertiary, #9ca3af);
+}
+
+.qoder-datepicker__clear {
+  font-size: 12px;
+  color: var(--text-tertiary, #9ca3af);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.qoder-datepicker:hover .qoder-datepicker__clear {
+  opacity: 1;
+}
+
+.qoder-datepicker__panel {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  background: var(--bg-surface, #fff);
+  border: 1px solid var(--border, #e4e3dd);
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  padding: 12px;
+  z-index: 100;
+  display: none;
+  width: 280px;
+  animation: qoder-select-in 0.15s ease;
+}
+
+.qoder-datepicker--open .qoder-datepicker__panel {
+  display: block;
+}
+
+.qoder-datepicker__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.qoder-datepicker__nav {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--text-secondary, #6b7280);
+  transition: background 0.15s;
+}
+
+.qoder-datepicker__nav:hover {
+  background: var(--bg-tertiary, #f0efeb);
+}
+
+.qoder-datepicker__title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary, #1a1b1c);
+}
+
+.qoder-datepicker__weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  margin-bottom: 4px;
+}
+
+.qoder-datepicker__weekday {
+  text-align: center;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-tertiary, #9ca3af);
+  padding: 4px 0;
+}
+
+.qoder-datepicker__days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.qoder-datepicker__day {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: var(--text-primary, #1a1b1c);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.1s;
+}
+
+.qoder-datepicker__day:hover {
+  background: var(--bg-tertiary, #f0efeb);
+}
+
+.qoder-datepicker__day--other {
+  color: var(--text-tertiary, #9ca3af);
+}
+
+.qoder-datepicker__day--today {
+  border: 1px solid var(--accent, #358e62);
+  font-weight: 600;
+}
+
+.qoder-datepicker__day--selected {
+  background: var(--accent, #358e62);
+  color: #fff;
+  font-weight: 600;
+}
+
+.qoder-datepicker__day--selected:hover {
+  background: var(--accent-hover, #2d7a54);
+}
+
+/* ---------- Slider 滑块 ---------- */
+.qoder-slider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.qoder-slider__track {
+  flex: 1;
+  height: 4px;
+  background: var(--bg-tertiary, #f0efeb);
+  border-radius: 2px;
+  position: relative;
+  cursor: pointer;
+}
+
+.qoder-slider__fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background: var(--accent, #358e62);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+.qoder-slider__thumb {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 16px;
+  height: 16px;
+  background: #fff;
+  border: 2px solid var(--accent, #358e62);
+  border-radius: 50%;
+  cursor: grab;
+  transition: box-shadow 0.15s;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+.qoder-slider__thumb:hover,
+.qoder-slider__thumb:active {
+  box-shadow: 0 0 0 4px var(--accent-bg, rgba(53, 142, 98, 0.15));
+}
+
+.qoder-slider__thumb:active {
+  cursor: grabbing;
+}
+
+.qoder-slider__value {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary, #1a1b1c);
+  min-width: 36px;
+  text-align: right;
+  font-family: var(--qoder-font-mono, ui-monospace, monospace);
+}
+
+/* ---------- Upload 上传 ---------- */
+.qoder-upload {
+  border: 2px dashed var(--border, #e4e3dd);
+  border-radius: 10px;
+  padding: 32px 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: var(--bg-surface, #fff);
+}
+
+.qoder-upload:hover,
+.qoder-upload--dragover {
+  border-color: var(--accent, #358e62);
+  background: var(--accent-bg, rgba(53, 142, 98, 0.03));
+}
+
+.qoder-upload__icon {
+  font-size: 32px;
+  color: var(--text-tertiary, #9ca3af);
+  margin-bottom: 10px;
+}
+
+.qoder-upload__title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary, #1a1b1c);
+  margin-bottom: 4px;
+}
+
+.qoder-upload__title span {
+  color: var(--accent, #358e62);
+}
+
+.qoder-upload__desc {
+  font-size: 12px;
+  color: var(--text-tertiary, #9ca3af);
+}
+
+.qoder-upload__file-list {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.qoder-upload__file {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  background: var(--bg-tertiary, #f0efeb);
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+.qoder-upload__file-name {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text-primary, #1a1b1c);
+}
+
+.qoder-upload__file-size {
+  color: var(--text-tertiary, #9ca3af);
+  flex-shrink: 0;
+}
+
+.qoder-upload__file-remove {
+  cursor: pointer;
+  color: var(--text-tertiary, #9ca3af);
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.qoder-upload__file-remove:hover {
+  color: var(--error, #e06c75);
+}
+
+/* ---------- ColorPicker 颜色选择 ---------- */
+.qoder-colorpicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.qoder-colorpicker__swatch {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 2px solid var(--border, #e4e3dd);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.15s;
+}
+
+.qoder-colorpicker__swatch:hover {
+  transform: scale(1.08);
+}
+
+.qoder-colorpicker__swatch input[type="color"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.qoder-colorpicker__value {
+  font-size: 12px;
+  font-family: var(--qoder-font-mono, ui-monospace, monospace);
+  color: var(--text-secondary, #6b7280);
+  text-transform: uppercase;
+}
+
+.qoder-colorpicker__presets {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.qoder-colorpicker__preset {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.15s;
+}
+
+.qoder-colorpicker__preset:hover {
+  transform: scale(1.15);
+}
+
+.qoder-colorpicker__preset--active {
+  border-color: var(--text-primary, #1a1b1c);
+}
+
+/* ============================================================
+   Qoder Terminal - 终端面板 UI
+   ============================================================ */
+
+.qoder-terminal {
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-code, #1e1e1e);
+  border-radius: 8px;
+  overflow: hidden;
+  font-family: var(--qoder-font-mono, ui-monospace, monospace);
+}
+
+.qoder-terminal__tabs {
+  display: flex;
+  align-items: center;
+  background: var(--bg-code-header, #252526);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  padding: 0 4px;
+  min-height: 32px;
+}
+
+.qoder-terminal__tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 12px;
+  height: 32px;
+  font-size: 11px;
+  color: rgba(255,255,255,0.5);
+  cursor: pointer;
+  border-right: 1px solid rgba(255,255,255,0.06);
+  transition: color 0.15s;
+  max-width: 160px;
+}
+
+.qoder-terminal__tab:hover {
+  color: rgba(255,255,255,0.8);
+}
+
+.qoder-terminal__tab--active {
+  background: var(--bg-code, #1e1e1e);
+  color: rgba(255,255,255,0.9);
+}
+
+.qoder-terminal__tab-icon {
+  font-size: 12px;
+}
+
+.qoder-terminal__tab-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.qoder-terminal__tab-close {
+  font-size: 14px;
+  opacity: 0;
+  transition: opacity 0.15s;
+  margin-left: auto;
+}
+
+.qoder-terminal__tab:hover .qoder-terminal__tab-close {
+  opacity: 1;
+}
+
+.qoder-terminal__actions {
+  margin-left: auto;
+  display: flex;
+  gap: 2px;
+  padding: 0 4px;
+}
+
+.qoder-terminal__action {
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.5);
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.15s;
+}
+
+.qoder-terminal__action:hover {
+  background: rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.85);
+}
+
+.qoder-terminal__body {
+  flex: 1;
+  padding: 8px 12px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: #cccccc;
+  overflow-y: auto;
+  min-height: 120px;
+}
+
+.qoder-terminal__line {
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.qoder-terminal__prompt {
+  color: #4ec9b0;
+}
+
+.qoder-terminal__path {
+  color: #569cd6;
+}
+
+.qoder-terminal__command {
+  color: #cccccc;
+}
+
+.qoder-terminal__output {
+  color: #cccccc;
+}
+
+.qoder-terminal__output--error {
+  color: #f48771;
+}
+
+.qoder-terminal__output--success {
+  color: #b5cea8;
+}
+
+.qoder-terminal__output--warning {
+  color: #dcdcaa;
+}
+
+.qoder-terminal__cursor {
+  display: inline-block;
+  width: 7px;
+  height: 14px;
+  background: rgba(255,255,255,0.7);
+  vertical-align: middle;
+  animation: qoder-blink 1s step-end infinite;
+  margin-left: 1px;
+}
+
+.qoder-terminal__split {
+  display: flex;
+  gap: 1px;
+  background: rgba(255,255,255,0.06);
+}
+
+.qoder-terminal__split > .qoder-terminal {
+  flex: 1;
+  border-radius: 0;
+}
+
+/* ============================================================
+   Qoder Notification Center - 通知中心
+   ============================================================ */
+
+.qoder-notification-center {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 360px;
+  height: 100vh;
+  background: var(--bg-surface, #fff);
+  border-left: 1px solid var(--border-subtle, #e4e3dd);
+  box-shadow: -8px 0 24px rgba(0, 0, 0, 0.08);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.qoder-notification-center--open {
+  transform: translateX(0);
+}
+
+.qoder-notification-center__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border-bottom: 1px solid var(--border-subtle, #e4e3dd);
+}
+
+.qoder-notification-center__title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary, #1a1b1c);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.qoder-notification-center__count {
+  background: var(--accent, #358e62);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 10px;
+}
+
+.qoder-notification-center__clear {
+  font-size: 12px;
+  color: var(--text-tertiary, #9ca3af);
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-family: inherit;
+  transition: color 0.15s;
+}
+
+.qoder-notification-center__clear:hover {
+  color: var(--accent, #358e62);
+}
+
+.qoder-notification-center__tabs {
+  display: flex;
+  gap: 0;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--border-subtle, #e4e3dd);
+}
+
+.qoder-notification-center__tab {
+  padding: 8px 12px;
+  font-size: 12px;
+  color: var(--text-secondary, #6b7280);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s;
+  margin-bottom: -1px;
+}
+
+.qoder-notification-center__tab--active {
+  color: var(--accent, #358e62);
+  border-bottom-color: var(--accent, #358e62);
+  font-weight: 600;
+}
+
+.qoder-notification-center__list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+.qoder-notification-item {
+  display: flex;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 6px;
+  background: var(--bg-page, #f4f3ee);
+  border: 1px solid transparent;
+  transition: all 0.15s;
+  cursor: pointer;
+}
+
+.qoder-notification-item:hover {
+  border-color: var(--border, #e4e3dd);
+  background: var(--bg-surface, #fff);
+}
+
+.qoder-notification-item--unread {
+  background: var(--accent-bg, rgba(53, 142, 98, 0.05));
+  border-color: var(--accent-bg, rgba(53, 142, 98, 0.15));
+}
+
+.qoder-notification-item__icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+
+.qoder-notification-item__icon--info { background: var(--info-bg, rgba(79, 169, 143, 0.1)); color: var(--info, #4fa98f); }
+.qoder-notification-item__icon--success { background: var(--success-bg, rgba(82, 196, 26, 0.1)); color: var(--success, #52c41a); }
+.qoder-notification-item__icon--warning { background: var(--warning-bg, rgba(250, 173, 20, 0.1)); color: var(--warning, #faad14); }
+.qoder-notification-item__icon--error { background: var(--error-bg, rgba(224, 108, 117, 0.1)); color: var(--error, #e06c75); }
+
+.qoder-notification-item__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.qoder-notification-item__title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary, #1a1b1c);
+  margin-bottom: 2px;
+}
+
+.qoder-notification-item__desc {
+  font-size: 12px;
+  color: var(--text-secondary, #6b7280);
+  line-height: 1.4;
+}
+
+.qoder-notification-item__time {
+  font-size: 10px;
+  color: var(--text-tertiary, #9ca3af);
+  margin-top: 4px;
+}
+
+.qoder-notification-center__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  text-align: center;
+  color: var(--text-tertiary, #9ca3af);
+}
+
+.qoder-notification-center__empty-icon {
+  font-size: 40px;
+  margin-bottom: 12px;
+  opacity: 0.5;
+}
+
+.qoder-notification-center__empty-text {
+  font-size: 13px;
+}
+
+/* ============================================================
+   Qoder Diff - 代码 Diff 查看器
+   ============================================================ */
+
+.qoder-diff {
+  border: 1px solid var(--border, #e4e3dd);
+  border-radius: 8px;
+  overflow: hidden;
+  font-family: var(--qoder-font-mono, ui-monospace, monospace);
+  font-size: 12.5px;
+}
+
+.qoder-diff__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  background: var(--bg-tertiary, #f0efeb);
+  border-bottom: 1px solid var(--border-subtle, #e4e3dd);
+}
+
+.qoder-diff__filename {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary, #1a1b1c);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.qoder-diff__stats {
+  display: flex;
+  gap: 8px;
+  font-size: 11px;
+}
+
+.qoder-diff__stat--add { color: var(--success, #52c41a); }
+.qoder-diff__stat--del { color: var(--error, #e06c75); }
+
+.qoder-diff__body {
+  overflow-x: auto;
+}
+
+.qoder-diff__table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.qoder-diff__gutter {
+  width: 40px;
+  padding: 1px 8px;
+  text-align: right;
+  color: var(--text-tertiary, #9ca3af);
+  user-select: none;
+  white-space: nowrap;
+  font-size: 11px;
+}
+
+.qoder-diff__code {
+  padding: 1px 12px;
+  white-space: pre;
+  color: var(--text-primary, #1a1b1c);
+  line-height: 1.6;
+}
+
+.qoder-diff__row--context .qoder-diff__code { background: var(--bg-surface, #fff); }
+.qoder-diff__row--add .qoder-diff__code { background: var(--success-bg, rgba(82, 196, 26, 0.08)); }
+.qoder-diff__row--add .qoder-diff__gutter { background: var(--success-bg, rgba(82, 196, 26, 0.08)); color: var(--success, #52c41a); }
+.qoder-diff__row--del .qoder-diff__code { background: var(--error-bg, rgba(224, 108, 117, 0.08)); }
+.qoder-diff__row--del .qoder-diff__gutter { background: var(--error-bg, rgba(224, 108, 117, 0.08)); color: var(--error, #e06c75); }
+
+.qoder-diff__row--add .qoder-diff__code::before {
+  content: '+';
+  color: var(--success, #52c41a);
+  margin-right: 8px;
+}
+
+.qoder-diff__row--del .qoder-diff__code::before {
+  content: '-';
+  color: var(--error, #e06c75);
+  margin-right: 8px;
+}
+
+.qoder-diff__hunk-header {
+  background: var(--bg-tertiary, #f0efeb);
+  color: var(--text-secondary, #6b7280);
+  font-size: 11px;
+}
+
+.qoder-diff__hunk-header .qoder-diff__code {
+  padding: 2px 12px;
+}
+
+/* ============================================================
+   Qoder Layout - 通用布局组件
+   Breadcrumb / Steps / Timeline / Pagination / Empty / Descriptions
+   ============================================================ */
+
+/* ---------- Breadcrumb 面包屑 ---------- */
+.qoder-breadcrumb {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  font-size: 13px;
+}
+
+.qoder-breadcrumb__item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-secondary, #6b7280);
+}
+
+.qoder-breadcrumb__item a {
+  color: var(--text-secondary, #6b7280);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.qoder-breadcrumb__item a:hover {
+  color: var(--accent, #358e62);
+}
+
+.qoder-breadcrumb__separator {
+  color: var(--text-tertiary, #9ca3af);
+  font-size: 11px;
+  margin: 0 2px;
+}
+
+.qoder-breadcrumb__item--current {
+  color: var(--text-primary, #1a1b1c);
+  font-weight: 500;
+}
+
+/* ---------- Steps 步骤条 ---------- */
+.qoder-steps {
+  display: flex;
+  align-items: flex-start;
+}
+
+.qoder-steps--vertical {
+  flex-direction: column;
+}
+
+.qoder-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  flex: 1;
+  position: relative;
+}
+
+.qoder-steps--vertical .qoder-step {
+  flex: none;
+  padding-bottom: 20px;
+}
+
+.qoder-step__indicator {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 600;
+  flex-shrink: 0;
+  background: var(--bg-tertiary, #f0efeb);
+  color: var(--text-tertiary, #9ca3af);
+  border: 2px solid var(--border, #e4e3dd);
+  transition: all 0.3s;
+}
+
+.qoder-step--active .qoder-step__indicator {
+  background: var(--accent, #358e62);
+  color: #fff;
+  border-color: var(--accent, #358e62);
+  box-shadow: 0 0 0 4px var(--accent-bg, rgba(53, 142, 98, 0.15));
+}
+
+.qoder-step--complete .qoder-step__indicator {
+  background: var(--success, #52c41a);
+  color: #fff;
+  border-color: var(--success, #52c41a);
+}
+
+.qoder-step--error .qoder-step__indicator {
+  background: var(--error, #e06c75);
+  color: #fff;
+  border-color: var(--error, #e06c75);
+}
+
+.qoder-step__content {
+  flex: 1;
+  min-width: 0;
+}
+
+.qoder-step__title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary, #1a1b1c);
+  margin-bottom: 2px;
+}
+
+.qoder-step--wait .qoder-step__title {
+  color: var(--text-tertiary, #9ca3af);
+}
+
+.qoder-step__desc {
+  font-size: 12px;
+  color: var(--text-tertiary, #9ca3af);
+}
+
+.qoder-step__line {
+  position: absolute;
+  top: 14px;
+  left: calc(50% + 18px);
+  right: calc(-50% + 18px);
+  height: 2px;
+  background: var(--border, #e4e3dd);
+}
+
+.qoder-steps--vertical .qoder-step__line {
+  top: 38px;
+  left: 13px;
+  right: auto;
+  width: 2px;
+  bottom: -6px;
+  height: auto;
+}
+
+.qoder-step--complete .qoder-step__line {
+  background: var(--success, #52c41a);
+}
+
+/* ---------- Timeline 时间线 ---------- */
+.qoder-timeline {
+  position: relative;
+  padding-left: 24px;
+}
+
+.qoder-timeline::before {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 6px;
+  bottom: 6px;
+  width: 2px;
+  background: var(--border, #e4e3dd);
+}
+
+.qoder-timeline__item {
+  position: relative;
+  padding-bottom: 20px;
+}
+
+.qoder-timeline__item:last-child {
+  padding-bottom: 0;
+}
+
+.qoder-timeline__dot {
+  position: absolute;
+  left: -24px;
+  top: 4px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--bg-surface, #fff);
+  border: 2px solid var(--border, #e4e3dd);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qoder-timeline__item--active .qoder-timeline__dot {
+  border-color: var(--accent, #358e62);
+  background: var(--accent, #358e62);
+}
+
+.qoder-timeline__item--active .qoder-timeline__dot::after {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: #fff;
+  border-radius: 50%;
+}
+
+.qoder-timeline__item--success .qoder-timeline__dot {
+  border-color: var(--success, #52c41a);
+  background: var(--success, #52c41a);
+}
+
+.qoder-timeline__item--error .qoder-timeline__dot {
+  border-color: var(--error, #e06c75);
+  background: var(--error, #e06c75);
+}
+
+.qoder-timeline__time {
+  font-size: 11px;
+  color: var(--text-tertiary, #9ca3af);
+  margin-bottom: 4px;
+}
+
+.qoder-timeline__title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary, #1a1b1c);
+  margin-bottom: 2px;
+}
+
+.qoder-timeline__desc {
+  font-size: 12px;
+  color: var(--text-secondary, #6b7280);
+  line-height: 1.5;
+}
+
+/* ---------- Pagination 分页 ---------- */
+.qoder-pagination {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.qoder-pagination__item {
+  min-width: 30px;
+  height: 30px;
+  padding: 0 8px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: var(--text-secondary, #6b7280);
+  cursor: pointer;
+  transition: all 0.15s;
+  border: 1px solid transparent;
+  user-select: none;
+}
+
+.qoder-pagination__item:hover {
+  background: var(--bg-tertiary, #f0efeb);
+  color: var(--text-primary, #1a1b1c);
+}
+
+.qoder-pagination__item--active {
+  background: var(--accent, #358e62);
+  color: #fff;
+  font-weight: 600;
+}
+
+.qoder-pagination__item--active:hover {
+  background: var(--accent-hover, #2d7a54);
+  color: #fff;
+}
+
+.qoder-pagination__item--disabled {
+  color: var(--text-tertiary, #9ca3af);
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.qoder-pagination__item--disabled:hover {
+  background: transparent;
+}
+
+.qoder-pagination__ellipsis {
+  color: var(--text-tertiary, #9ca3af);
+  padding: 0 4px;
+}
+
+.qoder-pagination__total {
+  font-size: 12px;
+  color: var(--text-tertiary, #9ca3af);
+  margin-left: 8px;
+}
+
+/* ---------- Empty 空状态 ---------- */
+.qoder-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  text-align: center;
+}
+
+.qoder-empty__icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.4;
+}
+
+.qoder-empty__title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-secondary, #6b7280);
+  margin: 0 0 6px 0;
+}
+
+.qoder-empty__desc {
+  font-size: 13px;
+  color: var(--text-tertiary, #9ca3af);
+  margin: 0 0 20px 0;
+  max-width: 320px;
+}
+
+/* ---------- Descriptions 描述列表 ---------- */
+.qoder-descriptions {
+  border: 1px solid var(--border-subtle, #e4e3dd);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.qoder-descriptions__title {
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary, #1a1b1c);
+  background: var(--bg-tertiary, #f0efeb);
+  border-bottom: 1px solid var(--border-subtle, #e4e3dd);
+}
+
+.qoder-descriptions__row {
+  display: flex;
+  border-bottom: 1px solid var(--border-subtle, #e4e3dd);
+}
+
+.qoder-descriptions__row:last-child {
+  border-bottom: none;
+}
+
+.qoder-descriptions__label {
+  width: 140px;
+  flex-shrink: 0;
+  padding: 10px 16px;
+  font-size: 13px;
+  color: var(--text-secondary, #6b7280);
+  background: var(--bg-page, #f4f3ee);
+  border-right: 1px solid var(--border-subtle, #e4e3dd);
+}
+
+.qoder-descriptions__value {
+  flex: 1;
+  padding: 10px 16px;
+  font-size: 13px;
+  color: var(--text-primary, #1a1b1c);
+  word-break: break-word;
+}

@@ -10,7 +10,12 @@
   <link rel="stylesheet" href="../src/components/qoder-advanced.css">
   <link rel="stylesheet" href="../src/components/qoder-icons.css">
   <link rel="stylesheet" href="../src/components/qoder-markdown.css">
+  <link rel="stylesheet" href="../src/components/qoder-chat.css">
+  <link rel="stylesheet" href="../src/components/qoder-panels.css">
+  <link rel="stylesheet" href="../src/components/qoder-extras.css">
+  <link rel="stylesheet" href="../src/components/qoder-viz.css">
   <script src="../src/qoder-ui.js"></script>
+  <script src="../src/qoder-interactions.js"></script>
   <style>
     * { box-sizing: border-box; }
     body { margin: 0; font-family: 'Instrument Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg-page); color: var(--text-primary); transition: background 0.3s, color 0.3s; }
@@ -66,7 +71,7 @@
     <h1>
       <span class="qoder-icon qoder-icon--sparkle" style="color: var(--accent);"></span>
       Qoder UI 完整组件库
-      <span class="badge">v2.0</span>
+      <span class="badge">v3.0</span>
     </h1>
     <div class="theme-switcher" id="themeSwitcher">
       <div class="theme-btn active" data-theme="forest-light" data-name="Forest" style="background: linear-gradient(135deg, #e8f5ee, #358e62);"></div>
@@ -570,6 +575,382 @@ function hello() {
               <div class="qoder-dropdown__item qoder-dropdown__item--danger"><span class="qoder-icon qoder-icon--trash"></span>删除</div>
             </div>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 14. 聊天界面 -->
+    <section class="demo-section">
+      <h2 class="demo-section-title"><span class="num">14</span>聊天界面 Chat Interface</h2>
+      <p class="demo-section-desc">完整还原 Qoder AI 聊天界面：消息列表、用户/AI/系统消息、代码块带语言标签和复制按钮、流式打字光标、思考过程折叠、工具调用卡片、附件消息、聊天输入区、欢迎空状态。</p>
+      <div class="demo-box" style="padding: 0; overflow: hidden;">
+        <div class="qoder-chat" style="height: 480px;">
+          <div class="qoder-chat__messages">
+            <div class="qoder-chat__messages-inner">
+              <div class="qoder-chat__welcome">
+                <div class="qoder-chat__welcome-title">有什么可以帮你的？</div>
+                <div class="qoder-chat__welcome-subtitle">我是 Qoder AI，可以帮你写代码、调试、解释概念</div>
+                <div class="qoder-chat__welcome-suggestions">
+                  <div class="qoder-chat__suggestion"><span class="qoder-chat__suggestion-icon">💡</span><span class="qoder-chat__suggestion-text">帮我写一个 React 组件</span></div>
+                  <div class="qoder-chat__suggestion"><span class="qoder-chat__suggestion-icon">🐛</span><span class="qoder-chat__suggestion-text">调试这段代码的错误</span></div>
+                  <div class="qoder-chat__suggestion"><span class="qoder-chat__suggestion-icon">📖</span><span class="qoder-chat__suggestion-text">解释闭包的概念</span></div>
+                  <div class="qoder-chat__suggestion"><span class="qoder-chat__suggestion-icon">⚡</span><span class="qoder-chat__suggestion-text">优化这个函数的性能</span></div>
+                </div>
+              </div>
+              <div class="qoder-chat__date-sep"><span>今天</span></div>
+              <div class="qoder-chat__msg qoder-chat__msg--user">
+                <div class="qoder-chat__msg-avatar">U</div>
+                <div class="qoder-chat__msg-body"><div class="qoder-chat__msg-content">帮我写一个防抖函数</div><div class="qoder-chat__msg-time">14:32</div></div>
+              </div>
+              <div class="qoder-chat__msg qoder-chat__msg--ai">
+                <div class="qoder-chat__msg-avatar">AI</div>
+                <div class="qoder-chat__msg-body">
+                  <div class="qoder-chat__thinking qoder-thinking--open">
+                    <div class="qoder-thinking__header"><span class="qoder-thinking__icon">🧠</span><span class="qoder-thinking__title">思考过程</span><span class="qoder-thinking__toggle">▼</span></div>
+                    <div class="qoder-thinking__content">用户需要防抖函数，需要考虑：1. 立即执行 vs 延迟执行 2. this 绑定 3. 返回值 4. 取消方法</div>
+                  </div>
+                  <div class="qoder-chat__msg-content">
+                    <p>这是一个标准的防抖函数实现：</p>
+                    <div class="qoder-code-block">
+                      <div class="qoder-code-block__header"><span class="qoder-code-block__lang">javascript</span><button class="qoder-code-block__copy">复制</button></div>
+                      <pre class="qoder-code-block__code"><code><span class="qoder-code-line"><span class="qoder-code-line-num">1</span>function debounce(fn, delay) {</span>
+<span class="qoder-code-line"><span class="qoder-code-line-num">2</span>  let timer = null;</span>
+<span class="qoder-code-line"><span class="qoder-code-line-num">3</span>  return function(...args) {</span>
+<span class="qoder-code-line"><span class="qoder-code-line-num">4</span>    clearTimeout(timer);</span>
+<span class="qoder-code-line"><span class="qoder-code-line-num">5</span>    timer = setTimeout(() => fn.apply(this, args), delay);</span>
+<span class="qoder-code-line"><span class="qoder-code-line-num">6</span>  };</span>
+<span class="qoder-code-line"><span class="qoder-code-line-num">7</span>}</span></code></pre>
+                    </div>
+                  </div>
+                  <div class="qoder-chat__msg-actions"><button class="qoder-chat__action">复制</button><button class="qoder-chat__action">重新生成</button><button class="qoder-chat__action">👍</button><button class="qoder-chat__action">👎</button></div>
+                </div>
+              </div>
+              <div class="qoder-chat__msg qoder-chat__msg--system"><div class="qoder-chat__msg-content">已切换到 forest-dark 主题</div></div>
+              <div class="qoder-chat__msg qoder-chat__msg--ai">
+                <div class="qoder-chat__msg-avatar">AI</div>
+                <div class="qoder-chat__msg-body">
+                  <div class="qoder-tool-call">
+                    <div class="qoder-tool-call__header"><span class="qoder-tool-call__icon">🔧</span><span class="qoder-tool-call__name">read_file</span><span class="qoder-tool-call__status qoder-tool-call__status--success">完成</span></div>
+                    <div class="qoder-tool-call__args">path: /src/utils/debounce.ts</div>
+                    <div class="qoder-tool-call__result">文件已读取，共 42 行</div>
+                  </div>
+                  <div class="qoder-chat__msg-content">正在流式输出<span class="qoder-typing-cursor">|</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="qoder-chat-input"><div class="qoder-chat-input__inner"><textarea class="qoder-chat-input__textarea" placeholder="输入消息，Shift+Enter 换行..."></textarea><div class="qoder-chat-input__toolbar"><button class="qoder-chat-input__tool">📎</button><button class="qoder-chat-input__tool">🎤</button><button class="qoder-chat-input__send">发送</button></div></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 15. 命令面板 & 上下文菜单 -->
+    <section class="demo-section">
+      <h2 class="demo-section-title"><span class="num">15</span>命令面板 & 上下文菜单</h2>
+      <p class="demo-section-desc">VS Code 风格命令面板（Ctrl+Shift+P），支持搜索过滤、分组、键盘导航、高亮匹配。右键上下文菜单支持禁用项、危险项、分割线、快捷键。</p>
+      <div class="demo-row">
+        <button class="qoder-btn qoder-btn--primary" onclick="QoderUI.palette.open([{icon:'🎨',label:'切换主题',group:'外观',shortcut:'Ctrl+K T'},{icon:'💬',label:'新建会话',group:'聊天',shortcut:'Ctrl+N'},{icon:'⚙️',label:'打开设置',group:'系统',shortcut:'Ctrl+,'},{icon:'🔔',label:'通知中心',group:'系统'},{icon:'📋',label:'切换终端',group:'视图'},{icon:'🔍',label:'全局搜索',group:'编辑',shortcut:'Ctrl+Shift+F'}], (item)=>QoderUI.toast.show('执行: '+item.label,'info'))">打开命令面板</button>
+        <button class="qoder-btn qoder-btn--secondary" oncontextmenu="event.preventDefault();QoderUI.contextMenu.show(event.clientX,event.clientY,[{icon:'✏️',label:'编辑',action:'edit',onClick:()=>QoderUI.toast.show('编辑','info')},{icon:'📋',label:'复制',action:'copy',shortcut:'Ctrl+C',onClick:()=>QoderUI.toast.show('已复制','success')},{divider:true},{icon:'📌',label:'固定',action:'pin',disabled:true},{divider:true},{icon:'🗑️',label:'删除',action:'delete',danger:true,shortcut:'Del',onClick:()=>QoderUI.toast.show('已删除','error')}])">右键点击我</button>
+        <span style="font-size:12px;color:var(--text-tertiary);">快捷键 Ctrl+Shift+P 也可打开</span>
+      </div>
+    </section>
+
+    <!-- 16. 侧边栏 & 设置面板 -->
+    <section class="demo-section">
+      <h2 class="demo-section-title"><span class="num">16</span>侧边栏 & 设置面板</h2>
+      <p class="demo-section-desc">活动栏（48px）+ 可折叠面板 + 会话列表 + 工作区切换器。设置面板：左侧导航 + 右侧内容 + 主题预览网格 + 快捷键列表。</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div class="demo-box" style="padding:0;overflow:hidden;height:360px;">
+          <div class="qoder-sidebar-layout" style="height:100%;">
+            <div class="qoder-activity-bar">
+              <div class="qoder-activity-bar__item qoder-activity-bar__item--active" title="聊天"><span class="qoder-icon qoder-icon--comment"></span></div>
+              <div class="qoder-activity-bar__item" title="文件"><span class="qoder-icon qoder-icon--files"></span></div>
+              <div class="qoder-activity-bar__item" title="搜索"><span class="qoder-icon qoder-icon--search"></span></div>
+              <div class="qoder-activity-bar__item" title="Git"><span class="qoder-icon qoder-icon--source-control"></span></div>
+              <div class="qoder-activity-bar__item qoder-activity-bar__item--bottom" title="设置"><span class="qoder-icon qoder-icon--settings-gear"></span></div>
+            </div>
+            <div class="qoder-sidebar-panel">
+              <div class="qoder-workspace-switcher"><span class="qoder-workspace-switcher__name">my-project</span><span class="qoder-workspace-switcher__chevron">▼</span></div>
+              <div class="qoder-collapsible qoder-collapsible--open">
+                <div class="qoder-collapsible__header"><span class="qoder-collapsible__chevron">▼</span><span class="qoder-collapsible__title">最近会话</span></div>
+                <div class="qoder-collapsible__body">
+                  <div class="qoder-session-item qoder-session-item--active"><span class="qoder-session-item__title">防抖函数实现</span><span class="qoder-session-item__time">14:32</span></div>
+                  <div class="qoder-session-item"><span class="qoder-session-item__title">React 组件优化</span><span class="qoder-session-item__time">昨天</span></div>
+                  <div class="qoder-session-item"><span class="qoder-session-item__title">数据库设计</span><span class="qoder-session-item__time">2天前</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="demo-box" style="padding:0;overflow:hidden;height:360px;">
+          <div class="qoder-settings" style="height:100%;">
+            <div class="qoder-settings__sidebar">
+              <div class="qoder-settings__nav-item qoder-settings__nav-item--active">外观</div>
+              <div class="qoder-settings__nav-item">快捷键</div>
+              <div class="qoder-settings__nav-item">AI 模型</div>
+              <div class="qoder-settings__nav-item">隐私</div>
+            </div>
+            <div class="qoder-settings__content">
+              <h3 style="margin:0 0 12px;font-size:14px;">主题</h3>
+              <div class="qoder-theme-grid">
+                <div class="qoder-theme-preview qoder-theme-preview--active" style="background:linear-gradient(135deg,#e8f5ee,#358e62);"><span>Forest</span></div>
+                <div class="qoder-theme-preview" style="background:linear-gradient(135deg,#fdf6e3,#e0c65c);"><span>Bee</span></div>
+                <div class="qoder-theme-preview" style="background:linear-gradient(135deg,#e6f7f2,#4fa98f);"><span>Mint</span></div>
+                <div class="qoder-theme-preview" style="background:linear-gradient(135deg,#f5ebe0,#c96442);"><span>Parchment</span></div>
+              </div>
+              <div class="qoder-setting-row">
+                <div class="qoder-setting-row__label"><div class="qoder-setting-row__title">自动保存</div><div class="qoder-setting-row__desc">编辑后自动保存文件</div></div>
+                <label class="qoder-switch"><input type="checkbox" checked><span class="qoder-switch__slider"></span></label>
+              </div>
+              <div class="qoder-setting-row">
+                <div class="qoder-setting-row__label"><div class="qoder-setting-row__title">字体大小</div><div class="qoder-setting-row__desc">编辑器字体大小</div></div>
+                <div class="qoder-select" style="width:100px;"><div class="qoder-select__trigger"><span class="qoder-select__value">14px</span><span class="qoder-select__chevron">▼</span></div><div class="qoder-select__dropdown"><div class="qoder-select__option">12px</div><div class="qoder-select__option qoder-select__option--selected">14px</div><div class="qoder-select__option">16px</div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 17. 表单组件 -->
+    <section class="demo-section">
+      <h2 class="demo-section-title"><span class="num">17</span>表单组件 Form Components</h2>
+      <p class="demo-section-desc">Select 下拉选择、Radio 单选、DatePicker 日期选择、Slider 滑块、Upload 上传、ColorPicker 颜色选择器。</p>
+      <div class="demo-box">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;">
+          <div><div class="demo-label">Select 下拉</div>
+            <div class="qoder-select"><div class="qoder-select__trigger" tabindex="0"><span class="qoder-select__value qoder-select__value--placeholder">请选择框架</span><span class="qoder-select__chevron">▼</span></div><div class="qoder-select__dropdown"><div class="qoder-select__option" data-value="react">React</div><div class="qoder-select__option" data-value="vue">Vue</div><div class="qoder-select__option" data-value="svelte">Svelte</div><div class="qoder-select__option qoder-select__option--disabled" data-value="angular">Angular (禁用)</div></div></div>
+          </div>
+          <div><div class="demo-label">Radio 单选</div>
+            <div class="qoder-radio-group"><label class="qoder-radio"><input type="radio" name="demo" checked><span class="qoder-radio__circle"></span>选项 A</label><label class="qoder-radio"><input type="radio" name="demo"><span class="qoder-radio__circle"></span>选项 B</label><label class="qoder-radio"><input type="radio" name="demo"><span class="qoder-radio__circle"></span>选项 C</label></div>
+          </div>
+          <div><div class="demo-label">Slider 滑块</div>
+            <div class="qoder-slider" data-min="0" data-max="100" data-value="65"><div class="qoder-slider__track"><div class="qoder-slider__fill"></div><div class="qoder-slider__thumb"></div></div><span class="qoder-slider__value">65</span></div>
+          </div>
+          <div><div class="demo-label">Upload 上传</div>
+            <div class="qoder-upload"><div class="qoder-upload__area"><span class="qoder-upload__icon">📁</span><span class="qoder-upload__text">点击或拖拽文件到此处</span><span class="qoder-upload__hint">支持 PNG, JPG, PDF 最大 10MB</span></div></div>
+          </div>
+          <div><div class="demo-label">ColorPicker</div>
+            <div class="qoder-color-picker"><div class="qoder-color-picker__swatches"><div class="qoder-color-picker__swatch" style="background:#358e62;"></div><div class="qoder-color-picker__swatch" style="background:#e0c65c;"></div><div class="qoder-color-picker__swatch" style="background:#4fa98f;"></div><div class="qoder-color-picker__swatch qoder-color-picker__swatch--active" style="background:#c96442;"></div><div class="qoder-color-picker__swatch" style="background:#62c9a8;"></div><div class="qoder-color-picker__swatch" style="background:#8ee5a1;"></div></div></div>
+          </div>
+          <div><div class="demo-label">DatePicker</div>
+            <div class="qoder-datepicker"><div class="qoder-datepicker__input"><span class="qoder-icon qoder-icon--calendar"></span><input type="text" placeholder="选择日期" readonly></div><div class="qoder-datepicker__panel"><div class="qoder-datepicker__header"><span class="qoder-datepicker__nav">‹</span><span class="qoder-datepicker__title">2026 年 9 月</span><span class="qoder-datepicker__nav">›</span></div><div class="qoder-datepicker__grid"><span class="qoder-datepicker__dow">日</span><span class="qoder-datepicker__dow">一</span><span class="qoder-datepicker__dow">二</span><span class="qoder-datepicker__dow">三</span><span class="qoder-datepicker__dow">四</span><span class="qoder-datepicker__dow">五</span><span class="qoder-datepicker__dow">六</span><span class="qoder-datepicker__day qoder-datepicker__day--other">31</span><span class="qoder-datepicker__day">1</span><span class="qoder-datepicker__day">2</span><span class="qoder-datepicker__day">3</span><span class="qoder-datepicker__day">4</span><span class="qoder-datepicker__day qoder-datepicker__day--today">5</span><span class="qoder-datepicker__day qoder-datepicker__day--selected">6</span><span class="qoder-datepicker__day">7</span><span class="qoder-datepicker__day">8</span><span class="qoder-datepicker__day">9</span><span class="qoder-datepicker__day">10</span><span class="qoder-datepicker__day">11</span><span class="qoder-datepicker__day">12</span><span class="qoder-datepicker__day">13</span></div></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 18. 终端面板 -->
+    <section class="demo-section">
+      <h2 class="demo-section-title"><span class="num">18</span>终端面板 Terminal</h2>
+      <p class="demo-section-desc">标签页终端、分屏、语法着色输出、闪烁光标。还原 VS Code 集成终端风格。</p>
+      <div class="demo-box" style="padding:0;overflow:hidden;">
+        <div class="qoder-terminal">
+          <div class="qoder-terminal__tabs">
+            <div class="qoder-terminal__tab qoder-terminal__tab--active"><span class="qoder-terminal__tab-icon">⌨</span> bash<span class="qoder-terminal__tab-close">×</span></div>
+            <div class="qoder-terminal__tab"><span class="qoder-terminal__tab-icon">⌨</span> zsh</div>
+            <div class="qoder-terminal__tab qoder-terminal__tab--add">+</div>
+            <div class="qoder-terminal__actions"><span class="qoder-terminal__action">⊞</span><span class="qoder-terminal__action">🗑</span></div>
+          </div>
+          <div class="qoder-terminal__body">
+            <div class="qoder-terminal__line"><span class="qoder-terminal__prompt">user@qoder</span>:<span class="qoder-terminal__path">~/project</span>$ npm run dev</div>
+            <div class="qoder-terminal__line qoder-terminal__line--dim">> qoder-ui@3.0.0 dev</div>
+            <div class="qoder-terminal__line qoder-terminal__line--dim">> vite</div>
+            <div class="qoder-terminal__line">&nbsp;</div>
+            <div class="qoder-terminal__line"><span class="qoder-terminal__success">✓</span> VITE v5.0.0 ready in 234 ms</div>
+            <div class="qoder-terminal__line">&nbsp;</div>
+            <div class="qoder-terminal__line">➜ Local: <span class="qoder-terminal__link">http://localhost:5173/</span></div>
+            <div class="qoder-terminal__line">➜ Network: use --host to expose</div>
+            <div class="qoder-terminal__line">&nbsp;</div>
+            <div class="qoder-terminal__line"><span class="qoder-terminal__prompt">user@qoder</span>:<span class="qoder-terminal__path">~/project</span>$ <span class="qoder-terminal__cursor">▋</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 19. 通知中心 -->
+    <section class="demo-section">
+      <h2 class="demo-section-title"><span class="num">19</span>通知中心 Notification Center</h2>
+      <p class="demo-section-desc">右侧滑出通知面板，支持全部/未读标签、未读标记、全部已读、空状态。点击按钮添加通知并打开面板。</p>
+      <div class="demo-row">
+        <button class="qoder-btn qoder-btn--primary" onclick="QoderUI.notificationCenter.add({type:'success',title:'构建成功',desc:'项目已成功构建，耗时 2.3s'});QoderUI.notificationCenter.open()">添加成功通知</button>
+        <button class="qoder-btn qoder-btn--secondary" onclick="QoderUI.notificationCenter.add({type:'warning',title:'内存警告',desc:'内存使用率超过 80%'});QoderUI.notificationCenter.open()">添加警告通知</button>
+        <button class="qoder-btn qoder-btn--ghost" onclick="QoderUI.notificationCenter.toggle()">打开/关闭通知中心</button>
+      </div>
+    </section>
+
+    <!-- 20. 代码 Diff -->
+    <section class="demo-section">
+      <h2 class="demo-section-title"><span class="num">20</span>代码 Diff 查看器</h2>
+      <p class="demo-section-desc">行号 gutter、增删行高亮、hunk header、统计信息。还原 VS Code Diff 编辑器风格。</p>
+      <div class="demo-box" style="padding:0;overflow:hidden;">
+        <div class="qoder-diff">
+          <div class="qoder-diff__stats"><span class="qoder-diff__stat qoder-diff__stat--added">+3</span><span class="qoder-diff__stat qoder-diff__stat--removed">-1</span><span class="qoder-diff__stat">2 files changed</span></div>
+          <div class="qoder-diff__hunk">
+            <div class="qoder-diff__hunk-header">@@ -1,5 +1,7 @@ function debounce</div>
+            <div class="qoder-diff__line qoder-diff__line--context"><span class="qoder-diff__gutter">1</span><span class="qoder-diff__gutter">1</span><span class="qoder-diff__content">function debounce(fn, delay) {</span></div>
+            <div class="qoder-diff__line qoder-diff__line--context"><span class="qoder-diff__gutter">2</span><span class="qoder-diff__gutter">2</span><span class="qoder-diff__content">  let timer = null;</span></div>
+            <div class="qoder-diff__line qoder-diff__line--added"><span class="qoder-diff__gutter"></span><span class="qoder-diff__gutter">3</span><span class="qoder-diff__content">+  let lastInvoke = 0;</span></div>
+            <div class="qoder-diff__line qoder-diff__line--context"><span class="qoder-diff__gutter">3</span><span class="qoder-diff__gutter">4</span><span class="qoder-diff__content">  return function(...args) {</span></div>
+            <div class="qoder-diff__line qoder-diff__line--removed"><span class="qoder-diff__gutter">4</span><span class="qoder-diff__gutter"></span><span class="qoder-diff__content">-    clearTimeout(timer);</span></div>
+            <div class="qoder-diff__line qoder-diff__line--added"><span class="qoder-diff__gutter"></span><span class="qoder-diff__gutter">5</span><span class="qoder-diff__content">+    const now = Date.now();</span></div>
+            <div class="qoder-diff__line qoder-diff__line--added"><span class="qoder-diff__gutter"></span><span class="qoder-diff__gutter">6</span><span class="qoder-diff__content">+    clearTimeout(timer);</span></div>
+            <div class="qoder-diff__line qoder-diff__line--context"><span class="qoder-diff__gutter">5</span><span class="qoder-diff__gutter">7</span><span class="qoder-diff__content">    timer = setTimeout(() => fn.apply(this, args), delay);</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 21. 布局组件 -->
+    <section class="demo-section">
+      <h2 class="demo-section-title"><span class="num">21</span>布局组件 Layout Components</h2>
+      <p class="demo-section-desc">Breadcrumb 面包屑、Steps 步骤条（水平+垂直）、Timeline 时间线、Pagination 分页、Empty 空状态、Descriptions 描述列表。</p>
+      <div class="demo-box">
+        <div class="demo-label">Breadcrumb 面包屑</div>
+        <nav class="qoder-breadcrumb" style="margin-bottom:20px;"><span class="qoder-breadcrumb__item"><a href="#">首页</a></span><span class="qoder-breadcrumb__separator">/</span><span class="qoder-breadcrumb__item"><a href="#">组件库</a></span><span class="qoder-breadcrumb__separator">/</span><span class="qoder-breadcrumb__item qoder-breadcrumb__item--current">布局组件</span></nav>
+        <div class="demo-label">Steps 水平步骤条</div>
+        <div class="qoder-steps" style="margin-bottom:20px;">
+          <div class="qoder-step qoder-step--complete"><div class="qoder-step__indicator">✓</div><div class="qoder-step__content"><div class="qoder-step__title">需求分析</div></div><div class="qoder-step__line"></div></div>
+          <div class="qoder-step qoder-step--complete"><div class="qoder-step__indicator">✓</div><div class="qoder-step__content"><div class="qoder-step__title">设计</div></div><div class="qoder-step__line"></div></div>
+          <div class="qoder-step qoder-step--active"><div class="qoder-step__indicator">3</div><div class="qoder-step__content"><div class="qoder-step__title">开发</div><div class="qoder-step__desc">进行中</div></div><div class="qoder-step__line"></div></div>
+          <div class="qoder-step qoder-step--wait"><div class="qoder-step__indicator">4</div><div class="qoder-step__content"><div class="qoder-step__title">测试</div></div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+          <div><div class="demo-label">Timeline 时间线</div>
+            <div class="qoder-timeline">
+              <div class="qoder-timeline__item qoder-timeline__item--complete"><div class="qoder-timeline__dot"></div><div class="qoder-timeline__time">09:00</div><div class="qoder-timeline__title">项目启动</div><div class="qoder-timeline__desc">完成需求评审</div></div>
+              <div class="qoder-timeline__item qoder-timeline__item--active"><div class="qoder-timeline__dot"></div><div class="qoder-timeline__time">14:30</div><div class="qoder-timeline__title">开发中</div><div class="qoder-timeline__desc">核心功能实现</div></div>
+              <div class="qoder-timeline__item"><div class="qoder-timeline__dot"></div><div class="qoder-timeline__time">待办</div><div class="qoder-timeline__title">测试上线</div></div>
+            </div>
+          </div>
+          <div><div class="demo-label">Descriptions 描述列表</div>
+            <div class="qoder-descriptions">
+              <div class="qoder-descriptions__row"><div class="qoder-descriptions__label">项目名称</div><div class="qoder-descriptions__value">Qoder UI</div></div>
+              <div class="qoder-descriptions__row"><div class="qoder-descriptions__label">版本</div><div class="qoder-descriptions__value">v3.0.0</div></div>
+              <div class="qoder-descriptions__row"><div class="qoder-descriptions__label">主题数</div><div class="qoder-descriptions__value">8 个</div></div>
+              <div class="qoder-descriptions__row"><div class="qoder-descriptions__label">组件数</div><div class="qoder-descriptions__value">50+</div></div>
+              <div class="qoder-descriptions__row"><div class="qoder-descriptions__label">依赖</div><div class="qoder-descriptions__value"><span class="qoder-badge qoder-badge--success">零依赖</span></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="demo-label" style="margin-top:20px;">Pagination 分页 & Empty 空状态</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;">
+          <div class="qoder-pagination"><div class="qoder-pagination__item">‹</div><div class="qoder-pagination__item qoder-pagination__item--active">1</div><div class="qoder-pagination__item">2</div><div class="qoder-pagination__item">3</div><div class="qoder-pagination__ellipsis">...</div><div class="qoder-pagination__item">10</div><div class="qoder-pagination__item">›</div><span class="qoder-pagination__total">共 10 页</span></div>
+          <div class="qoder-empty" style="padding:16px;"><div class="qoder-empty__icon">📭</div><div class="qoder-empty__title">暂无数据</div><div class="qoder-empty__desc">点击按钮创建第一条记录</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 22. Agent 工作流可视化 -->
+    <section class="demo-section">
+      <h2 class="demo-section-title"><span class="num">22</span>Agent 工作流可视化</h2>
+      <p class="demo-section-desc">任务规划面板、多 Agent 协作卡片+消息流、运行结果面板。还原 Qoder AI Agent 工作台的工作流展示。</p>
+      <div class="demo-box">
+        <div class="qoder-task-planner">
+          <div class="qoder-task-planner__header"><span class="qoder-task-planner__title">任务规划</span><span class="qoder-badge qoder-badge--primary">3 个步骤</span></div>
+          <div class="qoder-task-item qoder-task-item--complete"><div class="qoder-task-item__status">✓</div><div class="qoder-task-item__body"><div class="qoder-task-item__title">分析需求文档</div><div class="qoder-task-item__desc">读取并解析 PRD.md</div></div><div class="qoder-task-item__time">2.1s</div></div>
+          <div class="qoder-task-item qoder-task-item--running"><div class="qoder-task-item__status"><div class="qoder-spinner" style="width:14px;height:14px;"></div></div><div class="qoder-task-item__body"><div class="qoder-task-item__title">生成代码骨架</div><div class="qoder-task-item__desc">创建项目结构和基础组件</div></div><div class="qoder-task-item__time">运行中</div></div>
+          <div class="qoder-task-item"><div class="qoder-task-item__status">3</div><div class="qoder-task-item__body"><div class="qoder-task-item__title">编写测试用例</div><div class="qoder-task-item__desc">为核心函数添加单元测试</div></div><div class="qoder-task-item__time">等待</div></div>
+        </div>
+        <div class="demo-label" style="margin-top:20px;">多 Agent 协作</div>
+        <div class="qoder-agent-grid">
+          <div class="qoder-agent-card qoder-agent-card--active">
+            <div class="qoder-agent-card__header"><div class="qoder-agent-card__avatar">C</div><div class="qoder-agent-card__name">Coder</div><span class="qoder-agent-card__status qoder-agent-card__status--active">运行中</span></div>
+            <div class="qoder-agent-card__role">代码生成专家</div>
+            <div class="qoder-agent-message qoder-agent-message--out">正在生成组件代码...</div>
+          </div>
+          <div class="qoder-agent-card">
+            <div class="qoder-agent-card__header"><div class="qoder-agent-card__avatar" style="background:var(--warning);">R</div><div class="qoder-agent-card__name">Reviewer</div><span class="qoder-agent-card__status">等待</span></div>
+            <div class="qoder-agent-card__role">代码审查专家</div>
+            <div class="qoder-agent-message qoder-agent-message--in">等待 Coder 完成</div>
+          </div>
+        </div>
+        <div class="demo-label" style="margin-top:20px;">运行结果</div>
+        <div class="qoder-run-result">
+          <div class="qoder-run-result__header"><span class="qoder-run-result__title">运行结果</span><span class="qoder-run-result__status qoder-run-result__status--success">成功</span></div>
+          <div class="qoder-run-result__metrics">
+            <div class="qoder-run-result__metric"><span class="qoder-run-result__metric-value">12</span><span class="qoder-run-result__metric-label">文件创建</span></div>
+            <div class="qoder-run-result__metric"><span class="qoder-run-result__metric-value">1,248</span><span class="qoder-run-result__metric-label">代码行数</span></div>
+            <div class="qoder-run-result__metric"><span class="qoder-run-result__metric-value">8.5s</span><span class="qoder-run-result__metric-label">总耗时</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 23. 数据可视化 -->
+    <section class="demo-section">
+      <h2 class="demo-section-title"><span class="num">23</span>数据可视化 Data Viz</h2>
+      <p class="demo-section-desc">统计卡片、进度环（SVG）、迷你柱状图、迷你折线图、热力图、仪表盘。纯 CSS+SVG 实现，零图表库依赖。</p>
+      <div class="demo-box">
+        <div class="qoder-stat-grid">
+          <div class="qoder-stat-card"><div class="qoder-stat-card__label">总请求数</div><div class="qoder-stat-card__value">12,847</div><div class="qoder-stat-card__change qoder-stat-card__change--up">↑ 12.5%</div></div>
+          <div class="qoder-stat-card"><div class="qoder-stat-card__label">成功率</div><div class="qoder-stat-card__value">99.2%</div><div class="qoder-stat-card__change qoder-stat-card__change--up">↑ 0.3%</div></div>
+          <div class="qoder-stat-card"><div class="qoder-stat-card__label">平均延迟</div><div class="qoder-stat-card__value">128ms</div><div class="qoder-stat-card__change qoder-stat-card__change--down">↓ 15ms</div></div>
+          <div class="qoder-stat-card"><div class="qoder-stat-card__label">活跃用户</div><div class="qoder-stat-card__value">3,421</div><div class="qoder-stat-card__change qoder-stat-card__change--up">↑ 8.1%</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;margin-top:20px;">
+          <div><div class="demo-label">进度环</div>
+            <div style="display:flex;gap:16px;align-items:center;">
+              <svg class="qoder-progress-ring" width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="34" fill="none" stroke="var(--border)" stroke-width="6"/><circle cx="40" cy="40" r="34" fill="none" stroke="var(--accent)" stroke-width="6" stroke-linecap="round" stroke-dasharray="213.6" stroke-dashoffset="53.4" transform="rotate(-90 40 40)"/><text x="40" y="45" text-anchor="middle" fill="var(--text-primary)" font-size="16" font-weight="700">75%</text></svg>
+              <div><div style="font-size:13px;font-weight:600;">任务完成率</div><div style="font-size:11px;color:var(--text-tertiary);">45/60 已完成</div></div>
+            </div>
+          </div>
+          <div><div class="demo-label">迷你柱状图</div>
+            <div class="qoder-mini-bar"><div class="qoder-mini-bar__item" style="height:40%;"></div><div class="qoder-mini-bar__item" style="height:65%;"></div><div class="qoder-mini-bar__item" style="height:50%;"></div><div class="qoder-mini-bar__item" style="height:80%;"></div><div class="qoder-mini-bar__item" style="height:60%;"></div><div class="qoder-mini-bar__item qoder-mini-bar__item--active" style="height:90%;"></div><div class="qoder-mini-bar__item" style="height:70%;"></div></div>
+          </div>
+          <div><div class="demo-label">迷你折线图</div>
+            <svg class="qoder-mini-line" width="160" height="50" viewBox="0 0 160 50"><polyline points="0,40 20,30 40,35 60,20 80,25 100,15 120,18 140,10 160,12" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><polygon points="0,40 20,30 40,35 60,20 80,25 100,15 120,18 140,10 160,12 160,50 0,50" fill="var(--accent)" opacity="0.1"/></svg>
+          </div>
+          <div><div class="demo-label">仪表盘</div>
+            <svg class="qoder-gauge" width="100" height="60" viewBox="0 0 100 60"><path d="M 10 55 A 40 40 0 0 1 90 55" fill="none" stroke="var(--border)" stroke-width="8" stroke-linecap="round"/><path d="M 10 55 A 40 40 0 0 1 70 20" fill="none" stroke="var(--accent)" stroke-width="8" stroke-linecap="round"/><text x="50" y="50" text-anchor="middle" fill="var(--text-primary)" font-size="14" font-weight="700">68</text></svg>
+          </div>
+        </div>
+        <div class="demo-label" style="margin-top:20px;">热力图</div>
+        <div class="qoder-heatmap">
+          <div class="qoder-heatmap__row"><span class="qoder-heatmap__label">Mon</span><div class="qoder-heatmap__cell" style="--heat:0.1;"></div><div class="qoder-heatmap__cell" style="--heat:0.3;"></div><div class="qoder-heatmap__cell" style="--heat:0.5;"></div><div class="qoder-heatmap__cell" style="--heat:0.8;"></div><div class="qoder-heatmap__cell" style="--heat:0.6;"></div><div class="qoder-heatmap__cell" style="--heat:0.4;"></div><div class="qoder-heatmap__cell" style="--heat:0.2;"></div></div>
+          <div class="qoder-heatmap__row"><span class="qoder-heatmap__label">Tue</span><div class="qoder-heatmap__cell" style="--heat:0.4;"></div><div class="qoder-heatmap__cell" style="--heat:0.6;"></div><div class="qoder-heatmap__cell" style="--heat:0.9;"></div><div class="qoder-heatmap__cell" style="--heat:0.7;"></div><div class="qoder-heatmap__cell" style="--heat:0.5;"></div><div class="qoder-heatmap__cell" style="--heat:0.3;"></div><div class="qoder-heatmap__cell" style="--heat:0.1;"></div></div>
+          <div class="qoder-heatmap__row"><span class="qoder-heatmap__label">Wed</span><div class="qoder-heatmap__cell" style="--heat:0.2;"></div><div class="qoder-heatmap__cell" style="--heat:0.5;"></div><div class="qoder-heatmap__cell" style="--heat:0.7;"></div><div class="qoder-heatmap__cell" style="--heat:1;"></div><div class="qoder-heatmap__cell" style="--heat:0.8;"></div><div class="qoder-heatmap__cell" style="--heat:0.6;"></div><div class="qoder-heatmap__cell" style="--heat:0.4;"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 24. Web Components 扩展 -->
+    <section class="demo-section">
+      <h2 class="demo-section-title"><span class="num">24</span>Web Components 扩展（18 个自定义元素）</h2>
+      <p class="demo-section-desc">v3.0 新增 18 个原生自定义元素：button、input、badge、avatar、alert、switch、tabs、progress、spinner、select、slider、tooltip、card、breadcrumb、steps、timeline、empty、pagination。一行标签即可使用。</p>
+      <div class="demo-box">
+        <div class="demo-label">基础元素</div>
+        <div class="demo-row" style="margin-bottom:20px;">
+          <qoder-button variant="primary">主要按钮</qoder-button>
+          <qoder-button variant="secondary">次要按钮</qoder-button>
+          <qoder-button variant="ghost">幽灵按钮</qoder-button>
+          <qoder-badge variant="success">Badge</qoder-badge>
+          <qoder-avatar text="Q" size="sm"></qoder-avatar>
+          <qoder-avatar text="AI"></qoder-avatar>
+          <qoder-switch checked></qoder-switch>
+          <qoder-spinner></qoder-spinner>
+        </div>
+        <div class="demo-label">Input & Progress</div>
+        <div class="demo-row" style="margin-bottom:20px;">
+          <qoder-input placeholder="自定义输入框"></qoder-input>
+          <qoder-progress value="70" style="width:200px;display:inline-block;"></qoder-progress>
+        </div>
+        <div class="demo-label">Alert</div>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px;">
+          <qoder-alert type="info">这是信息提示</qoder-alert>
+          <qoder-alert type="success">操作成功</qoder-alert>
+          <qoder-alert type="warning">请注意警告</qoder-alert>
+          <qoder-alert type="error">发生错误</qoder-alert>
+        </div>
+        <div class="demo-label">Tabs & Card</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
+          <qoder-tabs items="概览,代码,讨论,设置" active="0"></qoder-tabs>
+          <qoder-card title="卡片标题">这是卡片内容，支持标题属性和默认插槽。</qoder-card>
+        </div>
+        <div class="demo-label">Steps & Timeline（属性驱动）</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <qoder-steps steps='[{"title":"第一步"},{"title":"第二步"},{"title":"第三步"}]' current="1"></qoder-steps>
+          <qoder-timeline items='[{"time":"09:00","title":"启动","desc":"项目开始","status":"complete"},{"time":"14:00","title":"开发","desc":"进行中","status":"active"},{"time":"待办","title":"上线","status":"wait"}]'></qoder-timeline>
         </div>
       </div>
     </section>

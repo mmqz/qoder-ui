@@ -139,3 +139,143 @@ qoder-ui/
 打开 `examples/index.html` 即可查看所有组件和 8 个主题的效果。
 ## License
 MIT
+
+## v3.0 完整版更新（2026-09-04）
+
+### 新增 4 个 CSS 模块（约 2000+ 行）
+
+#### 1. qoder-chat.css — 完整聊天界面
+- 消息列表（用户/AI/系统三种消息类型）
+- 代码块（语言标签 + 复制按钮 + 行号 + 语法着色）
+- 流式打字光标
+- 消息操作栏（复制/重新生成/点赞/点踩）
+- 思考过程折叠面板
+- 工具调用卡片（参数 + 结果 + 状态）
+- 附件消息
+- 聊天输入区（textarea + 工具栏 + 发送按钮）
+- 欢迎空状态（标题 + 副标题 + 建议卡片网格）
+- 日期分隔线
+
+#### 2. qoder-panels.css — 面板系统
+- **命令面板**：Ctrl+Shift+P 风格，搜索输入 + 分组 + 高亮匹配 + 快捷键提示 + 底部导航提示
+- **上下文菜单**：右键菜单，禁用项/危险项/分割线/子菜单箭头/快捷键
+- **设置面板**：左侧导航 + 右侧内容 + 主题预览网格 + 设置行（标签+描述+控件）
+- **侧边栏**：活动栏（48px）+ 可折叠面板 + 会话列表 + 工作区切换器
+
+#### 3. qoder-extras.css — 扩展组件
+- **表单组件**：Select 下拉、Radio 单选、DatePicker 日期选择（日历面板）、Slider 滑块、Upload 上传区域、ColorPicker 颜色选择
+- **终端面板**：标签页 + 分屏 + 语法着色输出 + 闪烁光标 + 提示符
+- **通知中心**：右侧滑出面板 + 全部/未读标签 + 未读标记 + 全部已读 + 空状态
+- **代码 Diff 查看器**：行号 gutter + 增删行高亮 + hunk header + 统计信息
+- **布局组件**：Breadcrumb 面包屑、Steps 步骤条（水平+垂直）、Timeline 时间线、Pagination 分页、Empty 空状态、Descriptions 描述列表
+
+#### 4. qoder-viz.css — 可视化组件
+- **Agent 工作流**：任务规划面板（步骤状态）、多 Agent 协作卡片 + 消息流、运行结果面板（指标统计）
+- **数据可视化**：统计卡片（数值+变化率）、进度环（SVG）、迷你柱状图、迷你折线图（SVG）、热力图、仪表盘（SVG）
+
+### 新增 qoder-interactions.js（约 1000+ 行）
+
+#### 交互模块
+- `QoderUI.palette` — 命令面板（搜索/过滤/键盘导航/选中回调）
+- `QoderUI.contextMenu` — 上下文菜单（定位/防溢出/点击外部关闭）
+- `QoderUI.notificationCenter` — 通知中心（添加/打开/关闭/全部已读/未读计数）
+- `QoderUI.draggable` — HTML5 拖拽排序（占位符/上下半区判断）
+- `QoderUI.hotkeys` — 键盘快捷键系统（注册/冲突检测/组合键解析）
+- 表单交互：Select 展开收起、DatePicker 日历、Slider 拖拽（鼠标+触摸）、Collapsible 折叠、Thinking 思考折叠、设置导航、活动栏切换
+
+#### 21 个 Web Components（新增 18 个）
+| 标签 | 说明 | 属性 |
+|------|------|------|
+| `<qoder-button>` | 按钮 | variant, size, disabled |
+| `<qoder-input>` | 输入框 | placeholder, type, value, error |
+| `<qoder-badge>` | 徽章 | variant |
+| `<qoder-avatar>` | 头像 | size, text, src |
+| `<qoder-alert>` | 提示框 | type |
+| `<qoder-switch>` | 开关 | checked |
+| `<qoder-tabs>` | 标签页 | items, active |
+| `<qoder-progress>` | 进度条 | value |
+| `<qoder-spinner>` | 加载动画 | size |
+| `<qoder-select-wc>` | 下拉选择 | placeholder, options |
+| `<qoder-slider-wc>` | 滑块 | min, max, value |
+| `<qoder-tooltip>` | 工具提示 | text, position |
+| `<qoder-card>` | 卡片 | title |
+| `<qoder-breadcrumb>` | 面包屑 | items (JSON) |
+| `<qoder-steps>` | 步骤条 | steps (JSON), current, vertical |
+| `<qoder-timeline>` | 时间线 | items (JSON) |
+| `<qoder-empty>` | 空状态 | icon, title, desc |
+| `<qoder-pagination>` | 分页 | total, current |
+| `<qoder-user-card>`* | 用户卡片 | email, label, time, variant, name, role |
+| `<qoder-dialog>`* | 对话框 | title, open |
+| `<qoder-theme-switcher>`* | 主题切换 | — |
+
+*v2.1 已有
+
+### 无障碍 a11y
+- ARIA 属性（dialog 角色、aria-label）
+- 焦点管理（:focus-visible 轮廓）
+- 键盘导航（命令面板 ↑↓↵ESC、Tab 顺序）
+- 语义化标签（nav、button、label）
+
+### 响应式适配
+- 768px 断点：侧边栏布局转为垂直、活动栏转为顶部横栏、设置面板转为垂直、聊天消息内边距调整、命令面板宽度自适应、通知中心全宽、Agent 网格单列
+- 480px 断点：欢迎建议单列、描述列表标签缩小
+- 触控友好：交互元素最小 44×44px
+
+### 文件结构
+```
+qoder-ui/
+├── src/
+│   ├── index.css                    # 入口（引入全部 10 个 CSS）
+│   ├── qoder-ui.js                  # 基础 JS（主题/Toast/Dialog/3 WC）
+│   ├── qoder-interactions.js        # v3.0 交互 JS（面板/表单/拖拽/快捷键/18 WC）
+│   ├── themes/
+│   │   └── qoder-themes.css         # 8 个官方主题
+│   ├── styles/
+│   │   └── base.css                 # 基础重置 + 设计令牌
+│   ├── components/
+│   │   ├── qoder-components.css     # 20 个基础组件
+│   │   ├── qoder-advanced.css       # 12 类高级组件
+│   │   ├── qoder-icons.css          # 408 codicon + 30 seti
+│   │   ├── qoder-markdown.css       # Markdown 渲染样式
+│   │   ├── qoder-chat.css           # v3.0 聊天界面
+│   │   ├── qoder-panels.css         # v3.0 命令面板+上下文菜单+设置+侧边栏
+│   │   ├── qoder-extras.css         # v3.0 表单+终端+通知+Diff+布局
+│   │   └── qoder-viz.css            # v3.0 Agent工作流+数据可视化
+│   └── fonts/
+│       ├── codicon.ttf              # 125KB 图标字体
+│       └── qoder-seti.woff          # 32KB 文件类型图标
+├── examples/
+│   └── index.html                   # 24 区块完整演示
+├── package.json                     # v3.0.0
+└── README.md
+```
+
+### 快速开始
+```html
+<link rel="stylesheet" href="qoder-ui/src/index.css">
+<script src="qoder-ui/src/qoder-ui.js"></script>
+<script src="qoder-ui/src/qoder-interactions.js"></script>
+
+<!-- 设置主题 -->
+<html data-theme="forest-light">
+
+<!-- 使用 Web Component -->
+<qoder-button variant="primary">点击我</qoder-button>
+<qoder-alert type="success">操作成功</qoder-alert>
+
+<!-- JS API -->
+<script>
+  QoderUI.toast.show('Hello!', 'success');
+  QoderUI.palette.open([{label:'命令一', group:'分组'}], (item) => {});
+  QoderUI.hotkeys.register('ctrl+k', () => alert('Ctrl+K'));
+</script>
+```
+
+### v3.0 统计
+- **CSS 文件**：10 个模块，总计约 6000+ 行
+- **JS 文件**：2 个模块，总计约 1600+ 行
+- **组件总数**：50+ 个组件类
+- **Web Components**：21 个自定义元素
+- **主题**：8 个官方主题全覆盖
+- **图标**：408 codicon + 30 seti
+- **零依赖**：纯原生 CSS + JS，无任何外部库
