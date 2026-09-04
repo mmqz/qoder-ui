@@ -136,7 +136,7 @@ qoder-ui/
 6. 抛弃原生 React/Tailwind 打包代码，重写为纯原生 CSS + Web Components
 **技术栈**：Qoder = VS Code fork + Electron + React + Vite + Tailwind CSS
 
-> PC 端覆盖率对账（官方 App `qoder-cn 1:0.1.6` 与 IDE `1.1.3` 的双向值匹配审计、"哪里没分析"逐键清单）见 **`docs/pc-coverage-audit.md`**；移动端专项见 `docs/coverage-audit.md`。
+> PC 端覆盖率对账（官方 App `qoder-cn 1:0.1.6` 与 IDE `1.1.3` 的双向值匹配审计、"哪里没分析"逐键清单）见 **`docs/pc-coverage-audit.md`**；移动端专项见 `docs/coverage-audit.md`；桌面云端控制面协议（loop-server/turn 派发/runtime 心跳）与 CF 连接器自建架构见 **`docs/pc-cloud-control-plane.md`**。
 ## 演示
 打开 `examples/index.html` 即可查看所有组件和 8 个主题的效果。
 ## License
@@ -932,3 +932,24 @@ qoder-ui/
 - 导出面 31→32（`MobileApi` 命名导出）；`types/index.d.ts` 补齐 Mobile + MobileApi 完整类型
 - 示例页第⑪屏：Mock 后端 + 拉取会话 + 消息→审批闭环 + HMAC/VPC 自检，四按钮可操作
 - 测试 **232/232 全绿**（+30：端点对账/控制面/事件语义/SyncStore/HMAC 黄金向量/VPC 映射/Mock 闭环/SSE 断线续传/组件接线集成）
+
+## v3.11.0 桌面端云端控制面审计：loop-server 协议还原 + CF 连接器自建架构（2026-09-05）
+
+> 补全三端链路的**桌面侧最后一块拼图**：官方桌面双包（App v0.1.6 asar 主进程 5.93MB 偏移级审计 + IDE v1.1.3 deb 解包交叉验证）证实"手机↔云端↔桌面"的桌面接入点是**协作控制面 loop-server**；云端控制节点自建方案按用户决策落定为 **Cloudflare 连接器（cloudflared tunnel + Workers/DO/D1/R2）**。
+
+### ① 控制面协议还原（docs/pc-cloud-control-plane.md 七章实证报告）
+- **loop-server 寻址**：`QODER_SERVER_BASE_URL` 环境变量注入、默认为空=功能关闭（`QODER_DEMO_DATA` 演示态）——官方桌面客户端**零改动指向自建云端**的合法入口；同族注入面 121 项（`QODER_OPENAPI_BASE_URL`/`QODER_TELEMETRY_BASE_URL` 等）
+- **Runtime 生命周期**：`/v1/runtime-installations/{register,registrations,heartbeat,deregister}` 四端点 + registrations/profiles/agent-runtime-targets 三列表——移动端 `last_heartbeat_at` 的桌面源头；协议族枚举 `qoder|codex|pi`
+- **拉取式派发**：`POST /v1/runtime-registrations/{id}/turns/claim`（204=无任务，同 registration 连发排空 ≤8 次）+ `PATCH /v1/turns/{id}` 回传（outbox 5s 重试）——桌面在 NAT 后无需公网入站；Turn 八态状态机 + 失败码三分类 + 派发路由强校验清单（409 CLAIMED_TURN_SNAPSHOT_REQUIRED）
+- **会话绑定**：`/v1/sessions/{id}/runtime-bindings`，`executionPlaneKind:"client-managed"` + Idempotency-Key + If-Match ETag 并发贯穿全写操作
+- **增量通道**：`GET /v1/events?after={cursor}` SSE（cursor 单调正整数、`event: collaboration` 触发全量 refresh、1s→30s 指数退避、401 刷新重试）；对照面：国际云沙箱 `api.qoder.com/api/v1/cloud`（environments/agents/sessions/Anthropic 风格事件）
+- **执行体**：`@qoder-ai/qoder-cn-agent-sdk`（Process/Worker Transport）+ Remote-SSH `remote-runtime`（thin/full 双形态）stdio 协议（system.hello/ping 15s 心跳 45s 判死）——传输无关执行机协议可平移至隧道场景
+- **深链归属澄清**：`qoder-cn://` 系统级注册方是 **IDE**（url-handler desktop 双 scheme），App 侧 open-url/second-instance 入 20 条/600s 队列；`aicoding.aicoding-deeplink://mcp/add` 为 MCP 安装提案
+
+### ② CF 连接器自建架构（用户已拍板）
+- 官方组件→CF 映射表：loop-server→Workers+Durable Objects（TurnQueue/EventStream/Cursor）；关系数据→D1；产物 presign→R2；凭据三段式（accessToken/jobToken/deviceToken）→CF Access+自签 JWT
+- 三入口（手机 REST+SSE / 桌面 claim / 内网 PC cloudflared 隧道）共享同一事件存储，云端控制节点**永不发起入站连接**——官方拉取式设计是 CF 方案的可行性根基
+- 端点实现清单三级优先级（MVP 闭环六项→协作 CRUD→移动端 45 端点全量对拍）
+
+### ③ 工具与数据
+- `scripts/pc_cloud_audit.py`：桌面控制面审计脚本（端点 39 静态+59 动态模板 / 环境变量 121 项 / 协议常量 45+1 阴性对照 / IDE 信号 6/6），`docs/pc-cloud-audit.json` 机器可读数据落盘

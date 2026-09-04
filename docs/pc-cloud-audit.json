@@ -1,0 +1,679 @@
+{
+  "schema": "pc-cloud-audit/v1",
+  "generated_at": "2026-09-04T22:52:41.605295+00:00",
+  "app": {
+    "path": "pc/asar_x/out/main/index.js",
+    "bytes": 5931013,
+    "endpoints": {
+      "static": {
+        "/v1/agents": 3,
+        "/v1/projects": 3,
+        "/api/v1/me/mcp-servers": 2,
+        "/api/v1/userinfo": 2,
+        "/sash/api/v1/me/campaigns": 2,
+        "/sash/api/v1/organizations": 2,
+        "/v1/squads": 2,
+        "/api/v1/cloud": 1,
+        "/api/v1/deviceToken/poll": 1,
+        "/api/v1/deviceToken/refresh": 1,
+        "/api/v1/inner/organizations": 1,
+        "/api/v1/jobToken/exchange": 1,
+        "/api/v1/jobToken/refresh": 1,
+        "/api/v1/mcp-authorization-requests": 1,
+        "/api/v1/me/data-policy": 1,
+        "/api/v1/me/jobToken": 1,
+        "/api/v1/organizations": 1,
+        "/api/v1/ping": 1,
+        "/api/v2/quota/usage": 1,
+        "/api/v2/service/realtime-voice/aoq/sessions": 1,
+        "/api/v2/service/ws/asr": 1,
+        "/api/v2/user/plan": 1,
+        "/sash/api/v1/ai-conversations/credits-heatmap": 1,
+        "/v1/agent-runtime-targets": 1,
+        "/v1/discussions": 1,
+        "/v1/events": 1,
+        "/v1/issue-discussion-links": 1,
+        "/v1/runtime-installations/register": 1,
+        "/v1/runtime-profiles": 1,
+        "/v1/runtime-registrations": 1
+      },
+      "dynamic_templates": {
+        "/v1/discussions/${encodeURIComponent": 14,
+        "/v1/issues/${encodeURIComponent": 13,
+        "/v1/projects/${encodeURIComponent": 11,
+        "/v1/agents/${encodeURIComponent": 6,
+        "/v1/discussion-messages/${encodeURIComponent": 3,
+        "/v1/runtime-installations/${encodeURIComponent": 3,
+        "/v1/turns/${encodeURIComponent": 2,
+        "/v1/discussions${jR": 1,
+        "/v1/invitations/${encodeURIComponent": 1,
+        "/v1/issue-discussion-links/${encodeURIComponent": 1,
+        "/v1/runtime-registrations/${encodeURIComponent": 1,
+        "/v1/sessions/${encodeURIComponent": 1,
+        "/v1/squad-runs/${encodeURIComponent": 1,
+        "/v1/squads/${encodeURIComponent": 1
+      },
+      "static_total": 39,
+      "dynamic_total": 59
+    },
+    "urls": {
+      "by_group": {
+        "openapi/gateway (CN 业务面)": [
+          {
+            "host": "gateway.qoder.com.cn",
+            "hits": 4
+          },
+          {
+            "host": "openapi.qoder.com.cn",
+            "hits": 3
+          },
+          {
+            "host": "test-openapi.qoder.com.cn",
+            "hits": 3
+          },
+          {
+            "host": "test-gateway.qoder.com.cn",
+            "hits": 3
+          }
+        ],
+        "其他": [
+          {
+            "host": "qoder.cn",
+            "hits": 3
+          },
+          {
+            "host": "www.w3.org",
+            "hits": 3
+          },
+          {
+            "host": "cdnjs.cloudflare.com",
+            "hits": 2
+          },
+          {
+            "host": "test.qoder.com.cn",
+            "hits": 1
+          },
+          {
+            "host": "example.com",
+            "hits": 1
+          },
+          {
+            "host": "www.google.com",
+            "hits": 1
+          },
+          {
+            "host": "qoder.com",
+            "hits": 1
+          },
+          {
+            "host": "github.com",
+            "hits": 1
+          }
+        ],
+        "阿里云外围": [
+          {
+            "host": "proj-xtrace-7949c0f9d87d87c44fb1d52e3221c-cn-shanghai.cn-shanghai.log.aliyuncs.com",
+            "hits": 2
+          }
+        ],
+        "国际论坛/文档": [
+          {
+            "host": "docs.qoder.com",
+            "hits": 2
+          },
+          {
+            "host": "forum.qoder.com",
+            "hits": 1
+          }
+        ],
+        "collab/ops (sh)": [
+          {
+            "host": "center.qoder.sh",
+            "hits": 2
+          },
+          {
+            "host": "test-openapi.qoder.sh",
+            "hits": 1
+          },
+          {
+            "host": "openapi.qoder.sh",
+            "hits": 1
+          },
+          {
+            "host": "test-ops2.qoder.sh",
+            "hits": 1
+          }
+        ],
+        "static/download (CN 包面)": [
+          {
+            "host": "static.qoder.com.cn",
+            "hits": 1
+          },
+          {
+            "host": "download.qoder.com.cn",
+            "hits": 1
+          }
+        ],
+        "Qoder Cloud (国际云)": [
+          {
+            "host": "api.qoder.com",
+            "hits": 1
+          }
+        ]
+      },
+      "top_full_urls": [
+        {
+          "url": "https://qoder.cn",
+          "hits": 3
+        },
+        {
+          "url": "https://gateway.qoder.com.cn",
+          "hits": 3
+        },
+        {
+          "url": "https://openapi.qoder.com.cn",
+          "hits": 2
+        },
+        {
+          "url": "https://proj-xtrace-7949c0f9d87d87c44fb1d52e3221c-cn-shanghai.cn-shanghai.log.aliyuncs.com/rum/web/v2?workspace=default-cms-1199814959048061-cn-shanghai&service_id=btardsb9ml",
+          "hits": 2
+        },
+        {
+          "url": "https://test-openapi.qoder.com.cn",
+          "hits": 2
+        },
+        {
+          "url": "https://test-gateway.qoder.com.cn",
+          "hits": 2
+        },
+        {
+          "url": "https://docs.qoder.com",
+          "hits": 2
+        },
+        {
+          "url": "http://www.w3.org/2000/svg",
+          "hits": 2
+        },
+        {
+          "url": "https://openapi.qoder.com.cn/mind",
+          "hits": 1
+        },
+        {
+          "url": "https://test.qoder.com.cn",
+          "hits": 1
+        },
+        {
+          "url": "https://test-openapi.qoder.com.cn/mind",
+          "hits": 1
+        },
+        {
+          "url": "https://static.qoder.com.cn/qoder-app/releases/remote-runtime",
+          "hits": 1
+        },
+        {
+          "url": "https://api.qoder.com/api/v1/cloud",
+          "hits": 1
+        },
+        {
+          "url": "https://forum.qoder.com",
+          "hits": 1
+        },
+        {
+          "url": "https://example.com",
+          "hits": 1
+        },
+        {
+          "url": "https://cdnjs.cloudflare.com",
+          "hits": 1
+        },
+        {
+          "url": "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js",
+          "hits": 1
+        },
+        {
+          "url": "https://test-openapi.qoder.sh",
+          "hits": 1
+        },
+        {
+          "url": "https://openapi.qoder.sh",
+          "hits": 1
+        },
+        {
+          "url": "http://www.w3.org/2000/svg%22%20width=%2218%22%20height=%2218%22%20viewBox=%220%200%2024%2024%22%20fill=%22none%22%3E%3Cpath%20d=%22M13.5%206L16.5%203L21%207.5L18%2010.5L7.5%2021H3V16.5L13.5%206Z%22%20fill=%22white%22/%3E%3Cpath%20d=%22M23.1211%207.5L8.12109%2022.5H1.5V15.8789L16.5%200.878906L23.1211%207.5ZM4.5%2017.1211V19.5H6.87891L18.8789%207.5L16.5%205.12109L4.5%2017.1211Z%22%20fill=%22black%22%20stroke=%22white%22%20stroke-linecap=%22round%22/%3E%3Cpath%20d=%22M13.5%206L18%2010.5%22%20stroke=%22black%22%20stroke-width=%222%22%20stroke-linecap=%22round%22/%3E%3C/svg%3E",
+          "hits": 1
+        },
+        {
+          "url": "https://download.qoder.com.cn/qoder-app/releases",
+          "hits": 1
+        },
+        {
+          "url": "https://center.qoder.sh/algo",
+          "hits": 1
+        },
+        {
+          "url": "https://gateway.qoder.com.cn/algo",
+          "hits": 1
+        },
+        {
+          "url": "https://test-ops2.qoder.sh/algo",
+          "hits": 1
+        },
+        {
+          "url": "https://test-gateway.qoder.com.cn/algo",
+          "hits": 1
+        },
+        {
+          "url": "https://www.google.com/s2/favicons?domain=",
+          "hits": 1
+        },
+        {
+          "url": "https://center.qoder.sh",
+          "hits": 1
+        },
+        {
+          "url": "https://qoder.com",
+          "hits": 1
+        },
+        {
+          "url": "https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE",
+          "hits": 1
+        }
+      ],
+      "host_total": 39
+    },
+    "env_vars": {
+      "QODER_RESOURCE_NOT_FOUND": 12,
+      "QODER_RESOURCE_OUTSIDE_ROOT": 9,
+      "QODER_DEMO_DATA": 8,
+      "QODER_CONFIG_DIR": 7,
+      "QODER_RESOURCE_NOT_DIRECTORY": 7,
+      "QODER_PRODUCT_ID": 6,
+      "QODER_OPENAPI_BASE_URL": 5,
+      "QODER_APP_QCS_ACCOUNT_CHANGED": 4,
+      "QODER_RESOURCE_CHANGED": 4,
+      "QODER_APP_QCS_RATE_LIMIT_COOLDOWN": 3,
+      "QODER_BUSINESS_PRODUCT": 3,
+      "QODER_CLI_DAEMON_NOT_READY": 3,
+      "QODER_MCP_LAZY": 3,
+      "QODER_PLUGIN_DATA": 3,
+      "QODER_RESOURCE_STAT_FAILED": 3,
+      "QODER_SSH_ASKPASS_MAIN": 3,
+      "QODER_SSH_ASKPASS_NODE": 3,
+      "QODER_THIN_REQUIRED_COMMAND_MISSING": 3,
+      "QODER_AGENT_SHELL_PATH_CAPTURE_FILE": 2,
+      "QODER_AGENT_TEAMS": 2,
+      "QODER_APP_QCS_RATE_LIMITED": 2,
+      "QODER_APP_STATUS_SIGNED_IN_USER_REQUIRED": 2,
+      "QODER_CAMPAIGN_DEMO_BASE_URL": 2,
+      "QODER_HOME": 2,
+      "QODER_INFER_BASE_URL": 2,
+      "QODER_MARKET_BASE_URL": 2,
+      "QODER_METADATA_INVALID": 2,
+      "QODER_METADATA_WRITE_FAILED": 2,
+      "QODER_NODE_RUNTIME": 2,
+      "QODER_PLUGIN_ROOT": 2,
+      "QODER_PRIVATE_FILE_PATH": 2,
+      "QODER_RESOURCE_FILE_TOO_LARGE": 2,
+      "QODER_RESOURCE_GREP_UNSUPPORTED": 2,
+      "QODER_RESOURCE_INVALID_REQUEST": 2,
+      "QODER_RESOURCE_NOT_FILE": 2,
+      "QODER_RESOURCE_RESULT_ID": 2,
+      "QODER_RESOURCE_ROOT": 2,
+      "QODER_SERVER_BASE_URL": 2,
+      "QODER_SSH_ASKPASS_HANDLE": 2,
+      "QODER_SSH_ASKPASS_TOKEN": 2,
+      "QODER_TELEMETRY_BASE_URL": 2,
+      "QODER_THIN_BG": 2,
+      "QODER_AGENT_SDK_DEBUG": 1,
+      "QODER_AGENT_SDK_ENTRYPOINT": 1,
+      "QODER_AGENT_SDK_VERSION": 1,
+      "QODER_APPSHOT_BRIDGE_PATH": 1,
+      "QODER_APPSHOT_MONITOR_PATH": 1,
+      "QODER_APP_PLUGIN_ALLOW_UNVERIFIED": 1,
+      "QODER_APP_PLUGIN_DEV_DIRS": 1,
+      "QODER_APP_QCS_AUTH_REJECTED": 1,
+      "QODER_APP_QCS_INITIAL_FETCH_INCOMPLETE": 1,
+      "QODER_APP_QCS_INITIAL_SNAPSHOT_RECOVERY_TIMEOUT": 1,
+      "QODER_APP_QCS_NETWORK_ERROR": 1,
+      "QODER_APP_QCS_NOT_READY": 1,
+      "QODER_APP_QCS_REQUEST_REJECTED": 1,
+      "QODER_APP_QCS_SERVER_ERROR": 1,
+      "QODER_APP_QCS_SSE_DISCONNECTED": 1,
+      "QODER_APP_QCS_SSE_PAYLOAD_INVALID": 1,
+      "QODER_APP_STATUS_HOME_INVALID": 1,
+      "QODER_APP_STATUS_SNAPSHOT_TOO_LARGE": 1,
+      "QODER_AUTH_BASE_URL": 1,
+      "QODER_AUTH_BIZ_VARIANT": 1,
+      "QODER_AUTH_CLIENT_ID": 1,
+      "QODER_AUTH_DEBUG": 1,
+      "QODER_AUTH_DIRECT_DEVICE_FLOW": 1,
+      "QODER_AUTH_REDIRECT_URI": 1,
+      "QODER_BUSINESS_SUB_TASK": 1,
+      "QODER_CLIENT_TYPE": 1,
+      "QODER_CLI_DAEMON_ACCOUNT_CHANGED": 1,
+      "QODER_CLI_DAEMON_ACCOUNT_REQUIRED": 1,
+      "QODER_CLI_DAEMON_CORE_RETRY_EXHAUSTED": 1,
+      "QODER_CLI_DAEMON_FAILED": 1,
+      "QODER_CLI_DAEMON_HYDRATION_RETRY_EXHAUSTED": 1,
+      "QODER_CLI_DAEMON_STOPPED": 1,
+      "QODER_CLI_HOME": 1,
+      "QODER_CLI_MAX_SUBAGENT_SPAWN_DEPTH": 1,
+      "QODER_DESKTOP_BUNDLED_RESOURCES_DIR": 1,
+      "QODER_DESKTOP_UMID_RUNTIME_DIR": 1,
+      "QODER_DESKTOP_UPDATE_TEST": 1,
+      "QODER_DEV_INSTANCE_ID": 1,
+      "QODER_DEV_REMOTE_RUNTIME_COMMIT": 1,
+      "QODER_DEV_REMOTE_RUNTIME_VERSION": 1,
+      "QODER_ENV": 1,
+      "QODER_FEATURE_CODEBASE_BACKFLOW": 1,
+      "QODER_FEEDBACK_BASE_URL": 1,
+      "QODER_IDE_LOGS_HOME": 1,
+      "QODER_LAUNCHER_PROTOCOL": 1,
+      "QODER_METADATA_MISSING": 1,
+      "QODER_MTREE_NATIVE": 1,
+      "QODER_NATIVE_HTTP_USE_NODE_FETCH": 1,
+      "QODER_OPEN_DEVTOOLS": 1,
+      "QODER_OZONE_PLATFORM": 1,
+      "QODER_PAT": 1,
+      "QODER_PRODUCT_CATALOG_PATH": 1,
+      "QODER_QUEST_DB_KEY": 1,
+      "QODER_REMOTE_HOST_ID": 1,
+      "QODER_REMOTE_RUNTIME_ROOT": 1,
+      "QODER_REMOTE_SSH_FORCE_THIN": 1,
+      "QODER_RESOLVING_ENVIRONMENT": 1,
+      "QODER_RESOURCE_CANONICALIZER_MISSING": 1,
+      "QODER_RUM_DEV_REPORT": 1,
+      "QODER_SCENE": 1,
+      "QODER_SDK_AUTH_PAYLOAD_FILE": 1,
+      "QODER_SEARCH_PRODUCT_FORM": 1,
+      "QODER_SEARCH_RIPGREP_PATH": 1,
+      "QODER_SEARCH_WORKER_RUNTIME": 1,
+      "QODER_SESSION_TYPE": 1,
+      "QODER_TASK_LIST_ID": 1,
+      "QODER_THIN_ARCH_UNSUPPORTED": 1,
+      "QODER_THIN_GIT_": 1,
+      "QODER_THIN_GIT_INVALID_PATH": 1,
+      "QODER_THIN_GIT_INVALID_REF": 1,
+      "QODER_THIN_GIT_INVALID_ROOT": 1,
+      "QODER_THIN_GIT_NOT_FOUND": 1,
+      "QODER_THIN_GIT_NOT_REPOSITORY": 1,
+      "QODER_THIN_HOME_UNAVAILABLE": 1,
+      "QODER_THIN_OS_UNSUPPORTED": 1,
+      "QODER_UPDATE_CANDIDATE_PATHS": 1,
+      "QODER_UPDATE_REFERENCE_PATH": 1,
+      "QODER_WORKER_RUNTIME_ERROR": 1,
+      "QODER_WORKER_RUNTIME_PATH": 1
+    },
+    "constants": {
+      "sse_header_last_event_id": {
+        "hits": 1,
+        "present": true,
+        "desc": "SSE 重放头（移动端与 loop-server 双侧一致）"
+      },
+      "sse_accept": {
+        "hits": 2,
+        "present": true,
+        "desc": "SSE Accept"
+      },
+      "sse_event_deltas": {
+        "hits": 1,
+        "present": true,
+        "desc": "Qoder Cloud 会话流增量过滤参数"
+      },
+      "sse_heartbeat_event": {
+        "hits": 1,
+        "present": true,
+        "desc": "SSE 心跳事件帧"
+      },
+      "gw_route_token": {
+        "hits": 0,
+        "present": false,
+        "desc": "网关路由头族：移动端存在、桌面 App 无（阴性对照 = 桌面不直连移动网关）"
+      },
+      "device_token_poll": {
+        "hits": 1,
+        "present": true,
+        "desc": "OAuth Device Flow 轮询（S256）"
+      },
+      "device_token_refresh": {
+        "hits": 1,
+        "present": true,
+        "desc": "设备令牌刷新"
+      },
+      "device_flow_challenge_s256": {
+        "hits": 2,
+        "present": true,
+        "desc": "PKCE S256 挑战"
+      },
+      "job_token_exchange": {
+        "hits": 1,
+        "present": true,
+        "desc": "PAT 换 jobToken"
+      },
+      "job_token_me": {
+        "hits": 1,
+        "present": true,
+        "desc": "账号签发 jobToken"
+      },
+      "job_token_refresh": {
+        "hits": 1,
+        "present": true,
+        "desc": "jobToken 刷新"
+      },
+      "loop_runtime_install_register": {
+        "hits": 1,
+        "present": true,
+        "desc": "Runtime 安装注册"
+      },
+      "loop_runtime_install_hb": {
+        "hits": 1,
+        "present": true,
+        "desc": "Runtime 心跳（安卓端 last_heartbeat_at 的桌面源头）"
+      },
+      "loop_runtime_install_dereg": {
+        "hits": 1,
+        "present": true,
+        "desc": "Runtime 注销"
+      },
+      "loop_runtime_reconcile": {
+        "hits": 1,
+        "present": true,
+        "desc": "注册对账（PUT）"
+      },
+      "loop_runtime_registrations": {
+        "hits": 1,
+        "present": true,
+        "desc": "注册列表"
+      },
+      "loop_runtime_profiles": {
+        "hits": 1,
+        "present": true,
+        "desc": "Runtime Profile 列表"
+      },
+      "loop_runtime_targets": {
+        "hits": 1,
+        "present": true,
+        "desc": "Agent 运行目标"
+      },
+      "loop_turns_claim": {
+        "hits": 1,
+        "present": true,
+        "desc": "拉取式派单（204=无任务）"
+      },
+      "loop_turns_patch": {
+        "hits": 2,
+        "present": true,
+        "desc": "Turn 回传（PATCH status/result）"
+      },
+      "loop_runtime_bindings": {
+        "hits": 1,
+        "present": true,
+        "desc": "会话↔Runtime 绑定"
+      },
+      "loop_execution_plane": {
+        "hits": 8,
+        "present": true,
+        "desc": "执行面类型（client-managed）"
+      },
+      "loop_idempotency_key": {
+        "hits": 3,
+        "present": true,
+        "desc": "幂等键"
+      },
+      "loop_if_match": {
+        "hits": 8,
+        "present": true,
+        "desc": "ETag 并发控制"
+      },
+      "loop_events_stream": {
+        "hits": 1,
+        "present": true,
+        "desc": "协作增量 SSE（after=cursor）"
+      },
+      "loop_event_collab": {
+        "hits": 1,
+        "present": true,
+        "desc": "协作事件类型"
+      },
+      "loop_turn_states": {
+        "hits": 732,
+        "present": true,
+        "desc": "Turn 八态状态机"
+      },
+      "loop_protocol_family": {
+        "hits": 105,
+        "present": true,
+        "desc": "Agent 协议族枚举"
+      },
+      "loop_failure_codes": {
+        "hits": 22,
+        "present": true,
+        "desc": "Turn 失败码三分类"
+      },
+      "agent_sdk_transport": {
+        "hits": 7,
+        "present": true,
+        "desc": "qoder-cn-agent-sdk 传输层"
+      },
+      "remote_host_hello": {
+        "hits": 5,
+        "present": true,
+        "desc": "Remote Host stdio 协议握手/心跳"
+      },
+      "remote_host_hb_15s": {
+        "hits": 2,
+        "present": true,
+        "desc": "Remote Host 心跳 15s 间隔"
+      },
+      "remote_host_timeout_45s": {
+        "hits": 4,
+        "present": true,
+        "desc": "Remote Host 心跳超时 45s"
+      },
+      "remote_ssh_runtime": {
+        "hits": 138,
+        "present": true,
+        "desc": "Remote-SSH runtime（thin/full）"
+      },
+      "cloud_api_base": {
+        "hits": 1,
+        "present": true,
+        "desc": "国际云 Cloud Agent 基址"
+      },
+      "cloud_user_message": {
+        "hits": 1,
+        "present": true,
+        "desc": "会话事件：用户消息"
+      },
+      "cloud_tool_confirm": {
+        "hits": 1,
+        "present": true,
+        "desc": "会话事件：工具确认（tool_use_id）"
+      },
+      "cloud_session_cancel": {
+        "hits": 1,
+        "present": true,
+        "desc": "会话取消"
+      },
+      "cloud_agent_toolset": {
+        "hits": 1,
+        "present": true,
+        "desc": "Agent 工具集类型"
+      },
+      "deeplink_accept": {
+        "hits": 5,
+        "present": true,
+        "desc": "深链入口（队列 20 条/600s 过期）"
+      },
+      "deeplink_open_url": {
+        "hits": 2,
+        "present": true,
+        "desc": "Electron open-url 事件"
+      },
+      "deeplink_second_instance": {
+        "hits": 2,
+        "present": true,
+        "desc": "Windows/Linux argv 深链"
+      },
+      "env_server_base_url": {
+        "hits": 2,
+        "present": true,
+        "desc": "loop-server 地址环境变量（自建后端官方入口）"
+      },
+      "env_openapi_base_url": {
+        "hits": 5,
+        "present": true,
+        "desc": "openapi 基址覆盖"
+      },
+      "env_telemetry_base_url": {
+        "hits": 2,
+        "present": true,
+        "desc": "遥测基址覆盖"
+      },
+      "env_demo_data": {
+        "hits": 8,
+        "present": true,
+        "desc": "演示数据模式"
+      }
+    }
+  },
+  "ide": {
+    "path": "pc/ide_x/usr/share/qoder-cn-ide/resources/app/out",
+    "signals": {
+      "scheme_qoder_cn_handler": {
+        "hits": 22,
+        "desc": "IDE url-handler desktop 注册 qoder-cn:// 与 qoder-cn-ide://",
+        "present": true
+      },
+      "agents_window": {
+        "hits": 857,
+        "desc": "lingma agents 窗口（会话执行 UI）",
+        "present": true
+      },
+      "remote_environments_api": {
+        "hits": 6,
+        "desc": "会话执行环境列表（openapi）",
+        "present": true
+      },
+      "sash_integrations": {
+        "hits": 6,
+        "desc": "GitHub 集成端点（sash 域）",
+        "present": true
+      },
+      "device_token": {
+        "hits": 7,
+        "desc": "IDE 侧设备令牌",
+        "present": true
+      },
+      "url_handler_schemes": {
+        "present": true,
+        "hits": 2,
+        "desc": "深链 scheme 清单",
+        "schemes": [
+          "qoder-cn-ide",
+          "qoder-cn"
+        ]
+      }
+    }
+  }
+}
