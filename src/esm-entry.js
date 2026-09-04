@@ -42,5 +42,8 @@ export const {
   createTransport,
   mount,
   ShadowElement,
-  core
+  core,
+  t,
+  i18n,
+  setLocale
 } = QoderUI;

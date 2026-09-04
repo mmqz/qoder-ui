@@ -33,6 +33,11 @@
     : String(s == null ? '' : s).replace(/[&<>"']/g, (c) =>
       ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])));
 
+  // v3.3.3 i18n：接管界面文案（console/throw 保持原文）；加载期不触碰 window（SSR 安全）
+  const _qc = (typeof globalThis !== 'undefined' && globalThis.QoderCore) ||
+    (typeof window !== 'undefined' ? window.QoderCore : null) || null;
+  const t = (_qc && _qc.t) || ((s) => s);
+
   function debounce(fn, ms) {
     let t;
     return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); };
@@ -634,7 +639,11 @@
     dialog: QoderDialog,
     toast: QoderToast,
     init,
-    version: '3.3.2'
+    version: '3.3.3',
+    // v3.3.3 i18n 门面：QoderUI.t('已复制') / QoderUI.setLocale('en') / QoderUI.i18n.register(...)
+    t,
+    i18n: (_qc && _qc.i18n) || null,
+    setLocale(name) { if (_qc) _qc.setLocale(name); }
   };
   const _g = (typeof globalThis !== 'undefined' ? globalThis : {});
   const _ns = (typeof window !== 'undefined' ? window : _g);

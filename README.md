@@ -652,3 +652,22 @@ qoder-ui/
 - **浏览器**：行为零变化（全部 52 条既有用例 + 无头浏览器端到端回归通过：主题/聊天/终端/词级 Diff/ESC/REST 连接）
 - 测试套件 52 → **57 用例**（新增 `tests/exports.test.mjs` 5 条，含"干净子进程 SSR 导入"语义验证）
 - 版本统一 **3.3.2**（package.json = 运行时 = 构建横幅）
+
+## v3.3.3 通用性加固（2026-09-04）
+
+> 针对"给其他项目用"目标的遗留问题清单：A 类（工程化缺项）与 B 类（协议健壮性）全部补齐。
+
+### 新增能力
+| 项 | 说明 |
+|----|------|
+| **LICENSE（MIT）** | 补齐授权文件（package.json files 已引用） |
+| **GitHub Actions CI** | Node 18/20/22 矩阵：`npm ci → npm test → npm run build` + 产物完整性抽检（CJS 导出 / ESM SSR 导入冒烟） |
+| **i18n（gettext 风格）** | `QoderUI.t('已复制')` — key 即中文源串，无语言表时原样返回；内置 `en` 表；`QoderUI.setLocale('en')` 切换；`QoderUI.i18n.register('xx', {...})` 扩展任意语言；模板插值由调用方处理（`t('共 {n} 页').replace('{n}', n)`）。**仅接管界面文案，console 日志与 throw 错误保持中文原文** |
+| **WS 心跳（死链检测）** | 应用层 ping/pong，默认 `{ interval: 30000, timeout: 10000 }`；**任意入站消息均视为活性信号**（兼容不实现 pong 的服务端）；超时无响应 → 主动断开触发既有重连；`opts.heartbeat: false` 关闭；客户端自动应答服务端 ping（协议 v1 对等，axum 模板已同步） |
+| **REST 建连超时** | 默认 15000ms，仅守护响应头阶段（SSE 流式读取不限时）；超时 → `onError { message: 'timeout' }`（与用户 abort 的 `'aborted'` 区分）；`opts.timeout: 0` 关闭 |
+| **终端 scrollback 上限** | 默认 500 行，超出裁剪最老输出行（绝不动活动输入行）；`QoderUI.config.terminalScrollback` 可调，0 = 不限 |
+
+### 验证
+- 测试套件 57 → **69 用例**（新增 12 条：i18n ×3 / WS 心跳 ×4 / REST 超时 ×3 / scrollback ×2），并行模式全绿
+- 浏览器端到端：`setLocale('en')` 实时切换（终端 help 输出英文）→ 切回中文；scrollback 设 10 跑 20 条命令 DOM 稳定 10 行；REST 远程 pwd 往返正常；全程零 JS 错误
+- 导出面 26 → **29**（新增 `t` / `i18n` / `setLocale`），ESM/CJS 双格式键值断言通过

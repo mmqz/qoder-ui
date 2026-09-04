@@ -82,7 +82,16 @@ export interface QoderShadowApi {
   resolveEntryCSS(): Promise<string>;
 }
 
-export interface QoderConfig { shadow: boolean }
+export interface QoderConfig { shadow: boolean; terminalScrollback?: number }
+
+/** v3.3.3 i18n（gettext 风格：key 即中文源串） */
+export interface QoderI18n {
+  locale: string | null;
+  locales: Record<string, Record<string, string>>;
+  register(name: string, table: Record<string, string>): QoderI18n;
+  use(name: string | null): QoderI18n;
+  current(): string;
+}
 
 export interface QoderThemeApi {
   THEMES: QoderThemeId[];
@@ -212,6 +221,8 @@ export interface QoderRestTransportOptions {
   terminalUrl?: string;
   headers?: Record<string, string>;
   fetchImpl?: typeof fetch;
+  /** v3.3.3 建连超时（ms）：仅守护响应头阶段，流式读取不限时；默认 15000，0 关闭 */
+  timeout?: number;
 }
 
 export interface QoderWSTransportOptions {
@@ -220,6 +231,8 @@ export interface QoderWSTransportOptions {
   reconnectDelay?: number;
   maxRetries?: number;
   wsImpl?: any;
+  /** v3.3.3 心跳：默认 { interval: 30000, timeout: 10000 }；false 关闭 */
+  heartbeat?: false | { interval?: number; timeout?: number };
 }
 
 export interface QoderTransportApi {
@@ -320,6 +333,10 @@ export interface QoderUIApi {
   transport: QoderTransportApi;
   createTransport: QoderTransportApi['create'];
   mount(target: string | HTMLElement, options?: QoderMountOptions): QoderMountHandle;
+  /** v3.3.3 i18n：翻译用户可见文案（默认回退源串） */
+  t(s: string): string;
+  i18n: QoderI18n;
+  setLocale(name: string | null): void;
   WC: QoderWCRegistry;
   shadowEnabled(el?: HTMLElement): boolean;
   escapeHtml(s: unknown): string;

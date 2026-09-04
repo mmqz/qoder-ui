@@ -38,6 +38,9 @@
   // v3.3.2（测试发现修复）：注册不再依赖 window —— Node/SSR 亦可 import 纯逻辑 API
   const QF = _g.QoderUI = _g.QoderUI || {};
 
+  // v3.3.3 i18n：仅接管用户可见文案（console/throw 保持原文）
+  const t = (_g.QoderCore && _g.QoderCore.t) || ((s) => s);
+
   const PROTOCOL_VERSION = 1;
   let _seq = 0;
   function genId(prefix) {
@@ -74,7 +77,7 @@
 
   MockTransport.prototype.chat = function(text, handlers) {
     handlers = handlers || {};
-    const full = '收到你的消息："' + text + '"。当前为本地 Mock 模式；配置 REST / WebSocket 后端后，这段回复将来自你的真实服务（Rust / TS / 任意语言）。';
+    const full = t('收到你的消息：') + '"' + text + '"' + t('。当前为本地 Mock 模式；配置 REST / WebSocket 后端后，这段回复将来自你的真实服务（Rust / TS / 任意语言）。');
     let i = 0; let stopped = false;
     const self = this;
     if (handlers.onStart) handlers.onStart();
@@ -105,7 +108,7 @@
     const self = this;
     let stdout = ''; let stderr = ''; let exitCode = 0; let outCwd = cwd || '~';
     if (cmd === 'help') {
-      stdout = '可用命令: help, clear, echo, date, whoami, ls, pwd, cd, exit';
+      stdout = t('可用命令: help, clear, echo, date, whoami, ls, pwd, cd, exit');
     } else if (cmd === 'date') {
       stdout = new Date().toString();
     } else if (cmd === 'whoami') {
@@ -161,7 +164,13 @@
     this._termUrl = opts.terminalUrl || (this._baseUrl + '/terminal');
     this._fetch = opts.fetchImpl || (typeof fetch !== 'undefined' ? fetch.bind(_g) : null);
     if (!this._fetch) throw new Error('[QoderUI] RestTransport 需要 fetch 环境（浏览器 / Node>=18）');
+    // v3.3.3 超时兜底：仅守护建连阶段（响应头到达即停止计时；流式读取不限时）
+    this._timeout = opts.timeout != null ? opts.timeout : 15000;
   }
+  RestTransport.prototype._armConnectTimeout = function(ctrl, onFire) {
+    if (!this._timeout || !ctrl) return null;
+    return setTimeout(function() { if (onFire) onFire(); ctrl.abort(); }, this._timeout);
+  };
   RestTransport.prototype._setStatus = MockTransport.prototype._setStatus;
   RestTransport.prototype.onStatus = function(cb) { this._statusCbs.add(cb); cb(this.status); return function() { this._statusCbs.delete(cb); }.bind(this); };
   RestTransport.prototype.connect = function() { this._setStatus('open'); return Promise.resolve(); };
@@ -175,6 +184,8 @@
     const ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
     const msgId = genId('chat');
     if (handlers.onStart) handlers.onStart();
+    let timedOut = false;
+    const tmo = this._armConnectTimeout(ctrl, function() { timedOut = true; });
 
     (async function() {
       try {
@@ -184,6 +195,7 @@
           body: JSON.stringify({ v: PROTOCOL_VERSION, id: msgId, type: 'chat.send', channel: 'chat', payload: { text: text, sessionId: (ctx && ctx.sessionId) || null }, ts: Date.now() }),
           signal: ctrl ? ctrl.signal : undefined
         });
+        if (tmo) clearTimeout(tmo);
         if (!res.ok) throw new Error('HTTP ' + res.status);
         const ct = (res.headers && res.headers.get && res.headers.get('content-type')) || '';
         if (ct.indexOf('text/event-stream') >= 0) {
@@ -225,7 +237,8 @@
           if (handlers.onDone) handlers.onDone(content);
         }
       } catch (e) {
-        if (e && e.name === 'AbortError') { if (handlers.onError) handlers.onError({ message: 'aborted' }); }
+        if (tmo) clearTimeout(tmo);
+        if (e && e.name === 'AbortError') { if (handlers.onError) handlers.onError({ message: timedOut ? 'timeout' : 'aborted' }); }
         else if (handlers.onError) handlers.onError(cloneError(e));
       }
     })();
@@ -237,6 +250,8 @@
     handlers = handlers || {};
     const self = this;
     const ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    let timedOut = false;
+    const tmo = this._armConnectTimeout(ctrl, function() { timedOut = true; });
     (async function() {
       try {
         const res = await self._fetch(self._termUrl, {
@@ -245,6 +260,7 @@
           body: JSON.stringify(envelope('terminal.input', { cmd: cmd, cwd: cwd || '~', tabId: (ctx && ctx.tabId) || null }, ctx ? 'terminal:' + ctx.tabId : null)),
           signal: ctrl ? ctrl.signal : undefined
         });
+        if (tmo) clearTimeout(tmo);
         if (!res.ok) throw new Error('HTTP ' + res.status);
         const json = await res.json();
         const p = json.payload || json;
@@ -253,7 +269,8 @@
         if (p.cwd && handlers.onCwd) handlers.onCwd(p.cwd);
         if (handlers.onExit) handlers.onExit(p.exitCode != null ? p.exitCode : 0);
       } catch (e) {
-        if (e && e.name === 'AbortError') { if (handlers.onError) handlers.onError({ message: 'aborted' }); }
+        if (tmo) clearTimeout(tmo);
+        if (e && e.name === 'AbortError') { if (handlers.onError) handlers.onError({ message: timedOut ? 'timeout' : 'aborted' }); }
         else {
           if (handlers.onOutput) handlers.onOutput((e && e.message) || String(e), 'stderr');
           if (handlers.onExit) handlers.onExit(1);
@@ -284,6 +301,13 @@
     this._disposed = false;
     this._ws = null;
     this._wsImpl = opts.wsImpl || (typeof WebSocket !== 'undefined' ? WebSocket : null);
+    // v3.3.3 心跳：应用层 ping/pong。任意入站消息均视为活性；opts.heartbeat=false 关闭
+    const hb = opts.heartbeat === false ? null : (opts.heartbeat || {});
+    this._hbInterval = hb ? (hb.interval || 30000) : 0;
+    this._hbTimeout = hb ? (hb.timeout || 10000) : 0;
+    this._hbTimer = null;
+    this._hbWaiting = false;
+    this._hbSentAt = 0;
   }
   WSTransport.prototype._setStatus = MockTransport.prototype._setStatus;
 
@@ -300,11 +324,13 @@
       ws.onopen = function() {
         self._retries = 0;
         self._setStatus('open');
+        self._startHeartbeat();
         if (!settled) { settled = true; resolve(); }
       };
       ws.onmessage = function(ev) { self._receive(ev.data); };
       ws.onerror = function() { if (!settled) { settled = true; self._setStatus('error'); reject(new Error('WebSocket 连接失败: ' + self._url)); } };
       ws.onclose = function() {
+        self._stopHeartbeat();
         self._setStatus('closed');
         if (!settled) { settled = true; reject(new Error('WebSocket 已关闭')); }
         self._scheduleReconnect();
@@ -322,10 +348,37 @@
   };
   WSTransport.prototype.close = function() {
     this._disposed = true;
+    this._stopHeartbeat();
     if (this._reconnectTimer) clearTimeout(this._reconnectTimer);
     if (this._ws) { try { this._ws.close(); } catch (_) {} }
     this._setStatus('closed');
     return Promise.resolve();
+  };
+
+  /* ---- v3.3.3 心跳：死链检测（TCP 半开连接时状态灯不再假亮） ---- */
+  WSTransport.prototype._startHeartbeat = function() {
+    this._stopHeartbeat();
+    if (!this._hbInterval || this._disposed) return;
+    const self = this;
+    this._hbWaiting = false; this._hbSentAt = 0;
+    this._hbTimer = setInterval(function() { self._heartbeatTick(); }, this._hbInterval);
+  };
+  WSTransport.prototype._stopHeartbeat = function() {
+    if (this._hbTimer) { clearInterval(this._hbTimer); this._hbTimer = null; }
+    this._hbWaiting = false; this._hbSentAt = 0;
+  };
+  WSTransport.prototype._heartbeatTick = function() {
+    if (!this._ws || this._ws.readyState !== 1) return;
+    // 上一跳 ping 未在超时内等到任何消息 → 判定死链，主动断开触发重连
+    if (this._hbWaiting && this._hbSentAt && (Date.now() - this._hbSentAt > this._hbTimeout)) {
+      try { this._ws.close(); } catch (_) {}
+      return;
+    }
+    if (!this._hbWaiting) {
+      this._hbWaiting = true;
+      this._hbSentAt = Date.now();
+      this.sendRaw(envelope('ping', {}));
+    }
   };
   WSTransport.prototype.onStatus = function(cb) { this._statusCbs.add(cb); cb(this.status); return function() { this._statusCbs.delete(cb); }.bind(this); };
   WSTransport.prototype.raw = function(cb) { const self = this; this._envelopeCbs.add(cb); return function() { self._envelopeCbs.delete(cb); }; };
@@ -337,6 +390,11 @@
     let env = null;
     try { env = typeof data === 'string' ? JSON.parse(data) : data; } catch (_) { return; }
     if (!env || !env.type) return;
+    // 任意入站消息均视为心跳活性信号
+    this._hbWaiting = false; this._hbSentAt = 0;
+    // 服务端主动 ping → 回 pong（协议 v1 对等）
+    if (env.type === 'ping') { this.sendRaw(envelope('pong', {})); return; }
+    if (env.type === 'pong') return; // 仅作活性确认，无需路由
     this._envelopeCbs.forEach(function(cb) { try { cb(env); } catch (_) {} });
     const p = env.payload || {};
     if (env.type === 'chat.delta' || env.type === 'chat.done' || env.type === 'chat.error') {

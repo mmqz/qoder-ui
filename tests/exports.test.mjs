@@ -17,12 +17,12 @@ const dist = path.join(here, '..', 'dist');
 const EXPECTED_EXPORTS = [
   'ShadowElement', 'WC', 'chat', 'colorpicker', 'config', 'contextMenu',
   'core', 'createTransport', 'datepicker', 'default', 'dialog', 'diff',
-  'draggable', 'hotkeys', 'mount', 'notificationCenter', 'palette',
-  'sessions', 'settings', 'shadow', 'shortcutsPanel', 'terminal',
-  'theme', 'toast', 'transport', 'upload'
+  'draggable', 'hotkeys', 'i18n', 'mount', 'notificationCenter', 'palette',
+  'sessions', 'setLocale', 'settings', 'shadow', 'shortcutsPanel', 'terminal',
+  't', 'theme', 'toast', 'transport', 'upload'
 ];
 
-test('ESM 产物：26 个命名导出全部有值（非 undefined）', async () => {
+test('ESM 产物：29 个命名导出全部有值（非 undefined）', async () => {
   const m = await import(path.join(dist, 'qoder-ui.esm.js'));
   for (const k of EXPECTED_EXPORTS) {
     assert.notEqual(m[k], undefined, `ESM 导出 ${k} 为 undefined`);
@@ -30,7 +30,7 @@ test('ESM 产物：26 个命名导出全部有值（非 undefined）', async () 
   assert.equal(Object.keys(m).filter(k => k !== '__proto__').length, EXPECTED_EXPORTS.length);
 });
 
-test('CJS 产物：26 个命名导出全部有值（require 不崩溃，SSR 安全）', () => {
+test('CJS 产物：29 个命名导出全部有值（require 不崩溃，SSR 安全）', () => {
   const m = require(path.join(dist, 'qoder-ui.cjs.js'));
   for (const k of EXPECTED_EXPORTS) {
     assert.notEqual(m[k], undefined, `CJS 导出 ${k} 为 undefined`);
@@ -38,8 +38,16 @@ test('CJS 产物：26 个命名导出全部有值（require 不崩溃，SSR 安�
 });
 
 test('Node 下纯逻辑 API 真实可用（非空壳）', async () => {
-  const { core, diff, shadow, transport, createTransport, WC, ShadowElement } =
+  const { core, diff, shadow, transport, createTransport, WC, ShadowElement, t: tFn, setLocale } =
     await import(path.join(dist, 'qoder-ui.esm.js'));
+
+  // i18n：t / setLocale 门面可用
+  assert.equal(typeof tFn, 'function');
+  assert.equal(typeof setLocale, 'function');
+  assert.equal(tFn('已复制 ✓'), '已复制 ✓'); // 默认源串
+  setLocale('en');
+  assert.equal(tFn('已复制 ✓'), 'Copied ✓');
+  setLocale(null); // 恢复，避免污染其他用例
 
   // core：模糊匹配 + 键解析
   assert.ok(core.fuzzyMatch('settings panel', 'set').score > 0);

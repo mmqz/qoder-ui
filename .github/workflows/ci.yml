@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Test & Build (Node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [18, 20, 22]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node ${{ matrix.node }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Unit tests (57+)
+        run: npm test
+
+      - name: Build (4 formats)
+        run: npm run build
+
+      - name: Verify dist artifacts
+        run: |
+          test -f dist/qoder-ui.min.js
+          test -f dist/qoder-ui.min.css
+          test -f dist/qoder-ui.esm.js
+          test -f dist/qoder-ui.cjs.js
+          node -e "const m=require('./dist/qoder-ui.cjs.js'); const need=['transport','createTransport','mount','diff','core','WC','shadow','theme','toast']; const miss=need.filter(k=>m[k]===undefined); if(miss.length){console.error('CJS 缺失导出:',miss);process.exit(1);} console.log('CJS 导出完整性 OK ('+need.length+' 项抽检)');"
+
+      - name: ESM SSR import smoke (干净子进程)
+        run: |
+          node --input-type=module -e "
+            const m = await import('./dist/qoder-ui.esm.js');
+            if (m.transport === undefined || m.diff === undefined) process.exit(1);
+            const t = m.createTransport('mock');
+            if (t.name !== 'mock') process.exit(1);
+            console.log('ESM SSR 导入 OK');
+          "

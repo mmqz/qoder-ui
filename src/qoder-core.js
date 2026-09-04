@@ -259,6 +259,78 @@
   Core.MODIFIER_KEYS = MODIFIER_KEYS;
 
   /* ============================================================
+     6.1 i18n（gettext 风格，v3.3.3）
+     ------------------------------------------------------------
+     - key 即中文源串：t('已复制') → 无语言表时原样返回
+     - 内置 en 语言表；业务方也可 register 自己的语言
+     - QoderCore.i18n.use('en') / QoderUI.setLocale('en') 切换
+     - 模板插值由调用方处理：t('已添加 {n} 个文件').replace('{n}', n)
+     - 仅接管界面文案；console 日志与 throw 错误信息保持中文原文
+     ============================================================ */
+  const I18N = {
+    locale: null,
+    locales: {},
+    register(name, table) { if (name && table && typeof table === 'object') this.locales[name] = table; return this; },
+    use(name) { this.locale = (name && this.locales[name]) ? name : null; return this; },
+    current() { return this.locale || 'zh-CN（源串）'; }
+  };
+
+  Core.i18n = I18N;
+  Core.t = function t(s) {
+    if (I18N.locale) {
+      const tbl = I18N.locales[I18N.locale];
+      if (tbl && Object.prototype.hasOwnProperty.call(tbl, s)) return tbl[s];
+    }
+    return s;
+  };
+  Core.setLocale = function setLocale(name) { I18N.use(name); };
+
+  // 内置英文语言表（key = 中文源串）。业务方可 i18n.register('xx', {...}) 扩展任意语言
+  I18N.register('en', {
+    '（空回复）': '(empty reply)',
+    '未知错误': 'Unknown error',
+    '已复制 ✓': 'Copied ✓',
+    '复制': 'Copy',
+    '重新生成中...': 'Regenerating...',
+    '新会话': 'New chat',
+    '已创建新会话': 'New chat created',
+    '已添加 {n} 个文件': 'Added {n} file(s)',
+    '关闭标签': 'Close tab',
+    '新建终端标签': 'New terminal tab',
+    '分屏 / 取消分屏': 'Split / unsplit',
+    '清空当前终端': 'Clear current terminal',
+    '可用命令: help, clear, echo, date, whoami, ls, pwd, cd, exit': 'Available: help, clear, echo, date, whoami, ls, pwd, cd, exit',
+    ' — 点击切换': ' — click to switch',
+    '通知中心': 'Notification center',
+    '切换终端': 'Switch terminal',
+    '全局搜索': 'Search everywhere',
+    '未读': 'unread',
+    '暂无通知': 'No notifications',
+    '打开命令面板': 'Open command palette',
+    '切换主题': 'Toggle theme',
+    '新建会话': 'New chat',
+    '打开设置': 'Open settings',
+    '显示快捷键帮助': 'Show shortcuts help',
+    '关闭弹窗': 'Close dialog',
+    '命令面板': 'Command palette',
+    '输入命令名称...': 'Type a command...',
+    '没有找到匹配的命令': 'No matching commands',
+    '外观': 'Appearance',
+    '聊天': 'Chat',
+    '系统': 'System',
+    '视图': 'View',
+    '编辑': 'Edit',
+    '执行: ': 'Run: ',
+    '请选择': 'Please select',
+    '暂无数据': 'No data',
+    '共 {n} 页': 'Page {n} of {total}',
+    'Shell ready. 输入 help 查看可用命令。': 'Shell ready. Type help to list commands.',
+    '收到你的消息：': 'Received your message: ',
+    '。这是一个模拟回复，实际使用时请接入你的AI后端。': '. This is a mock reply; connect your AI backend for real responses.',
+    '。当前为本地 Mock 模式；配置 REST / WebSocket 后端后，这段回复将来自你的真实服务（Rust / TS / 任意语言）。': '. Local Mock mode; configure a REST / WebSocket backend and this reply will come from your real service (Rust / TS / any language).'
+  });
+
+  /* ============================================================
      7. 导出到全局
      ============================================================ */
   const g = root || (typeof globalThis !== 'undefined' ? globalThis : this);

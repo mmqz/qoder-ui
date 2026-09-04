@@ -284,6 +284,7 @@ async fn main() {
 
    async fn handle_socket(mut socket: WebSocket) {
        // 收 Envelope（serde_json）→ 按 kind 分发：
+       //   ping           → 立即回 pong（v3.3.3 客户端心跳；任何业务消息也可视为活性）
        //   chat.send      → 流式回 chat.delta / chat.done（payload.id 原样回传）
        //   chat.abort     → 取消对应 id 的生成任务
        //   terminal.input → 起 tokio::process shell 会话：
@@ -292,6 +293,11 @@ async fn main() {
        while let Some(Ok(msg)) = socket.recv().await {
            if let Message::Text(txt) = msg {
                if let Ok(env) = serde_json::from_str::<Envelope>(&txt) {
+                   if env.r#type == "ping" {
+                       let pong = serde_json::json!({ "v": 1, "id": env.id, "type": "pong", "channel": null, "payload": {}, "ts": env.ts });
+                       let _ = socket.send(Message::Text(pong.to_string().into())).await;
+                       continue;
+                   }
                    // TODO: 分发处理，用 socket.send(Message::Text(json)) 回推信封
                    let _ = env;
                }

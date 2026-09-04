@@ -18,6 +18,9 @@
   /* ============================================================
      1. 命令面板 Command Palette
      ============================================================ */
+  // v3.3.3 i18n：接管界面文案（console/throw 保持原文）
+  const t = (_g.QoderCore && _g.QoderCore.t) || ((s) => s);
+
   QI.palette = {
     _el: null,
     _input: null,
@@ -51,10 +54,10 @@
       this._el = document.createElement('div');
       this._el.className = 'qoder-palette';
       this._el.innerHTML = `
-        <div class="qoder-palette__modal" role="dialog" aria-label="命令面板">
+        <div class="qoder-palette__modal" role="dialog" aria-label="${t('命令面板')}">
           <div class="qoder-palette__input-wrap">
             <span class="qoder-palette__icon">⌘</span>
-            <input class="qoder-palette__input" type="text" placeholder="输入命令名称..." autocomplete="off">
+            <input class="qoder-palette__input" type="text" placeholder="${t('输入命令名称...')}" autocomplete="off">
             <span class="qoder-palette__shortcut">ESC</span>
           </div>
           <div class="qoder-palette__list"></div>
@@ -89,7 +92,7 @@
     _render() {
       if (!this._list) return;
       if (this._filtered.length === 0) {
-        this._list.innerHTML = '<div class="qoder-palette__empty">没有找到匹配的命令</div>';
+        this._list.innerHTML = '<div class="qoder-palette__empty">' + t('没有找到匹配的命令') + '</div>';
         return;
       }
       let html = '';
@@ -596,16 +599,16 @@
     if (!QI.hotkeys._bindings.some(b => b.keys === 'ctrl+shift+p')) {
       QI.hotkeys.register('ctrl+shift+p', () => {
         QI.palette.open([
-          { icon: '🎨', label: '切换主题', group: '外观', shortcut: 'Ctrl+K T' },
-          { icon: '💬', label: '新建会话', group: '聊天', shortcut: 'Ctrl+N' },
-          { icon: '⚙️', label: '打开设置', group: '系统', shortcut: 'Ctrl+,' },
-          { icon: '🔔', label: '通知中心', group: '系统', shortcut: 'Ctrl+Shift+U' },
-          { icon: '📋', label: '切换终端', group: '视图', shortcut: 'Ctrl+`' },
-          { icon: '🔍', label: '全局搜索', group: '编辑', shortcut: 'Ctrl+Shift+F' }
+          { icon: '🎨', label: t('切换主题'), group: t('外观'), shortcut: 'Ctrl+K T' },
+          { icon: '💬', label: t('新建会话'), group: t('聊天'), shortcut: 'Ctrl+N' },
+          { icon: '⚙️', label: t('打开设置'), group: t('系统'), shortcut: 'Ctrl+,' },
+          { icon: '🔔', label: t('通知中心'), group: t('系统'), shortcut: 'Ctrl+Shift+U' },
+          { icon: '📋', label: t('切换终端'), group: t('视图'), shortcut: 'Ctrl+`' },
+          { icon: '🔍', label: t('全局搜索'), group: t('编辑'), shortcut: 'Ctrl+Shift+F' }
         ], (item) => {
-          if (QI.toast) QI.toast.show('执行: ' + item.label, 'info');
+          if (QI.toast) QI.toast.show(t('执行: ') + item.label, 'info');
         });
-      }, '打开命令面板');
+      }, t('打开命令面板'));
     }
 
     if (!QI.hotkeys._bindings.some(b => b.keys === 'escape')) {
@@ -613,7 +616,7 @@
         QI.palette.close();
         QI.contextMenu.hide();
         if (QI.dialog) QI.dialog.closeAll();
-      }, '关闭弹窗');
+      }, t('关闭弹窗'));
     }
   }
 

@@ -14,6 +14,9 @@
     : String(s == null ? '' : s).replace(/[&<>"']/g, (c) =>
       ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])));
 
+  // v3.3.3 i18n：接管界面文案（console/throw 保持原文）
+  const t = (_g.QoderCore && _g.QoderCore.t) || ((s) => s);
+
   /* ============================================================
      1. 聊天系统 ChatManager
      ============================================================ */
@@ -57,7 +60,7 @@
         if (tp) {
           this._streamReply(container, id, tp, text);
         } else {
-          setTimeout(() => this._addMessage(container, id, 'ai', '收到你的消息："' + text + '"。这是一个模拟回复，实际使用时请接入你的AI后端。'), 600);
+          setTimeout(() => this._addMessage(container, id, 'ai', t('收到你的消息：') + '"' + text + '"' + t('。这是一个模拟回复，实际使用时请接入你的AI后端。')), 600);
         }
       };
 
@@ -118,13 +121,13 @@
         onDone(full) {
           buffer = full != null ? full : buffer;
           contentEl.classList.remove('qoder-chat__msg-content--streaming');
-          contentEl.innerHTML = self._escapeHtml(buffer || '（空回复）');
+          contentEl.innerHTML = self._escapeHtml(buffer || t('（空回复）'));
           const messagesEl = container.querySelector('.qoder-chat__messages');
           if (messagesEl) messagesEl.scrollTop = messagesEl.scrollHeight;
         },
         onError(err) {
           contentEl.classList.remove('qoder-chat__msg-content--streaming');
-          contentEl.innerHTML = '<span style="color:var(--error);">⚠ 连接错误：' + self._escapeHtml((err && err.message) || '未知错误') + '</span>';
+          contentEl.innerHTML = '<span style="color:var(--error);">⚠ ' + t('连接错误：') + self._escapeHtml((err && err.message) || t('未知错误')) + '</span>';
         }
       }, { sessionId: id });
     },
@@ -144,7 +147,7 @@
           if (code) {
             navigator.clipboard.writeText(code.textContent).then(() => {
               const orig = btn.textContent;
-              btn.textContent = '已复制 ✓';
+              btn.textContent = t('已复制 ✓');
               setTimeout(() => btn.textContent = orig, 1500);
             }).catch(() => {
               // fallback
@@ -154,8 +157,8 @@
               ta.select();
               document.execCommand('copy');
               document.body.removeChild(ta);
-              btn.textContent = '已复制 ✓';
-              setTimeout(() => btn.textContent = '复制', 1500);
+              btn.textContent = t('已复制 ✓');
+              setTimeout(() => btn.textContent = t('复制'), 1500);
             });
           }
         });
@@ -173,14 +176,14 @@
             const content = msg.querySelector('.qoder-chat__msg-content');
             if (content) {
               navigator.clipboard.writeText(content.textContent).catch(() => {});
-              btn.textContent = '已复制 ✓';
-              setTimeout(() => btn.textContent = '复制', 1500);
+              btn.textContent = t('已复制 ✓');
+              setTimeout(() => btn.textContent = t('复制'), 1500);
             }
           } else if (action === 'like' || action === 'dislike') {
             btn.style.opacity = '1';
             btn.style.background = 'var(--accent-bg)';
           } else if (action === 'regenerate') {
-            if (QF.toast) QF.toast.show('重新生成中...', 'info');
+            if (QF.toast) QF.toast.show(t('重新生成中...'), 'info');
           }
         });
       });
@@ -307,7 +310,7 @@
     create(panel) {
       const session = {
         id: 's_' + Date.now(),
-        title: '新会话 ' + (this._sessions.length + 1),
+        title: t('新会话') + ' ' + (this._sessions.length + 1),
         time: new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' }),
         active: true
       };
@@ -315,7 +318,7 @@
       this._sessions.unshift(session);
       this._save();
       this._render(panel);
-      if (QF.toast) QF.toast.show('已创建新会话', 'success');
+      if (QF.toast) QF.toast.show(t('已创建新会话'), 'success');
     },
 
     delete(panel, id) {
@@ -399,7 +402,7 @@
             <span class="qoder-datepicker__title">${year} 年 ${month + 1} 月</span>
             <span class="qoder-datepicker__nav" data-nav="next">›</span>
           </div><div class="qoder-datepicker__grid">`;
-          ['日','一','二','三','四','五','六'].forEach(d => html += `<span class="qoder-datepicker__dow">${d}</span>`);
+          ['日','一','二','三','四','五','六'].forEach(d => html += `<span class="qoder-datepicker__dow">${t(d)}</span>`);
           // 上月填充
           for (let i = firstDay - 1; i >= 0; i--) {
             html += `<span class="qoder-datepicker__day qoder-datepicker__day--other">${daysInPrevMonth - i}</span>`;
@@ -519,7 +522,7 @@
 
         item.querySelector('.qoder-upload__remove').addEventListener('click', () => item.remove());
       });
-      if (QF.toast) QF.toast.show(`已添加 ${files.length} 个文件`, 'info');
+      if (QF.toast) QF.toast.show(t('已添加 {n} 个文件').replace('{n}', files.length), 'info');
     }
   };
 
@@ -605,7 +608,7 @@
     _makeBody() {
       const body = document.createElement('div');
       body.className = 'qoder-terminal__body';
-      body.innerHTML = '<div class="qoder-terminal__line qoder-terminal__line--dim">Shell ready. 输入 help 查看可用命令。</div>';
+      body.innerHTML = '<div class="qoder-terminal__line qoder-terminal__line--dim">' + t('Shell ready. 输入 help 查看可用命令。') + '</div>';
       return body;
     },
 
@@ -624,11 +627,11 @@
         const el = document.createElement('div');
         el.className = 'qoder-terminal__tab' + (tab.id === state.activeId ? ' qoder-terminal__tab--active' : '');
         el.dataset.tabId = tab.id;
-        el.title = tab.name + ' — 点击切换';
+        el.title = tab.name + t(' — 点击切换');
         el.innerHTML =
           '<span class="qoder-terminal__tab-icon">⌨</span>' +
           '<span class="qoder-terminal__tab-title">' + tab.name + '</span>' +
-          '<span class="qoder-terminal__tab-close" title="关闭标签">×</span>';
+          '<span class="qoder-terminal__tab-close" title="' + t('关闭标签') + '">×</span>';
         // 切换
         el.addEventListener('click', (e) => {
           if (e.target.classList.contains('qoder-terminal__tab-close')) return;
@@ -645,7 +648,7 @@
       // 新建标签（+）
       const add = document.createElement('div');
       add.className = 'qoder-terminal__tab qoder-terminal__tab--add';
-      add.title = '新建终端标签';
+      add.title = t('新建终端标签');
       add.textContent = '+';
       add.addEventListener('click', () => this.createTab(state.el));
       bar.appendChild(add);
@@ -654,8 +657,8 @@
       const actions = document.createElement('div');
       actions.className = 'qoder-terminal__actions';
       actions.innerHTML =
-        '<span class="qoder-terminal__action" data-action="split" title="分屏 / 取消分屏">⊞</span>' +
-        '<span class="qoder-terminal__action" data-action="clear" title="清空当前终端">🗑</span>';
+        '<span class="qoder-terminal__action" data-action="split" title="' + t('分屏 / 取消分屏') + '">⊞</span>' +
+        '<span class="qoder-terminal__action" data-action="clear" title="' + t('清空当前终端') + '">🗑</span>';
       actions.querySelector('[data-action="split"]').addEventListener('click', () => this.toggleSplit(state.el));
       actions.querySelector('[data-action="clear"]').addEventListener('click', () => this.clearActive(state.el));
       bar.appendChild(actions);
@@ -848,6 +851,7 @@
         newLine.innerHTML = this._inputLineHtml();
         newLine.querySelector('.qoder-terminal__path').textContent = tab.cwd;
         tab.body.appendChild(newLine);
+        this._trimScrollback(tab.body);
         const newInput = newLine.querySelector('.qoder-terminal__input-text');
         newInput.focus();
         this._bindInput(newInput, newLine, tab, state);
@@ -887,6 +891,7 @@
       line.className = 'qoder-terminal__line' + (kind === 'stderr' ? ' qoder-terminal__line--err' : '');
       line.textContent = text;
       body.appendChild(line);
+      this._trimScrollback(body);
       body.scrollTop = body.scrollHeight;
     },
 
@@ -898,7 +903,26 @@
       line.className = 'qoder-terminal__line' + (isError ? ' qoder-terminal__line--err' : '');
       line.textContent = text;
       body.appendChild(line);
+      this._trimScrollback(body);
       body.scrollTop = body.scrollHeight;
+    },
+
+    /* ---------- v3.3.3 scrollback 上限：防长会话 DOM 无限增长（QoderUI.config.terminalScrollback，默认 500） ---------- */
+    _trimScrollback(body) {
+      const max = (QF.config && QF.config.terminalScrollback) || 500;
+      if (!body || !max) return;
+      while (body.children.length > max) {
+        const first = body.firstElementChild;
+        if (!first) break;
+        // 防御：绝不动活动输入行（正常情况下它在末尾）
+        if (first.classList.contains('qoder-terminal__input-line') && first.querySelector('.qoder-terminal__input-text')) {
+          const next = first.nextElementSibling;
+          if (!next) break;
+          body.removeChild(next);
+        } else {
+          body.removeChild(first);
+        }
+      }
     },
 
     /* ---------- 命令执行（按标签独立 cwd/输出） ---------- */
@@ -924,7 +948,7 @@
       // v3.3.1 审计修复（H2）：本地输出改用 textContent（isError 标记替代内联 HTML）
       let result = ''; let isErr = false;
       if (cmd === 'help') {
-        result = '可用命令: help, clear, echo, date, whoami, ls, pwd, cd, exit';
+        result = t('可用命令: help, clear, echo, date, whoami, ls, pwd, cd, exit');
       } else if (cmd === 'clear') {
         body.innerHTML = '';
         const groupEl = this._groupOf(tab);
@@ -1003,7 +1027,7 @@
 
       const filtered = this._filter === 'unread' ? this._notifications.filter(n => n.unread) : this._notifications;
       if (filtered.length === 0) {
-        list.innerHTML = `<div class="qoder-notification-center__empty"><div class="qoder-notification-center__empty-icon">🔔</div><div class="qoder-notification-center__empty-text">暂无通知</div></div>`;
+        list.innerHTML = `<div class="qoder-notification-center__empty"><div class="qoder-notification-center__empty-icon">🔔</div><div class="qoder-notification-center__empty-text">${t('暂无通知')}</div></div>`;
         return;
       }
       list.innerHTML = filtered.map(n => `
@@ -1095,12 +1119,12 @@
       const list = this._el.querySelector('#shortcutsList');
       const bindings = QF.hotkeys ? QF.hotkeys.getAll() : [];
       const defaults = [
-        { keys: 'Ctrl+Shift+P', description: '打开命令面板' },
-        { keys: 'Ctrl+K T', description: '切换主题' },
-        { keys: 'Ctrl+N', description: '新建会话' },
-        { keys: 'Ctrl+,', description: '打开设置' },
-        { keys: '?', description: '显示快捷键帮助' },
-        { keys: 'Esc', description: '关闭弹窗' }
+        { keys: 'Ctrl+Shift+P', description: t('打开命令面板') },
+        { keys: 'Ctrl+K T', description: t('切换主题') },
+        { keys: 'Ctrl+N', description: t('新建会话') },
+        { keys: 'Ctrl+,', description: t('打开设置') },
+        { keys: '?', description: t('显示快捷键帮助') },
+        { keys: 'Esc', description: t('关闭弹窗') }
       ];
       const all = [...defaults, ...bindings.map(b => ({ keys: this._formatKeys(b.keys), description: b.description || '' }))];
       list.innerHTML = all.map(s => `
@@ -1156,7 +1180,7 @@
     }
     // 快捷键 ? 打开帮助面板（v3.3.1 审计修复（L5）：防重复注册）
     if (QF.hotkeys && !QF.hotkeys._bindings.some(b => b.keys === '?')) {
-      QF.hotkeys.register('?', () => QF.shortcutsPanel.open(), '显示快捷键帮助');
+      QF.hotkeys.register('?', () => QF.shortcutsPanel.open(), t('显示快捷键帮助'));
     }
     // 全局代码块复制
     document.querySelectorAll('.qoder-code-block__copy').forEach(btn => {
@@ -1167,7 +1191,7 @@
         if (code) {
           navigator.clipboard.writeText(code.textContent).catch(() => {});
           const orig = btn.textContent;
-          btn.textContent = '已复制 ✓';
+          btn.textContent = t('已复制 ✓');
           setTimeout(() => btn.textContent = orig, 1500);
         }
       });

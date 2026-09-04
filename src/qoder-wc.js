@@ -244,7 +244,7 @@
     static get observedAttributes() { return ['placeholder', 'options', 'value', 'disabled']; }
     static get hostCss() { return ':host{display:inline-block;min-width:160px;}'; }
     template() {
-      const placeholder = this.getAttribute('placeholder') || '请选择';
+      const placeholder = this.getAttribute('placeholder') || Core.t('请选择');
       const options = json(this.getAttribute('options'), []);
       const value = this.getAttribute('value') || '';
       const disabled = this.hasAttribute('disabled');
@@ -517,7 +517,7 @@
     static get hostCss() { return ':host{display:block;}'; }
     template() {
       const icon = this.getAttribute('icon') || '📭';
-      const title = this.getAttribute('title') || '暂无数据';
+      const title = this.getAttribute('title') || Core.t('暂无数据');
       const desc = this.getAttribute('desc') || '';
       return '<div class="qoder-empty" part="empty">' +
         '<div class="qoder-empty__icon">' + esc(icon) + '</div>' +
@@ -550,7 +550,7 @@
       }
       html += '<div class="qoder-pagination__item qoder-pagination__item--' +
         (current === total ? 'disabled' : '') + '" data-page="next">›</div>';
-      html += '<span class="qoder-pagination__total">共 ' + total + ' 页</span>';
+      html += '<span class="qoder-pagination__total">' + Core.t('共 {n} 页').replace('{n}', total) + '</span>';
       return html + '</div>';
     }
     _bind(root) {
