@@ -5,6 +5,8 @@
 (function() {
   'use strict';
 
+  if (typeof window === 'undefined') return; // SSR 安全
+
   const QI = window.QoderUI = window.QoderUI || {};
 
   /* ============================================================
@@ -435,7 +437,10 @@
      ============================================================ */
   QI.draggable = {
     init(containerSelector, itemSelector) {
-      const container = document.querySelector(containerSelector);
+      // v3.2: 同时支持选择器字符串与 DOM 元素
+      const container = typeof containerSelector === 'string'
+        ? document.querySelector(containerSelector)
+        : containerSelector;
       if (!container) return;
       let dragEl = null;
       let placeholder = null;
@@ -492,14 +497,25 @@
 
     init() {
       document.addEventListener('keydown', (e) => {
-        const parts = [];
-        if (e.ctrlKey || e.metaKey) parts.push('ctrl');
-        if (e.shiftKey) parts.push('shift');
-        if (e.altKey) parts.push('alt');
-        const key = e.key.toLowerCase();
-        if (!['control', 'shift', 'alt', 'meta'].includes(key)) parts.push(key);
-        const combo = parts.join('+');
-        const binding = this._bindings.find(b => b.keys === combo);
+        const Core = window.QoderCore;
+        let combo;
+        if (Core && Core.comboFromEvent) {
+          combo = Core.comboFromEvent(e);
+        } else {
+          const parts = [];
+          if (e.ctrlKey || e.metaKey) parts.push('ctrl');
+          if (e.shiftKey) parts.push('shift');
+          if (e.altKey) parts.push('alt');
+          const key = (e.key || '').toLowerCase();
+          if (!['control', 'shift', 'alt', 'meta'].includes(key)) parts.push(key);
+          combo = parts.join('+');
+        }
+        let binding = this._bindings.find(b => b.keys === combo);
+        if (!binding) {
+          // 可打印单字符键忽略 shift 差异：'shift+?' 命中注册的 '?'
+          const alt = combo.replace(/^shift\+/, '');
+          if (alt !== combo) binding = this._bindings.find(b => b.keys === alt);
+        }
         if (binding) {
           e.preventDefault();
           binding.callback(e);
@@ -511,321 +527,15 @@
   };
 
   /* ============================================================
-     7. Web Components - 基础组件封装
+     7. Web Components
+        v3.2 起全部 21 个组件迁移到 src/qoder-wc.js
+        （属性响应 + Shadow DOM 样式隔离 + composed 事件）
+        此处保留注册兜底：若 qoder-wc.js 未加载则提示
      ============================================================ */
-
-  // <qoder-button>
-  class QoderButton extends HTMLElement {
-    static get observedAttributes() { return ['variant', 'size', 'disabled']; }
-    connectedCallback() { this._render(); }
-    attributeChangedCallback() { if (this._rendered) this._render(); }
-    _render() {
-      const variant = this.getAttribute('variant') || 'primary';
-      const size = this.getAttribute('size') || '';
-      const disabled = this.hasAttribute('disabled') ? 'disabled' : '';
-      const sizeClass = size ? ` qoder-btn--${size}` : '';
-      const text = this._originalText || this.textContent;
-      this._originalText = text;
-      this.innerHTML = `<button class="qoder-btn qoder-btn--${variant}${sizeClass}" ${disabled}>${text}</button>`;
-      this._rendered = true;
-      this.querySelector('button').addEventListener('click', (e) => {
-        this.dispatchEvent(new CustomEvent('click', { detail: e, bubbles: true }));
-      });
-    }
-  }
-
-  // <qoder-input>
-  class QoderInput extends HTMLElement {
-    static get observedAttributes() { return ['placeholder', 'type', 'value', 'error']; }
-    connectedCallback() { this._render(); }
-    attributeChangedCallback(name) { if (this._rendered && name !== 'value') this._render(); }
-    _render() {
-      const placeholder = this.getAttribute('placeholder') || '';
-      const type = this.getAttribute('type') || 'text';
-      const value = this.getAttribute('value') || '';
-      const error = this.hasAttribute('error');
-      this.innerHTML = `<div class="qoder-input-wrap ${error ? 'qoder-input-wrap--error' : ''}">
-        <input class="qoder-input" type="${type}" placeholder="${placeholder}" value="${value}" aria-invalid="${error}">
-      </div>`;
-      this._rendered = true;
-      this.querySelector('input').addEventListener('input', (e) => {
-        this.dispatchEvent(new CustomEvent('input', { detail: { value: e.target.value } }));
-      });
-      this.querySelector('input').addEventListener('change', (e) => {
-        this.setAttribute('value', e.target.value);
-        this.dispatchEvent(new CustomEvent('change', { detail: { value: e.target.value } }));
-      });
-    }
-    get value() { return this.querySelector('input')?.value || ''; }
-    set value(v) { if (this.querySelector('input')) this.querySelector('input').value = v; this.setAttribute('value', v); }
-  }
-
-  // <qoder-badge>
-  class QoderBadge extends HTMLElement {
-    connectedCallback() {
-      const variant = this.getAttribute('variant') || 'primary';
-      this.innerHTML = `<span class="qoder-badge qoder-badge--${variant}">${this.innerHTML}</span>`;
-    }
-  }
-
-  // <qoder-avatar>
-  class QoderAvatar extends HTMLElement {
-    connectedCallback() {
-      const size = this.getAttribute('size') || '';
-      const text = this.getAttribute('text') || '?';
-      const src = this.getAttribute('src') || '';
-      const sizeClass = size ? ` qoder-avatar--${size}` : '';
-      if (src) {
-        this.innerHTML = `<div class="qoder-avatar${sizeClass}"><img src="${src}" style="width:100%;height:100%;border-radius:inherit;object-fit:cover;"></div>`;
-      } else {
-        this.innerHTML = `<div class="qoder-avatar${sizeClass}">${text}</div>`;
-      }
-    }
-  }
-
-  // <qoder-alert>
-  class QoderAlert extends HTMLElement {
-    connectedCallback() {
-      const type = this.getAttribute('type') || 'info';
-      const iconMap = { info: 'i', success: '✓', warning: '!', error: '✕' };
-      this.innerHTML = `<div class="qoder-alert qoder-alert--${type}">
-        <span class="qoder-icon">${iconMap[type] || 'i'}</span>${this.innerHTML}
-      </div>`;
-    }
-  }
-
-  // <qoder-switch>
-  class QoderSwitch extends HTMLElement {
-    static get observedAttributes() { return ['checked']; }
-    connectedCallback() { this._render(); }
-    attributeChangedCallback() { if (this._rendered && this.querySelector('input')) this.querySelector('input').checked = this.hasAttribute('checked'); }
-    _render() {
-      const checked = this.hasAttribute('checked') ? 'checked' : '';
-      this.innerHTML = `<label class="qoder-switch"><input type="checkbox" ${checked}><span class="qoder-switch__slider"></span></label>`;
-      this._rendered = true;
-      this.querySelector('input').addEventListener('change', (e) => {
-        if (e.target.checked) this.setAttribute('checked', ''); else this.removeAttribute('checked');
-        this.dispatchEvent(new CustomEvent('change', { detail: { checked: e.target.checked } }));
-      });
-    }
-    get checked() { return this.querySelector('input')?.checked || false; }
-    set checked(v) { if (v) this.setAttribute('checked', ''); else this.removeAttribute('checked'); }
-  }
-
-  // <qoder-tabs>
-  class QoderTabs extends HTMLElement {
-    static get observedAttributes() { return ['items', 'active']; }
-    connectedCallback() { this._render(); }
-    attributeChangedCallback() { if (this._rendered) this._render(); }
-    _render() {
-      const items = (this.getAttribute('items') || '').split(',').map(s => s.trim());
-      const active = parseInt(this.getAttribute('active') || 0);
-      this.innerHTML = `<div class="qoder-tabs" role="tablist">${items.map((item, i) =>
-        `<div class="qoder-tabs__item ${i === active ? 'qoder-tabs__item--active' : ''}" data-index="${i}" role="tab" aria-selected="${i === active}">${item}</div>`
-      ).join('')}</div>`;
-      this._rendered = true;
-      this.querySelectorAll('.qoder-tabs__item').forEach(tab => {
-        tab.addEventListener('click', () => {
-          this.setAttribute('active', tab.dataset.index);
-          this._render();
-          this.dispatchEvent(new CustomEvent('change', { detail: { index: parseInt(tab.dataset.index) } }));
-        });
-      });
-    }
-  }
-
-  // <qoder-progress>
-  class QoderProgress extends HTMLElement {
-    static get observedAttributes() { return ['value']; }
-    connectedCallback() { this._render(); }
-    attributeChangedCallback() { if (this._rendered) this._render(); }
-    _render() {
-      const value = parseInt(this.getAttribute('value') || 0);
-      this.innerHTML = `<div class="qoder-progress" role="progressbar" aria-valuenow="${value}" aria-valuemin="0" aria-valuemax="100"><div class="qoder-progress__bar" style="width:${value}%"></div></div>`;
-      this._rendered = true;
-    }
-    get value() { return parseInt(this.getAttribute('value') || 0); }
-    set value(v) { this.setAttribute('value', v); }
-  }
-
-  // <qoder-spinner>
-  class QoderSpinner extends HTMLElement {
-    connectedCallback() {
-      const size = this.getAttribute('size') || '';
-      this.innerHTML = `<div class="qoder-spinner" style="${size ? `width:${size}px;height:${size}px;` : ''}"></div>`;
-    }
-  }
-
-  // <qoder-select>
-  class QoderSelect extends HTMLElement {
-    connectedCallback() {
-      const placeholder = this.getAttribute('placeholder') || '请选择';
-      const options = JSON.parse(this.getAttribute('options') || '[]');
-      this.innerHTML = `<div class="qoder-select">
-        <div class="qoder-select__trigger" tabindex="0">
-          <span class="qoder-select__value qoder-select__value--placeholder">${placeholder}</span>
-          <span class="qoder-select__chevron">▼</span>
-        </div>
-        <div class="qoder-select__dropdown">
-          ${options.map((o, i) => `<div class="qoder-select__option" data-value="${o.value || o}">${o.label || o}</div>`).join('')}
-        </div>
-      </div>`;
-      setTimeout(() => initSelects(), 0);
-    }
-  }
-
-  // <qoder-slider>
-  class QoderSliderEl extends HTMLElement {
-    connectedCallback() {
-      const min = this.getAttribute('min') || 0;
-      const max = this.getAttribute('max') || 100;
-      const value = this.getAttribute('value') || 50;
-      this.innerHTML = `<div class="qoder-slider" data-min="${min}" data-max="${max}" data-value="${value}">
-        <div class="qoder-slider__track">
-          <div class="qoder-slider__fill"></div>
-          <div class="qoder-slider__thumb"></div>
-        </div>
-        <span class="qoder-slider__value">${value}</span>
-      </div>`;
-      setTimeout(() => initSliders(), 0);
-    }
-  }
-
-  // <qoder-tooltip>
-  class QoderTooltip extends HTMLElement {
-    connectedCallback() {
-      const text = this.getAttribute('text') || '';
-      const position = this.getAttribute('position') || 'top';
-      this.innerHTML = `<div class="qoder-tooltip" style="position:relative;display:inline-block;">
-        ${this.innerHTML}
-        <span class="qoder-tooltip__content" style="position:absolute;${position === 'top' ? 'bottom:100%;' : 'top:100%;'}left:50%;transform:translateX(-50%);white-space:nowrap;">${text}</span>
-      </div>`;
-    }
-  }
-
-  // <qoder-card>
-  class QoderCard extends HTMLElement {
-    connectedCallback() {
-      const title = this.getAttribute('title') || '';
-      this.innerHTML = `<div class="qoder-card">
-        ${title ? `<div class="qoder-card__header"><h3 class="qoder-card__title">${title}</h3></div>` : ''}
-        <div class="qoder-card__body">${this.innerHTML}</div>
-      </div>`;
-    }
-  }
-
-  // <qoder-breadcrumb>
-  class QoderBreadcrumb extends HTMLElement {
-    connectedCallback() {
-      const items = JSON.parse(this.getAttribute('items') || '[]');
-      this.innerHTML = `<nav class="qoder-breadcrumb">${items.map((item, i) => `
-        <span class="qoder-breadcrumb__item ${i === items.length - 1 ? 'qoder-breadcrumb__item--current' : ''}">
-          ${item.href ? `<a href="${item.href}">${item.label}</a>` : item.label}
-        </span>
-        ${i < items.length - 1 ? '<span class="qoder-breadcrumb__separator">/</span>' : ''}
-      `).join('')}</nav>`;
-    }
-  }
-
-  // <qoder-steps>
-  class QoderSteps extends HTMLElement {
-    connectedCallback() {
-      const steps = JSON.parse(this.getAttribute('steps') || '[]');
-      const current = parseInt(this.getAttribute('current') || 0);
-      const vertical = this.hasAttribute('vertical');
-      this.innerHTML = `<div class="qoder-steps ${vertical ? 'qoder-steps--vertical' : ''}">
-        ${steps.map((step, i) => {
-          let status = 'wait';
-          if (i < current) status = 'complete';
-          else if (i === current) status = 'active';
-          return `<div class="qoder-step qoder-step--${status}">
-            <div class="qoder-step__indicator">${status === 'complete' ? '✓' : i + 1}</div>
-            <div class="qoder-step__content">
-              <div class="qoder-step__title">${step.title}</div>
-              ${step.desc ? `<div class="qoder-step__desc">${step.desc}</div>` : ''}
-            </div>
-            ${i < steps.length - 1 ? '<div class="qoder-step__line"></div>' : ''}
-          </div>`;
-        }).join('')}
-      </div>`;
-    }
-  }
-
-  // <qoder-timeline>
-  class QoderTimeline extends HTMLElement {
-    connectedCallback() {
-      const items = JSON.parse(this.getAttribute('items') || '[]');
-      this.innerHTML = `<div class="qoder-timeline">${items.map(item => `
-        <div class="qoder-timeline__item qoder-timeline__item--${item.status || 'active'}">
-          <div class="qoder-timeline__dot"></div>
-          ${item.time ? `<div class="qoder-timeline__time">${item.time}</div>` : ''}
-          <div class="qoder-timeline__title">${item.title}</div>
-          ${item.desc ? `<div class="qoder-timeline__desc">${item.desc}</div>` : ''}
-        </div>
-      `).join('')}</div>`;
-    }
-  }
-
-  // <qoder-empty>
-  class QoderEmpty extends HTMLElement {
-    connectedCallback() {
-      const icon = this.getAttribute('icon') || '📭';
-      const title = this.getAttribute('title') || '暂无数据';
-      const desc = this.getAttribute('desc') || '';
-      this.innerHTML = `<div class="qoder-empty">
-        <div class="qoder-empty__icon">${icon}</div>
-        <div class="qoder-empty__title">${title}</div>
-        ${desc ? `<div class="qoder-empty__desc">${desc}</div>` : ''}
-        ${this.innerHTML}
-      </div>`;
-    }
-  }
-
-  // <qoder-pagination>
-  class QoderPagination extends HTMLElement {
-    connectedCallback() {
-      const total = parseInt(this.getAttribute('total') || 10);
-      const current = parseInt(this.getAttribute('current') || 1);
-      let html = '';
-      html += `<div class="qoder-pagination__item qoder-pagination__item--${current === 1 ? 'disabled' : ''}">‹</div>`;
-      for (let i = 1; i <= total; i++) {
-        if (i === 1 || i === total || Math.abs(i - current) <= 1) {
-          html += `<div class="qoder-pagination__item ${i === current ? 'qoder-pagination__item--active' : ''}">${i}</div>`;
-        } else if (Math.abs(i - current) === 2) {
-          html += `<div class="qoder-pagination__ellipsis">...</div>`;
-        }
-      }
-      html += `<div class="qoder-pagination__item qoder-pagination__item--${current === total ? 'disabled' : ''}">›</div>`;
-      html += `<span class="qoder-pagination__total">共 ${total} 页</span>`;
-      this.innerHTML = `<div class="qoder-pagination">${html}</div>`;
-    }
-  }
-
-  // 注册所有自定义元素
   function registerComponents() {
-    const components = [
-      ['qoder-button', QoderButton],
-      ['qoder-input', QoderInput],
-      ['qoder-badge', QoderBadge],
-      ['qoder-avatar', QoderAvatar],
-      ['qoder-alert', QoderAlert],
-      ['qoder-switch', QoderSwitch],
-      ['qoder-tabs', QoderTabs],
-      ['qoder-progress', QoderProgress],
-      ['qoder-spinner', QoderSpinner],
-      ['qoder-select', QoderSelect],
-      ['qoder-slider', QoderSliderEl],
-      ['qoder-tooltip', QoderTooltip],
-      ['qoder-card', QoderCard],
-      ['qoder-breadcrumb', QoderBreadcrumb],
-      ['qoder-steps', QoderSteps],
-      ['qoder-timeline', QoderTimeline],
-      ['qoder-empty', QoderEmpty],
-      ['qoder-pagination', QoderPagination]
-    ];
-    components.forEach(([name, cls]) => {
-      if (!customElements.get(name)) customElements.define(name, cls);
-    });
+    if (!(window.QoderUI && window.QoderUI.WC)) {
+      console.warn('[QoderUI] Web Components 已迁移至 qoder-wc.js，请加载 src/qoder-wc.js');
+    }
   }
 
   /* ============================================================
@@ -894,10 +604,12 @@
     }, '关闭弹窗');
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', autoInit);
-  } else {
-    autoInit();
+  if (typeof document !== 'undefined') {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', autoInit);
+    } else {
+      autoInit();
+    }
   }
 
   // 导出

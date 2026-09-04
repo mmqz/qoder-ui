@@ -15,9 +15,14 @@
   <link rel="stylesheet" href="../src/components/qoder-extras.css">
   <link rel="stylesheet" href="../src/components/qoder-viz.css">
   <link rel="stylesheet" href="../src/components/qoder-responsive.css">
+  <link rel="stylesheet" href="../src/components/qoder-compat.css">
+  <script src="../src/qoder-core.js"></script>
+  <script src="../src/qoder-shadow.js"></script>
   <script src="../src/qoder-ui.js"></script>
   <script src="../src/qoder-interactions.js"></script>
+  <script src="../src/qoder-wc.js"></script>
   <script src="../src/qoder-features.js"></script>
+  <script src="../src/qoder-diff.js"></script>
   <style>
     * { box-sizing: border-box; }
     body { margin: 0; font-family: 'Instrument Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg-page); color: var(--text-primary); transition: background 0.3s, color 0.3s; }
@@ -73,7 +78,7 @@
     <h1>
       <span class="qoder-icon qoder-icon--sparkle" style="color: var(--accent);"></span>
       Qoder UI 完整组件库
-      <span class="badge">v3.1</span>
+      <span class="badge">v3.2</span>
     </h1>
     <div class="theme-switcher" id="themeSwitcher">
       <div class="theme-btn active" data-theme="forest-light" data-name="Forest" style="background: linear-gradient(135deg, #e8f5ee, #358e62);"></div>
@@ -745,7 +750,7 @@ function hello() {
     <!-- 18. 终端面板 -->
     <section class="demo-section">
       <h2 class="demo-section-title"><span class="num">18</span>终端面板 Terminal</h2>
-      <p class="demo-section-desc">标签页终端、分屏、语法着色输出、闪烁光标。还原 VS Code 集成终端风格。</p>
+      <p class="demo-section-desc">完整终端管理器（v3.2 功能化）：标签页可切换/关闭/新建（+），点击 ⊞ 分屏双栏并排、🗑 清屏；每个标签独立命令历史（↑↓）与工作目录（支持 cd/exit），输入 help 查看。还原 VS Code 集成终端风格。</p>
       <div class="demo-box" style="padding:0;overflow:hidden;">
         <div class="qoder-terminal">
           <div class="qoder-terminal__tabs">
@@ -784,7 +789,7 @@ function hello() {
     <!-- 20. 代码 Diff -->
     <section class="demo-section">
       <h2 class="demo-section-title"><span class="num">20</span>代码 Diff 查看器</h2>
-      <p class="demo-section-desc">行号 gutter、增删行高亮、hunk header、统计信息。还原 VS Code Diff 编辑器风格。</p>
+      <p class="demo-section-desc">v3.2 新增行内 word-level 高亮：相邻增删行自动配对，命中词以绿/红底色标出（del 加删除线）；同时修复了 __line 系列样式缺失问题。下方第一块为静态标记自动增强，第二块由 <code>QoderUI.diff.render()</code> 动态生成。</p>
       <div class="demo-box" style="padding:0;overflow:hidden;">
         <div class="qoder-diff">
           <div class="qoder-diff__stats"><span class="qoder-diff__stat qoder-diff__stat--added">+3</span><span class="qoder-diff__stat qoder-diff__stat--removed">-1</span><span class="qoder-diff__stat">2 files changed</span></div>
@@ -800,6 +805,9 @@ function hello() {
             <div class="qoder-diff__line qoder-diff__line--context"><span class="qoder-diff__gutter">5</span><span class="qoder-diff__gutter">7</span><span class="qoder-diff__content">    timer = setTimeout(() => fn.apply(this, args), delay);</span></div>
           </div>
         </div>
+      </div>
+      <div class="demo-box" style="padding:0;overflow:hidden;" id="dynamicDiffHost">
+        <!-- v3.2：由 QoderUI.diff.render() 动态生成 -->
       </div>
     </section>
 
@@ -954,34 +962,116 @@ function hello() {
           <qoder-steps steps='[{"title":"第一步"},{"title":"第二步"},{"title":"第三步"}]' current="1"></qoder-steps>
           <qoder-timeline items='[{"time":"09:00","title":"启动","desc":"项目开始","status":"complete"},{"time":"14:00","title":"开发","desc":"进行中","status":"active"},{"time":"待办","title":"上线","status":"wait"}]'></qoder-timeline>
         </div>
+        <div class="demo-label" style="margin-top:24px;">属性响应 Playground（v3.2：21 个组件全部支持 attributeChangedCallback）</div>
+        <div class="demo-row" style="align-items:center;">
+          <span style="font-size:12px;color:var(--text-tertiary);">badge:</span>
+          <qoder-badge id="pgBadge" variant="primary">Primary</qoder-badge>
+          <button class="qoder-btn qoder-btn--ghost qoder-btn--sm" onclick="document.getElementById('pgBadge').setAttribute('variant','success')">success</button>
+          <button class="qoder-btn qoder-btn--ghost qoder-btn--sm" onclick="document.getElementById('pgBadge').setAttribute('variant','warning')">warning</button>
+          <button class="qoder-btn qoder-btn--ghost qoder-btn--sm" onclick="document.getElementById('pgBadge').setAttribute('variant','error')">error</button>
+        </div>
+        <div class="demo-row" style="align-items:center;">
+          <span style="font-size:12px;color:var(--text-tertiary);">progress:</span>
+          <qoder-progress id="pgProgress" value="40" style="width:200px;display:inline-block;"></qoder-progress>
+          <span id="pgProgressVal" style="font-size:12px;font-family:var(--qoder-font-mono);width:36px;">40%</span>
+          <button class="qoder-btn qoder-btn--ghost qoder-btn--sm" onclick="pgStep(-10)">-10</button>
+          <button class="qoder-btn qoder-btn--ghost qoder-btn--sm" onclick="pgStep(10)">+10</button>
+          <span style="font-size:12px;color:var(--text-tertiary);margin-left:16px;">steps:</span>
+          <button class="qoder-btn qoder-btn--ghost qoder-btn--sm" onclick="pgStepsNext()">下一步</button>
+        </div>
+        <div class="demo-row" style="align-items:center;">
+          <span style="font-size:12px;color:var(--text-tertiary);">switch→alert:</span>
+          <qoder-switch id="pgSwitch"></qoder-switch>
+          <qoder-alert id="pgAlert" type="info">开关关闭状态</qoder-alert>
+        </div>
+        <div class="demo-label" style="margin-top:16px;">Shadow DOM 样式隔离</div>
+        <p style="font-size:12.5px;color:var(--text-secondary);margin:0;line-height:1.7;">
+          v3.2 起全部 Web Components 渲染在 Shadow DOM 内：全库 CSS 只构建一个共享
+          <code>CSSStyleSheet</code>（adoptedStyleSheets），页面样式不会泄入、组件样式不会泄出，
+          图标字体由引擎自动向 document 注入保障。退回 light DOM：
+          <code>window.QoderUIConfig = { shadow:false }</code>、<code>&lt;html data-qoder-shadow="false"&gt;</code>
+          或单元素 <code>no-shadow</code> 属性。事件统一 bubbles + composed。
+        </p>
       </div>
     </section>
 
   </div>
 
   <script>
-    // 主题切换 - 统一事件机制
+    // 主题切换 - 统一事件机制（v3.2：document 级事件，WC 自动联动）
     function applyTheme(theme) {
       document.documentElement.setAttribute('data-theme', theme);
       localStorage.setItem('qoder-theme', theme);
       document.querySelectorAll('.theme-btn').forEach(b => b.classList.toggle('active', b.dataset.theme === theme));
-      // 同步 theme-switcher 组件
-      document.querySelectorAll('qoder-theme-switcher button').forEach(b => {
-        b.classList.toggle('qoder-theme-switcher__btn--active', b.dataset.theme === theme);
-      });
-      window.dispatchEvent(new CustomEvent('qoder-theme-change', { detail: { theme } }));
+      document.dispatchEvent(new CustomEvent('qoder-theme-change', { detail: { theme } }));
     }
     document.querySelectorAll('.theme-btn').forEach(btn => {
       btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
     });
-    // 监听 theme-switcher 的切换
-    document.addEventListener('click', (e) => {
-      const btn = e.target.closest('qoder-theme-switcher button');
-      if (btn && btn.dataset.theme) applyTheme(btn.dataset.theme);
+    // theme-switcher 组件内部点击 -> QoderTheme.set -> 文档事件 -> 同步头部按钮
+    document.addEventListener('qoder-theme-change', (e) => {
+      if (e.detail && e.detail.theme) {
+        document.querySelectorAll('.theme-btn').forEach(b => b.classList.toggle('active', b.dataset.theme === e.detail.theme));
+      }
     });
     // 恢复保存的主题
     const savedTheme = localStorage.getItem('qoder-theme') || 'forest-light';
     applyTheme(savedTheme);
+
+    // v3.2：动态 Diff 演示（QoderUI.diff.render）
+    (function renderDynamicDiff() {
+      if (!(window.QoderUI && QoderUI.diff)) return;
+      const oldCode = [
+        'function fetchUser(id) {',
+        '  const url = "/api/user?id=" + id;',
+        '  return http.get(url);',
+        '}',
+        '',
+        'fetchUser(42);'
+      ].join('\n');
+      const newCode = [
+        'async function fetchUser(id, { fields } = {}) {',
+        '  const params = new URLSearchParams({ id });',
+        '  if (fields) params.set("fields", fields.join(","));',
+        '  const res = await http.get("/api/user?" + params);',
+        '  return res.json();',
+        '}',
+        '',
+        'fetchUser(42, { fields: ["name", "email"] });'
+      ].join('\n');
+      const host = document.getElementById('dynamicDiffHost');
+      if (host) {
+        host.appendChild(QoderUI.diff.render({
+          old: oldCode,
+          'new': newCode,
+          filename: 'src/api/user.js'
+        }));
+      }
+    })();
+
+    // v3.2：属性响应 Playground
+    let pgStepsCurrent = 1;
+    function pgStep(delta) {
+      const el = document.getElementById('pgProgress');
+      const next = Math.max(0, Math.min(100, parseInt(el.getAttribute('value') || 0, 10) + delta));
+      el.setAttribute('value', next);
+      document.getElementById('pgProgressVal').textContent = next + '%';
+    }
+    function pgStepsNext() {
+      pgStepsCurrent = (pgStepsCurrent + 1) % 3;
+      const el = document.querySelector('.demo-box qoder-steps');
+      if (el) el.setAttribute('current', pgStepsCurrent);
+    }
+    (function bindPgSwitch() {
+      const sw = document.getElementById('pgSwitch');
+      const alertEl = document.getElementById('pgAlert');
+      if (!sw || !alertEl) return;
+      sw.addEventListener('change', (e) => {
+        alertEl.setAttribute('type', e.detail.checked ? 'success' : 'info');
+        alertEl.textContent = e.detail.checked ? '开关已开启，事件 bubbles + composed' : '开关关闭状态';
+      });
+    })();
+
     // 快捷键帮助按钮
     document.addEventListener('keydown', (e) => {
       if (e.key === '?' && !e.ctrlKey && !e.metaKey && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA' && !document.activeElement.isContentEditable) {

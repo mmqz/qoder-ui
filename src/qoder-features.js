@@ -4,6 +4,7 @@
    ============================================================ */
 (function() {
   'use strict';
+  if (typeof window === 'undefined') return; // SSR 安全
   const QF = window.QoderUI = window.QoderUI || {};
 
   /* ============================================================
@@ -475,109 +476,368 @@
   };
 
   /* ============================================================
-     7. 终端 - 命令输入 + 历史
+     7. 终端管理器 TerminalManager（v3.2 完整重写）
+        - 多标签：每个标签独立 body / 命令历史 / 工作目录
+        - 标签切换、关闭（×）、新建（+）
+        - 分屏（⊞）：双栏并排，点击分栏聚焦
+        - 清屏（🗑）：清空当前分栏输出
      ============================================================ */
   QF.terminal = {
+    _groups: new Map(),
+    _shellSeq: ['bash', 'zsh', 'sh', 'fish', 'pwsh'],
+    _shellIdx: 0,
+
     init() {
       document.querySelectorAll('.qoder-terminal').forEach(term => {
         if (term._termInit) return;
         term._termInit = true;
-        const body = term.querySelector('.qoder-terminal__body');
-        if (!body) return;
-
-        let history = [];
-        let historyIdx = -1;
-
-        // 创建输入行
-        const inputLine = document.createElement('div');
-        inputLine.className = 'qoder-terminal__line';
-        inputLine.innerHTML = `<span class="qoder-terminal__prompt">user@qoder</span>:<span class="qoder-terminal__path">~</span>$ <span class="qoder-terminal__input-text" contenteditable="true" style="outline:none;display:inline-block;min-width:10px;"></span><span class="qoder-terminal__cursor">▋</span>`;
-        body.appendChild(inputLine);
-
-        const inputEl = inputLine.querySelector('.qoder-terminal__input-text');
-        const cursor = inputLine.querySelector('.qoder-terminal__cursor');
-
-        inputEl.focus();
-        body.addEventListener('click', () => inputEl.focus());
-
-        inputEl.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter') {
-            e.preventDefault();
-            const cmd = inputEl.textContent.trim();
-            cursor.remove();
-            if (cmd) {
-              history.push(cmd);
-              historyIdx = history.length;
-              this._execute(body, cmd);
-            }
-            // 新输入行
-            const newLine = document.createElement('div');
-            newLine.className = 'qoder-terminal__line';
-            newLine.innerHTML = `<span class="qoder-terminal__prompt">user@qoder</span>:<span class="qoder-terminal__path">~</span>$ <span class="qoder-terminal__input-text" contenteditable="true" style="outline:none;display:inline-block;min-width:10px;"></span><span class="qoder-terminal__cursor">▋</span>`;
-            body.appendChild(newLine);
-            const newInput = newLine.querySelector('.qoder-terminal__input-text');
-            newInput.focus();
-            // 重新绑定
-            this._bindInput(newInput, newLine, body, history, (idx) => { historyIdx = idx; }, () => historyIdx);
-          } else if (e.key === 'ArrowUp') {
-            e.preventDefault();
-            if (historyIdx > 0) {
-              historyIdx--;
-              inputEl.textContent = history[historyIdx] || '';
-            }
-          } else if (e.key === 'ArrowDown') {
-            e.preventDefault();
-            if (historyIdx < history.length - 1) {
-              historyIdx++;
-              inputEl.textContent = history[historyIdx];
-            } else {
-              historyIdx = history.length;
-              inputEl.textContent = '';
-            }
-          }
-        });
+        this._setupGroup(term);
       });
     },
 
-    _bindInput(inputEl, line, body, history, setIdx, getIdx) {
+    /* ---------- 组初始化：规范化结构 ---------- */
+    _setupGroup(el) {
+      const tabsBar = el.querySelector('.qoder-terminal__tabs');
+      const oldBody = el.querySelector('.qoder-terminal__body');
+
+      // bodies 容器：承载每个标签的独立 body
+      const bodiesWrap = document.createElement('div');
+      bodiesWrap.className = 'qoder-terminal__bodies';
+      if (oldBody) {
+        el.insertBefore(bodiesWrap, oldBody);
+        bodiesWrap.appendChild(oldBody); // 保留演示内容作为第一个标签
+      } else {
+        el.appendChild(bodiesWrap);
+      }
+
+      const state = {
+        el, tabsBar, bodiesWrap,
+        tabs: [],
+        activeId: null,
+        split: false,
+        splitTabId: null,
+        _idSeq: 0
+      };
+      this._groups.set(el, state);
+
+      // 标签1：沿用现有 body（保留初始输出）
+      const firstName = 'bash';
+      const firstBody = oldBody || this._makeBody();
+      firstBody.classList.add('qoder-terminal__body');
+      firstBody.dataset.tabId = 'tab_0';
+      const tab1 = this._makeTabState(firstName, firstBody, state);
+      state.tabs.push(tab1);
+
+      // 标签2：若原有第二个静态标签则对应新建
+      if (tabsBar) {
+        const staticTabs = tabsBar.querySelectorAll('.qoder-terminal__tab:not(.qoder-terminal__tab--add)');
+        if (staticTabs.length > 1) {
+          const zshBody = this._makeBody();
+          bodiesWrap.appendChild(zshBody); // 必须挂载到 DOM（v3.2 修复 detached bug）
+          state.tabs.push(this._makeTabState('zsh', zshBody, state));
+        }
+      }
+
+      // 重建标签栏
+      if (!tabsBar) {
+        state.tabsBar = document.createElement('div');
+        state.tabsBar.className = 'qoder-terminal__tabs';
+        el.insertBefore(state.tabsBar, bodiesWrap);
+      }
+      state.activeId = tab1.id;
+      this._renderTabs(state);
+
+      // 命令行输入行
+      this._attachInput(tab1, state);
+      if (state.tabs[1]) this._attachInput(state.tabs[1], state);
+
+      return state;
+    },
+
+    _makeBody() {
+      const body = document.createElement('div');
+      body.className = 'qoder-terminal__body';
+      body.innerHTML = '<div class="qoder-terminal__line qoder-terminal__line--dim">Shell ready. 输入 help 查看可用命令。</div>';
+      return body;
+    },
+
+    _makeTabState(name, body, state) {
+      const id = 'tab_' + (state._idSeq++);
+      if (body) body.dataset.tabId = id;
+      return { id, name, body, history: [], historyIdx: 0, cwd: '~' };
+    },
+
+    /* ---------- 标签栏渲染 ---------- */
+    _renderTabs(state) {
+      const bar = state.tabsBar;
+      bar.innerHTML = '';
+
+      state.tabs.forEach(tab => {
+        const el = document.createElement('div');
+        el.className = 'qoder-terminal__tab' + (tab.id === state.activeId ? ' qoder-terminal__tab--active' : '');
+        el.dataset.tabId = tab.id;
+        el.title = tab.name + ' — 点击切换';
+        el.innerHTML =
+          '<span class="qoder-terminal__tab-icon">⌨</span>' +
+          '<span class="qoder-terminal__tab-title">' + tab.name + '</span>' +
+          '<span class="qoder-terminal__tab-close" title="关闭标签">×</span>';
+        // 切换
+        el.addEventListener('click', (e) => {
+          if (e.target.classList.contains('qoder-terminal__tab-close')) return;
+          this.activateTab(state.el, tab.id);
+        });
+        // 关闭
+        el.querySelector('.qoder-terminal__tab-close').addEventListener('click', (e) => {
+          e.stopPropagation();
+          this.closeTab(state.el, tab.id);
+        });
+        bar.appendChild(el);
+      });
+
+      // 新建标签（+）
+      const add = document.createElement('div');
+      add.className = 'qoder-terminal__tab qoder-terminal__tab--add';
+      add.title = '新建终端标签';
+      add.textContent = '+';
+      add.addEventListener('click', () => this.createTab(state.el));
+      bar.appendChild(add);
+
+      // 操作区：分屏 / 清屏
+      const actions = document.createElement('div');
+      actions.className = 'qoder-terminal__actions';
+      actions.innerHTML =
+        '<span class="qoder-terminal__action" data-action="split" title="分屏 / 取消分屏">⊞</span>' +
+        '<span class="qoder-terminal__action" data-action="clear" title="清空当前终端">🗑</span>';
+      actions.querySelector('[data-action="split"]').addEventListener('click', () => this.toggleSplit(state.el));
+      actions.querySelector('[data-action="clear"]').addEventListener('click', () => this.clearActive(state.el));
+      bar.appendChild(actions);
+    },
+
+    /* ---------- bodies 可见性同步 ---------- */
+    _syncBodies(state) {
+      const visibleIds = state.split && state.splitTabId
+        ? [state.activeId, state.splitTabId]
+        : [state.activeId];
+      state.tabs.forEach(tab => {
+        const show = visibleIds.indexOf(tab.id) >= 0;
+        tab.body.style.display = show ? '' : 'none';
+      });
+      state.bodiesWrap.classList.toggle('qoder-terminal__bodies--split', !!(state.split && state.splitTabId));
+    },
+
+    /* ---------- 公开 API：切换 ---------- */
+    activateTab(el, tabId) {
+      const state = this._groups.get(el);
+      if (!state) return;
+      const tab = state.tabs.find(t => t.id === tabId);
+      if (!tab) return;
+      state.activeId = tabId;
+      this._renderTabs(state);
+      this._syncBodies(state);
+      this._focus(tab);
+    },
+
+    /* ---------- 公开 API：新建 ---------- */
+    createTab(el, name) {
+      const state = this._groups.get(el);
+      if (!state) return null;
+      const shellName = name || this._shellSeq[this._shellIdx++ % this._shellSeq.length];
+      const body = this._makeBody();
+      state.bodiesWrap.appendChild(body); // 挂载到 DOM
+      const tab = this._makeTabState(shellName, body, state);
+      state.tabs.push(tab);
+      this._attachInput(tab, state);
+      state.activeId = tab.id;
+      // 分屏下新建：让右栏跟随新标签
+      if (state.split && !state.splitTabId) state.splitTabId = tab.id;
+      this._renderTabs(state);
+      this._syncBodies(state);
+      this._focus(tab);
+      el.dispatchEvent(new CustomEvent('qoder-terminal-tab-open', { detail: { id: tab.id, name: tab.name }, bubbles: true }));
+      return tab;
+    },
+
+    /* ---------- 公开 API：关闭 ---------- */
+    closeTab(el, tabId) {
+      const state = this._groups.get(el);
+      if (!state) return;
+      const idx = state.tabs.findIndex(t => t.id === tabId);
+      if (idx < 0) return;
+      const closed = state.tabs[idx];
+      state.tabs.splice(idx, 1);
+      closed.body.remove();
+
+      // 全部关闭则自动补一个新 bash
+      if (state.tabs.length === 0) {
+        state.split = false;
+        state.splitTabId = null;
+        const body = this._makeBody();
+        state.bodiesWrap.appendChild(body); // 挂载到 DOM
+        const tab = this._makeTabState('bash', body, state);
+        state.tabs.push(tab);
+        this._attachInput(tab, state);
+        state.activeId = tab.id;
+        this._renderTabs(state);
+        this._syncBodies(state);
+        this._focus(tab);
+        return;
+      }
+
+      // 激活对象调整
+      if (state.activeId === tabId) {
+        const next = state.tabs[Math.min(idx, state.tabs.length - 1)];
+        state.activeId = next.id;
+      }
+      if (state.splitTabId === tabId) {
+        const other = state.tabs.find(t => t.id !== state.activeId);
+        state.splitTabId = other ? other.id : null;
+        if (!state.splitTabId) state.split = false;
+      }
+      this._renderTabs(state);
+      this._syncBodies(state);
+      const active = state.tabs.find(t => t.id === state.activeId);
+      if (active) this._focus(active);
+      el.dispatchEvent(new CustomEvent('qoder-terminal-tab-close', { detail: { id: tabId, name: closed.name }, bubbles: true }));
+    },
+
+    /* ---------- 公开 API：分屏切换 ---------- */
+    toggleSplit(el) {
+      const state = this._groups.get(el);
+      if (!state) return;
+      if (state.split) {
+        state.split = false;
+        state.splitTabId = null;
+      } else {
+        // 右栏优先选当前激活标签之外的标签，否则自动新建
+        let other = state.tabs.find(t => t.id !== state.activeId);
+        if (!other) other = this.createTab(el);
+        state.split = true;
+        state.splitTabId = other.id;
+      }
+      this._renderTabs(state);
+      this._syncBodies(state);
+      const active = state.tabs.find(t => t.id === state.activeId);
+      if (active) this._focus(active);
+    },
+
+    /* ---------- 公开 API：清屏 ---------- */
+    clearActive(el) {
+      const state = this._groups.get(el);
+      if (!state) return;
+      const tab = state.tabs.find(t => t.id === state.activeId);
+      if (!tab) return;
+      tab.body.innerHTML = '';
+      tab.history = [];
+      tab.historyIdx = 0;
+      this._attachInput(tab, state);
+      this._focus(tab);
+    },
+
+    /* ---------- 焦点 ---------- */
+    _focus(tab) {
+      if (!tab || !tab.body) return;
+      const input = tab.body.querySelector('.qoder-terminal__input-text:last-of-type') ||
+                    tab.body.querySelector('.qoder-terminal__input-text');
+      if (input) input.focus();
+    },
+
+    /* ---------- 输入行 ---------- */
+    _inputLineHtml() {
+      return '<span class="qoder-terminal__prompt">user@qoder</span>:<span class="qoder-terminal__path"></span>$ ' +
+        '<span class="qoder-terminal__input-text" contenteditable="true" spellcheck="false" style="outline:none;display:inline-block;min-width:10px;"></span>' +
+        '<span class="qoder-terminal__cursor">▋</span>';
+    },
+
+    _attachInput(tab, state) {
+      if (!tab || !tab.body || tab.body.querySelector('.qoder-terminal__input-text')) return;
+      const line = document.createElement('div');
+      line.className = 'qoder-terminal__line qoder-terminal__input-line';
+      line.innerHTML = this._inputLineHtml();
+      tab.body.appendChild(line);
+      line.querySelector('.qoder-terminal__path').textContent = tab.cwd;
+      const inputEl = line.querySelector('.qoder-terminal__input-text');
+
+      // 点击 body 任意处聚焦当前分栏（body 只绑定一次，防止 clear 后重复）
+      if (tab.body._clickBound !== true) {
+        tab.body._clickBound = true;
+        tab.body.addEventListener('click', () => {
+          // 分屏时点击即切换激活
+          if (state.split && tab.id !== state.activeId) {
+            this.activateTab(state.el, tab.id);
+          } else {
+            const activeInput = tab.body.querySelector('.qoder-terminal__input-line:last-of-type .qoder-terminal__input-text');
+            if (activeInput) activeInput.focus();
+          }
+        });
+      }
+
+      const submit = () => {
+        const cmd = inputEl.textContent.trim();
+        line.querySelector('.qoder-terminal__cursor')?.remove();
+        line.setAttribute('contenteditable', 'false');
+        if (cmd) {
+          tab.history.push(cmd);
+          tab.historyIdx = tab.history.length;
+          this._execute(tab, cmd);
+        }
+        // 新输入行
+        const newLine = document.createElement('div');
+        newLine.className = 'qoder-terminal__line qoder-terminal__input-line';
+        newLine.innerHTML = this._inputLineHtml();
+        newLine.querySelector('.qoder-terminal__path').textContent = tab.cwd;
+        tab.body.appendChild(newLine);
+        const newInput = newLine.querySelector('.qoder-terminal__input-text');
+        newInput.focus();
+        this._bindInput(newInput, newLine, tab, state);
+        tab.body.scrollTop = tab.body.scrollHeight;
+      };
+
       inputEl.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
           e.preventDefault();
-          const cmd = inputEl.textContent.trim();
-          line.querySelector('.qoder-terminal__cursor')?.remove();
-          if (cmd) {
-            history.push(cmd);
-            setIdx(history.length);
-            this._execute(body, cmd);
-          }
-          const newLine = document.createElement('div');
-          newLine.className = 'qoder-terminal__line';
-          newLine.innerHTML = `<span class="qoder-terminal__prompt">user@qoder</span>:<span class="qoder-terminal__path">~</span>$ <span class="qoder-terminal__input-text" contenteditable="true" style="outline:none;display:inline-block;min-width:10px;"></span><span class="qoder-terminal__cursor">▋</span>`;
-          body.appendChild(newLine);
-          const newInput = newLine.querySelector('.qoder-terminal__input-text');
-          newInput.focus();
-          this._bindInput(newInput, newLine, body, history, setIdx, getIdx);
+          submit();
         } else if (e.key === 'ArrowUp') {
           e.preventDefault();
-          let idx = getIdx();
-          if (idx > 0) { idx--; setIdx(idx); inputEl.textContent = history[idx] || ''; }
+          if (tab.historyIdx > 0) {
+            tab.historyIdx--;
+            inputEl.textContent = tab.history[tab.historyIdx] || '';
+          }
         } else if (e.key === 'ArrowDown') {
           e.preventDefault();
-          let idx = getIdx();
-          if (idx < history.length - 1) { idx++; setIdx(idx); inputEl.textContent = history[idx]; }
-          else { setIdx(history.length); inputEl.textContent = ''; }
+          if (tab.historyIdx < tab.history.length - 1) {
+            tab.historyIdx++;
+            inputEl.textContent = tab.history[tab.historyIdx];
+          } else {
+            tab.historyIdx = tab.history.length;
+            inputEl.textContent = '';
+          }
+        } else if (e.key === 'l' && (e.ctrlKey || e.metaKey)) {
+          e.preventDefault();
+          tab.body.innerHTML = '';
+          this._attachInput(tab, state);
         }
       });
+
+      this._bindInput(inputEl, line, tab, state);
     },
 
-    _execute(body, cmd) {
+    _bindInput(inputEl, line, tab, state) {
+      // 绑定逻辑内联在 _attachInput（避免旧版重复绑定 bug）
+    },
+
+    /* ---------- 命令执行（按标签独立 cwd/输出） ---------- */
+    _execute(tab, cmd) {
+      const body = tab.body;
       const output = document.createElement('div');
       output.className = 'qoder-terminal__line';
       let result = '';
       if (cmd === 'help') {
-        result = '可用命令: help, clear, echo, date, whoami, ls, pwd';
+        result = '可用命令: help, clear, echo, date, whoami, ls, pwd, cd, exit';
       } else if (cmd === 'clear') {
         body.innerHTML = '';
+        const groupEl = this._groupOf(tab);
+        const st = groupEl ? this._groups.get(groupEl) : null;
+        if (st) this._attachInput(tab, st);
         return;
       } else if (cmd === 'date') {
         result = new Date().toString();
@@ -587,13 +847,37 @@
         result = 'src/  examples/  package.json  README.md';
       } else if (cmd === 'pwd') {
         result = '/home/user/qoder-ui';
+      } else if (cmd === 'exit') {
+        const groupEl = this._groupOf(tab);
+        if (groupEl) this.closeTab(groupEl, tab.id);
+        return;
       } else if (cmd.startsWith('echo ')) {
         result = cmd.slice(5);
+      } else if (cmd.startsWith('cd')) {
+        const target = cmd.slice(2).trim();
+        if (!target || target === '~') tab.cwd = '~';
+        else if (target === '..') {
+          const parts = tab.cwd.split('/');
+          tab.cwd = parts.length > 1 ? parts.slice(0, -1).join('/') || '/' : tab.cwd;
+        } else {
+          tab.cwd = (tab.cwd === '~' ? '' : tab.cwd) + '/' + target.replace(/^\/+/, '');
+        }
+        const lastLine = body.querySelector('.qoder-terminal__input-line:last-of-type .qoder-terminal__path');
+        if (lastLine) lastLine.textContent = tab.cwd;
+        return;
       } else {
-        result = `<span style="color:var(--error);">command not found: ${cmd}</span>`;
+        result = '<span style="color:var(--error);">command not found: ' + cmd.replace(/</g, '&lt;') + '</span>';
       }
       output.innerHTML = result;
       body.appendChild(output);
+      body.scrollTop = body.scrollHeight;
+    },
+
+    _groupOf(tab) {
+      for (const [el, state] of this._groups) {
+        if (state.tabs.indexOf(tab) >= 0) return el;
+      }
+      return null;
     }
   };
 
@@ -799,10 +1083,12 @@
     });
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', autoInitFeatures);
-  } else {
-    autoInitFeatures();
+  if (typeof document !== 'undefined') {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', autoInitFeatures);
+    } else {
+      autoInitFeatures();
+    }
   }
 
   QF.features = { init: autoInitFeatures };

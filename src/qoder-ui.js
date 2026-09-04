@@ -10,6 +10,18 @@
   'use strict';
 
   // ============================================================
+  // 依赖守卫：qoder-core.js 与 qoder-shadow.js 必须先加载
+  // ============================================================
+  if (typeof window !== 'undefined') {
+    if (!window.QoderCore) {
+      console.error('[QoderUI] 缺少依赖 qoder-core.js，请按顺序加载: core → shadow → ui → interactions → wc → features → diff');
+    }
+    if (!window.QoderUI || !window.QoderUI.ShadowElement) {
+      console.error('[QoderUI] 缺少依赖 qoder-shadow.js，Web Components 将不可用');
+    }
+  }
+
+  // ============================================================
   // 工具函数
   // ============================================================
   const $ = (sel, ctx = document) => ctx.querySelector(sel);
@@ -230,13 +242,18 @@
     }
   };
 
-  // 注入 Toast 动画
-  const toastStyle = document.createElement('style');
-  toastStyle.textContent = `
-    @keyframes qoder-toast-in { from { opacity:0; transform: translateX(40px); } to { opacity:1; transform: translateX(0); } }
-    @keyframes qoder-toast-out { from { opacity:1; transform: translateX(0); } to { opacity:0; transform: translateX(40px); } }
-  `;
-  document.head.appendChild(toastStyle);
+  // ============================================================
+  // 注入 Toast 动画（SSR 安全守卫）
+  // ============================================================
+  const IS_BROWSER = typeof document !== 'undefined' && typeof window !== 'undefined';
+  if (IS_BROWSER) {
+    const toastStyle = document.createElement('style');
+    toastStyle.textContent = `
+      @keyframes qoder-toast-in { from { opacity:0; transform: translateX(40px); } to { opacity:1; transform: translateX(0); } }
+      @keyframes qoder-toast-out { from { opacity:1; transform: translateX(0); } to { opacity:0; transform: translateX(40px); } }
+    `;
+    document.head.appendChild(toastStyle);
+  }
 
   // ============================================================
   // Tabs 切换
@@ -333,27 +350,21 @@
 
   // ============================================================
   // Web Components - <qoder-user-card>
+  // v3.2：基于 QoderUI.ShadowElement（共享样式表，无 @import）
   // ============================================================
-  class QoderUserCard extends HTMLElement {
+  let QoderUserCard;
+  if (IS_BROWSER) QoderUserCard = class extends window.QoderUI.ShadowElement {
     static get observedAttributes() {
       return ['email', 'label', 'time', 'variant', 'name', 'role'];
     }
-
-    constructor() {
-      super();
-      this.attachShadow({ mode: 'open' });
-    }
-
-    connectedCallback() {
-      this.render();
-      this._initTilt();
-    }
-
-    attributeChangedCallback() {
-      if (this.shadowRoot) this.render();
-    }
+    static get hostCss() { return ':host{display:inline-block;}'; }
 
     render() {
+      // 兼容旧 API：属性变化 -> 重渲染
+      this._schedule(false);
+    }
+
+    template() {
       const email = this.getAttribute('email') || 'user@example.com';
       const label = this.getAttribute('label') || 'PRO MEMBER';
       const time = this.getAttribute('time') || 'JOINED 2024';
@@ -363,12 +374,8 @@
 
       const isStandard = variant === 'standard';
 
-      this.shadowRoot.innerHTML = `
-        <style>
-          @import url('${this._cssPath()}');
-          :host { display: inline-block; }
-        </style>
-        <div class="qoder-user-card ${isStandard ? 'qoder-user-card--standard' : ''}">
+      return `
+        <div class="qoder-user-card ${isStandard ? 'qoder-user-card--standard' : ''}" part="card">
           <div class="qoder-user-card__frame"></div>
           ${isStandard ? `
             <div class="qoder-user-card__standard">
@@ -409,20 +416,11 @@
       `;
     }
 
-    _cssPath() {
-      // 尝试从当前脚本路径推断 CSS 路径
-      const scripts = document.querySelectorAll('script[src]');
-      for (const s of scripts) {
-        if (s.src.includes('qoder-ui')) {
-          return s.src.replace(/\/[^\/]*\.js.*$/, '/../src/index.css');
-        }
-      }
-      return '../src/index.css';
-    }
+    _bind() { this._initTilt(); }
 
     _initTilt() {
-      const card = this.shadowRoot.querySelector('.qoder-user-card');
-      const holo = this.shadowRoot.querySelector('.qoder-user-card__holographic');
+      const card = this.$('.qoder-user-card');
+      const holo = this.$('.qoder-user-card__holographic');
       if (!card) return;
 
       card.addEventListener('mousemove', (e) => {
@@ -443,35 +441,20 @@
 
   // ============================================================
   // Web Components - <qoder-dialog>
+  // v3.2：基于 QoderUI.ShadowElement（共享样式表，无 @import）
   // ============================================================
-  class QoderDialog extends HTMLElement {
+  let QoderDialogElement;
+  if (IS_BROWSER) QoderDialogElement = class extends window.QoderUI.ShadowElement {
     static get observedAttributes() { return ['title', 'open']; }
+    static get hostCss() { return ':host{display:contents;}'; }
 
-    constructor() {
-      super();
-      this.attachShadow({ mode: 'open' });
-    }
+    render() { this._schedule(false); }
 
-    connectedCallback() { this.render(); }
-
-    attributeChangedCallback(name) {
-      if (this.shadowRoot) {
-        if (name === 'open') this._toggle();
-        else this.render();
-      }
-    }
-
-    render() {
+    template() {
       const title = this.getAttribute('title') || '对话框';
       const isOpen = this.hasAttribute('open');
-
-      this.shadowRoot.innerHTML = `
-        <style>
-          @import url('${this._cssPath()}');
-          :host { display: contents; }
-          .overlay { display: ${isOpen ? 'flex' : 'none'}; }
-        </style>
-        <div class="overlay qoder-dialog-overlay" part="overlay">
+      return `
+        <div class="overlay qoder-dialog-overlay" part="overlay" style="display:${isOpen ? 'flex' : 'none'};">
           <div class="qoder-dialog" part="dialog">
             <div class="qoder-dialog-header">
               <h3 class="qoder-dialog-title">${title}</h3>
@@ -486,38 +469,53 @@
           </div>
         </div>
       `;
+    }
 
-      this.shadowRoot.querySelector('.qoder-dialog-close').addEventListener('click', () => this.close());
-      this.shadowRoot.querySelector('.overlay').addEventListener('click', (e) => {
+    _bind(root) {
+      root.querySelector('.qoder-dialog-close').addEventListener('click', () => this.close());
+      root.querySelector('.overlay').addEventListener('click', (e) => {
         if (e.target.classList.contains('overlay')) this.close();
       });
-    }
-
-    _cssPath() {
-      const scripts = document.querySelectorAll('script[src]');
-      for (const s of scripts) {
-        if (s.src.includes('qoder-ui')) return s.src.replace(/\/[^\/]*\.js.*$/, '/../src/index.css');
+      // ESC 关闭（shadow 内叠加层需自行监听文档）
+      if (!this._escBound) {
+        this._escBound = true;
+        this._escHandler = (e) => {
+          if (e.key === 'Escape' && this.hasAttribute('open')) this.close();
+        };
+        document.addEventListener('keydown', this._escHandler);
       }
-      return '../src/index.css';
     }
 
-    _toggle() {
-      const overlay = this.shadowRoot.querySelector('.overlay');
-      if (overlay) overlay.style.display = this.hasAttribute('open') ? 'flex' : 'none';
+    disconnectedCallback() {
+      if (this._escHandler) document.removeEventListener('keydown', this._escHandler);
     }
 
-    open() { this.setAttribute('open', ''); this.dispatchEvent(new CustomEvent('open')); }
-    close() { this.removeAttribute('open'); this.dispatchEvent(new CustomEvent('close')); }
+    attributeChangedCallback(name) {
+      // open 属性切换不重建 DOM，仅切换显示
+      if (name === 'open' && this._rendered) {
+        const overlay = this.$('.overlay');
+        if (overlay) overlay.style.display = this.hasAttribute('open') ? 'flex' : 'none';
+        return;
+      }
+      if (window.QoderUI && window.QoderUI.ShadowElement) {
+        window.QoderUI.ShadowElement.prototype.attributeChangedCallback.call(this, name);
+      } else if (this.render) {
+        this.render();
+      }
+    }
+
+    open() { this.setAttribute('open', ''); this.emit('open', {}); }
+    close() { this.removeAttribute('open'); this.emit('close', {}); }
   }
 
   // ============================================================
   // Web Components - <qoder-theme-switcher>
+  // v3.2：Shadow 隔离 + 与全局主题事件联动
   // ============================================================
-  class QoderThemeSwitcher extends HTMLElement {
-    connectedCallback() { this.render(); }
-
-    render() {
-      const themes = [
+  let QoderThemeSwitcher;
+  if (IS_BROWSER) QoderThemeSwitcher = class extends window.QoderUI.ShadowElement {
+    static get THEMES() {
+      return [
         { id: 'forest-light', name: 'Forest', grad: 'linear-gradient(135deg,#e8f5ee,#358e62)' },
         { id: 'forest-dark', name: 'Forest Dark', grad: 'linear-gradient(135deg,#1a2e24,#62c9a8)' },
         { id: 'bee-light', name: 'Bee', grad: 'linear-gradient(135deg,#fdf6e3,#e0c65c)' },
@@ -525,47 +523,64 @@
         { id: 'mint-light', name: 'Mint', grad: 'linear-gradient(135deg,#e6f7f2,#4fa98f)' },
         { id: 'mint-dark', name: 'Mint Dark', grad: 'linear-gradient(135deg,#152a25,#62c9a8)' },
         { id: 'light-parchment', name: 'Parchment', grad: 'linear-gradient(135deg,#f5ebe0,#c96442)' },
-        { id: 'parchment-dark', name: 'Parchment Dark', grad: 'linear-gradient(135deg,#2a1f18,#8ee5a1)' },
+        { id: 'parchment-dark', name: 'Parchment Dark', grad: 'linear-gradient(135deg,#2a1f18,#8ee5a1)' }
       ];
+    }
+    static get hostCss() { return ':host{display:block;}'; }
 
-      this.innerHTML = `
-        <div style="display:flex;gap:6px;flex-wrap:wrap;">
-          ${themes.map(t => `
-            <button data-theme="${t.id}" title="${t.name}"
-              style="width:28px;height:28px;border-radius:50%;border:2px solid var(--border);
-              background:${t.grad};cursor:pointer;transition:all .2s;padding:0;"></button>
-          `).join('')}
-        </div>
-      `;
+    render() { this._schedule(false); }
 
+    template() {
+      return '<div style="display:flex;gap:6px;flex-wrap:wrap;" part="switcher">' +
+        QoderThemeSwitcher.THEMES.map(t =>
+          '<button data-theme="' + t.id + '" title="' + t.name + '"' +
+          ' style="width:28px;height:28px;border-radius:50%;border:2px solid var(--border);' +
+          'background:' + t.grad + ';cursor:pointer;transition:all .2s;padding:0;"></button>'
+        ).join('') + '</div>';
+    }
+
+    _bind(root) {
+      this._sync();
+      this.$$('button').forEach(btn => {
+        btn.addEventListener('click', () => QoderTheme.set(btn.dataset.theme));
+      });
+      // 主题变化（含其他切换器触发）时同步高亮
+      if (!this._themeBound) {
+        this._themeBound = true;
+        this._themeHandler = () => this._sync();
+        document.addEventListener('qoder-theme-change', this._themeHandler);
+      }
+    }
+
+    _sync() {
       const current = QoderTheme.current;
-      $$('button', this).forEach(btn => {
+      this.$$('button').forEach(btn => {
         if (btn.dataset.theme === current) {
           btn.style.borderColor = 'var(--accent)';
           btn.style.boxShadow = '0 0 0 2px var(--accent-bg)';
+        } else {
+          btn.style.borderColor = 'var(--border)';
+          btn.style.boxShadow = 'none';
         }
-        btn.addEventListener('click', () => {
-          QoderTheme.set(btn.dataset.theme);
-          $$('button', this).forEach(b => {
-            b.style.borderColor = 'var(--border)';
-            b.style.boxShadow = 'none';
-          });
-          btn.style.borderColor = 'var(--accent)';
-          btn.style.boxShadow = '0 0 0 2px var(--accent-bg)';
-        });
       });
+    }
+
+    disconnectedCallback() {
+      if (this._themeHandler) document.removeEventListener('qoder-theme-change', this._themeHandler);
     }
   }
 
   // ============================================================
-  // 注册自定义元素
+  // 注册自定义元素（仅浏览器）
   // ============================================================
-  if (!customElements.get('qoder-user-card')) customElements.define('qoder-user-card', QoderUserCard);
-  if (!customElements.get('qoder-dialog')) customElements.define('qoder-dialog', QoderDialog);
-  if (!customElements.get('qoder-theme-switcher')) customElements.define('qoder-theme-switcher', QoderThemeSwitcher);
+  if (IS_BROWSER) {
+    if (!customElements.get('qoder-user-card')) customElements.define('qoder-user-card', QoderUserCard);
+    if (!customElements.get('qoder-dialog')) customElements.define('qoder-dialog', QoderDialogElement);
+    if (!customElements.get('qoder-theme-switcher')) customElements.define('qoder-theme-switcher', QoderThemeSwitcher);
+  }
 
   // ============================================================
-  // 自动初始化
+  // 自动初始化（仅浏览器）
   // ============================================================
   function init() {
     QoderTheme.init();
@@ -579,21 +594,27 @@
     initPetStacks();
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
+  if (IS_BROWSER) {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
   }
 
   // ============================================================
-  // 导出到全局
+  // 导出到全局（合并，不覆盖 qoder-shadow 注入的命名空间成员）
   // ============================================================
-  window.QoderUI = {
+  const QoderUIExport = {
     theme: QoderTheme,
     dialog: QoderDialog,
     toast: QoderToast,
     init,
-    version: '2.1.0'
+    version: '3.2.0'
   };
+  const _g = (typeof globalThis !== 'undefined' ? globalThis : {});
+  const _ns = (typeof window !== 'undefined' ? window : _g);
+  Object.assign(_ns.QoderUI = _ns.QoderUI || {}, QoderUIExport);
+  _ns.QoderUI.core = _ns.QoderCore || null;
 
 })();

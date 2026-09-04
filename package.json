@@ -1,15 +1,37 @@
 {
   "name": "qoder-ui",
-  "version": "3.1.0",
-  "description": "原汁原味的 Qoder 前端风格原生组件库，8 个官方主题，400+ 图标，50+ 组件（聊天/命令面板/侧边栏/设置/表单/终端/通知/Diff/Agent工作流/数据可视化），21 个 Web Components，完整交互逻辑（拖拽/快捷键/a11y/响应式），零依赖纯 CSS+JS 实现",
-  "main": "src/index.css",
-  "style": "src/index.css",
-  "module": "src/qoder-ui.js",
-  "browser": "src/qoder-ui.js",
+  "version": "3.2.0",
+  "description": "原汁原味的 Qoder 前端风格原生组件库，8 个官方主题，400+ 图标，50+ 组件（聊天/命令面板/侧边栏/设置/表单/终端/通知/Diff/Agent工作流/数据可视化），21 个 Web Components（属性响应 + Shadow DOM 样式隔离），完整交互逻辑（拖拽/快捷键/a11y/响应式），零依赖纯 CSS+JS 实现",
+  "main": "dist/qoder-ui.cjs.js",
+  "module": "dist/qoder-ui.esm.js",
+  "types": "types/index.d.ts",
+  "style": "dist/qoder-ui.min.css",
+  "browser": "dist/qoder-ui.min.js",
+  "unpkg": "dist/qoder-ui.min.js",
+  "jsdelivr": "dist/qoder-ui.min.js",
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "import": "./dist/qoder-ui.esm.js",
+      "require": "./dist/qoder-ui.cjs.js",
+      "browser": "./dist/qoder-ui.min.js",
+      "default": "./dist/qoder-ui.esm.js"
+    },
+    "./dist/qoder-ui.min.css": "./dist/qoder-ui.min.css",
+    "./css": "./dist/qoder-ui.min.css",
+    "./src/*": "./src/*",
+    "./package.json": "./package.json"
+  },
   "files": [
-    "src/"
+    "dist/",
+    "src/",
+    "types/",
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
+    "build": "node build/build.mjs",
+    "test": "node --test",
     "dev": "npx serve examples",
     "preview": "open examples/index.html"
   },
@@ -22,9 +44,11 @@
     "theme",
     "native",
     "web-components",
+    "shadow-dom",
     "markdown",
     "chat",
     "terminal",
+    "diff",
     "agent",
     "data-viz",
     "command-palette"
@@ -34,5 +58,8 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/mmqz/qoder-ui"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.0"
   }
 }

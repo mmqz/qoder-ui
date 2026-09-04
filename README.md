@@ -351,3 +351,92 @@ src/
 - **交互功能完整度**：从 ~30% 提升至 ~85%
 - **Web Components**：21个，5个支持属性响应
 - **响应式断点**：6个全量适配
+
+## v3.2 完成剩余 15%（2026-09-04）
+
+### 1. Diff 行内 word-level 高亮
+- **`src/qoder-core.js`**（新增）：零 DOM 纯逻辑模块 —— LCS word-diff 引擎（`diffWords`/`wordChanges`）、行级 diff（`diffLines`）、命令面板模糊匹配（`fuzzyMatch`）、快捷键解析（`comboFromEvent`/`matchKeys`），可在 Node 中直接测试
+- **`src/qoder-diff.js`**（新增）：`QoderUI.diff.enhance(root)` 扫描现有 `.qoder-diff`，相邻增删行自动 1:1 配对做词级高亮（绿底新增 / 红底删除线）；`QoderUI.diff.render({old, new, filename})` 由两段文本动态渲染完整 diff；幂等可重复调用
+- **修复存量 bug**：示例页使用的 `.qoder-diff__line--added/--removed/--context` 与 `.qoder-diff__stat--added/--removed` 在 CSS 中从未定义（只有 `__row` 系），本次补齐行式布局样式
+
+### 2. 终端标签页功能化（完整终端管理器）
+- 标签切换 / 关闭（×）/ 新建（+，bash→zsh→sh→fish→pwsh 轮转）/ 分屏（⊞ 双栏并排，点击分栏聚焦）/ 清屏（🗑）
+- 每个标签**独立**的输出 body、命令历史（↑↓）、工作目录（`cd`/`cd ..`/`cd ~`）
+- 新增命令：`cd`、`exit`（关闭当前标签）、`Ctrl+L` 清屏；关闭最后一个标签自动重建 bash
+- API：`QoderUI.terminal.activateTab/createTab/closeTab/toggleSplit/clearActive`
+- **修复存量 bug**：新建标签的 body 此前未挂载 DOM（detached 节点）
+
+### 3. 剩余 13 个 Web Components 属性响应
+badge / avatar / alert / spinner / select / slider / tooltip / card / breadcrumb / steps / timeline / empty / pagination 全部支持 `observedAttributes` + `attributeChangedCallback`，改属性自动更新 DOM；关键组件提供 getter/setter（`value`/`checked`/`current`/`active`/`disabled`）；select/slider 行为自包含（不再依赖全局 init）
+
+### 4. Shadow DOM 样式隔离
+- **`src/qoder-shadow.js`**（新增）：全库 CSS 只 fetch/解析一次，构建**单个共享 CSSStyleSheet**，经 `adoptedStyleSheets` 被全部 21 个组件的 shadow root 复用（零重复解析）；相对 `url(...)` 自动重写为绝对地址；自动向 document 注入样式链接保障图标字体；fetch 不可用（file://）时自动降级为 shadow 内 `@import`
+- 内容型组件经 `<slot>` 投影光内容；事件统一 `bubbles + composed` 穿透边界
+- **退回 light DOM**（三选一）：`window.QoderUIConfig = { shadow: false }`、`<html data-qoder-shadow="false">`、单元素 `no-shadow` 属性
+- **修复存量 bug**：原 `qoder-ui.js` 存在 `QoderDialog` 重复声明的**致命语法错误**（整个文件解析失败），以及 `connectedCallback` 过早读取子节点的问题
+
+### 5. 构建产物（esbuild）
+```
+dist/qoder-ui.min.css   全部 CSS 打包压缩（@font 字体资产重写）  168KB
+dist/qoder-ui.min.js    IIFE 压缩包，<script> 直接引入           81KB
+dist/qoder-ui.esm.js    ESM（bundler 用）                        82KB
+dist/qoder-ui.cjs.js    CJS（SSR 安全，Node require 不崩溃）     82KB
+types/index.d.ts        手写 TS 类型声明（全 API 覆盖）
+```
+```bash
+npm run build   # esbuild 构建
+```
+```html
+<!-- 构建产物用法：一个 CSS + 一个 JS -->
+<link rel="stylesheet" href="qoder-ui/dist/qoder-ui.min.css">
+<script src="qoder-ui/dist/qoder-ui.min.js"></script>
+```
+
+### 6. 单元测试（零依赖，Node 内置 test runner）
+```bash
+npm test        # 31 个用例全通过
+```
+- `tests/core.test.mjs`：word-diff/行级 diff/LCS/模糊匹配/快捷键解析/工具函数（20 用例）
+- `tests/integrity.test.mjs`：CSS @import 完整性、示例页类名 100% 覆盖、21 个 WC 属性响应静态检查、构建产物、类型声明（11 用例）
+
+### 7. 命名兼容层（修复 96 个无样式类）
+**`src/components/qoder-compat.css`**（由 `scripts/gen_compat.py` 自动生成）：修复 v1/v3.0 期间 CSS 单横线命名（`qoder-btn-primary`）与示例页双横线 BEM（`qoder-btn--primary`）的漂移 —— 96 个类此前完全无样式（含按钮变体/徽章/消息气泡/任务规划/迷你图表等）。现在示例页类名 100% 有定义，并被完整性测试锁定。
+
+### 加载顺序（源码方式）
+```html
+<script src="qoder-ui/src/qoder-core.js"></script>
+<script src="qoder-ui/src/qoder-shadow.js"></script>
+<script src="qoder-ui/src/qoder-ui.js"></script>
+<script src="qoder-ui/src/qoder-interactions.js"></script>
+<script src="qoder-ui/src/qoder-wc.js"></script>
+<script src="qoder-ui/src/qoder-features.js"></script>
+<script src="qoder-ui/src/qoder-diff.js"></script>
+```
+
+### 文件结构（v3.2）
+```
+qoder-ui/
+├── src/
+│   ├── index.css                    # 入口（12 个 CSS 模块）
+│   ├── qoder-core.js                # v3.2 纯逻辑（diff 引擎/模糊匹配，可 Node 测试）
+│   ├── qoder-shadow.js              # v3.2 Shadow DOM 隔离引擎 + 组件基类
+│   ├── qoder-ui.js                  # 基础（主题/Toast/Dialog/3 WC）[修复语法错误]
+│   ├── qoder-interactions.js        # 交互（面板/表单/拖拽/快捷键）
+│   ├── qoder-wc.js                  # v3.2 全部 18 个 WC（属性响应 + slot）
+│   ├── qoder-features.js            # 功能（聊天/终端管理器/上传/日历）[终端重写]
+│   ├── qoder-diff.js                # v3.2 Diff 增强器 + 动态渲染
+│   ├── esm-entry.js                 # v3.2 ESM/CJS 构建入口
+│   ├── themes/ styles/ components/  # CSS（含 v3.2 qoder-compat.css）
+│   └── fonts/                       # 图标字体
+├── examples/index.html              # 24 区块完整演示（真实可操作）
+├── build/build.mjs                  # v3.2 esbuild 构建脚本
+├── tests/                           # v3.2 单元测试（31 用例）
+├── types/index.d.ts                 # v3.2 TS 类型声明
+└── dist/                            # v3.2 构建产物
+```
+
+### v3.2 统计
+- **交互功能完整度**：~85% → **100%**（诚实清单 6 项全部完成）
+- **Web Components**：21 个，**21/21** 属性响应 + Shadow DOM 隔离
+- **测试**：31 用例全通过（零测试依赖）
+- **修复存量 bug**：7 个（语法错误/detached 节点/96 无样式类/draggable 崩溃/热键 shift 容错等）
