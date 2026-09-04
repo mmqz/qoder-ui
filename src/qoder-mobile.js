@@ -3597,7 +3597,7 @@
         '<span class="qm-ac__arr">›</span></button>';
       const us = this.getAttribute('update-state') || 'idle';
       const updSub = us === 'checking' ? t('update.checking') : us === 'installing' ? t('update.installing')
-        : us === 'none' ? t('update.no_update') : fmt(t('update.title'), ['3.9.0']);
+        : us === 'none' ? t('update.no_update') : fmt(t('update.title'), ['3.9.1']);
       return '<div class="qm-ac">' +
         row('profile', t('account_security.account'), email || t('account_security.verification_title')) +
         row('update', t('tasks.time.now'), updSub) +
@@ -4000,7 +4000,7 @@
     locale: () => _locale,
     statusColor,
     parseMermaid, renderMermaidSvg,
-    version: '3.9.0'
+    version: '3.9.1'
   };
   register();
 

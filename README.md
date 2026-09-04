@@ -135,6 +135,8 @@ qoder-ui/
 5. 提取 codicon.ttf + qoder-seti.woff 图标字体
 6. 抛弃原生 React/Tailwind 打包代码，重写为纯原生 CSS + Web Components
 **技术栈**：Qoder = VS Code fork + Electron + React + Vite + Tailwind CSS
+
+> PC 端覆盖率对账（官方 App `qoder-cn 1:0.1.6` 与 IDE `1.1.3` 的双向值匹配审计、"哪里没分析"逐键清单）见 **`docs/pc-coverage-audit.md`**；移动端专项见 `docs/coverage-audit.md`。
 ## 演示
 打开 `examples/index.html` 即可查看所有组件和 8 个主题的效果。
 ## License
@@ -808,6 +810,23 @@ qoder-ui/
 - 本机 Node 24 加 `--no-experimental-detect-module`（等价 Node 18 严格扩展名语义）：`.mjs` ESM 导入 31 项导出齐全，CJS require 正常
 - 测试 182/182 全绿；构建四产物；npm pack 36 文件（qoder-ui-3.7.1.tgz）
 - CI Node 18/20/22 矩阵由本提交重新触发复验
+
+## v3.9.1 PC 端覆盖率审计：官方 App v0.1.6 / IDE v1.1.3 首次对账（2026-09-04）
+
+> 用户拍板"pc 再之后查清哪里没分析"落地：官方桌面双产品线首次源码级盘点，**"哪里没分析"从此有逐键清单**（4,694 键入库）。
+
+### 审计对象与关键事实
+- **官方 App `qoder-cn 1:0.1.6`**（deb 187MB，2026-09-02 构建，Electron，asar 128MB）：与 PC 复现依据的 v0.1.6 **同版本号**，无版本漂移；但同版本号下官方持续重建，文案载体已三迁（`dynamic-content/` → `dynamic-text/` → asar 内嵌 i18next）
+- **官方 IDE `qoder-cn-ide 1.1.3`**（VS Code 基座 1.105）：zh 面 = 官方 zh-hans 语言包（221k CJK）+ **`aicoding-agent` 扩展（60k CJK，Qoder 自有 agent UI）——IDE 侧真正差异面，此前 0% 分析**
+- 官方全产品线下载直链（App/IDE/QoderWake/QoderWork/CLI）已从下载页 chunk 提取并记录于报告 §2.1
+
+### 双向值匹配对账（新方法论，与移动端单向口径互补）
+- **A 向覆盖率（官方 → 复现）：14 / 5,814（0.2%）**——官方 App zh UI 值 5,814 条（键名映射 4,716 条 camelCase 扁平键），命中均为"关闭/复制/新会话"级通用词。定性结论：本仓库 PC 侧是设计语言+组件库级复现，官方**应用级**文案（agent 149 键/profile 124/语音 83/运行时 73/导入迁移 72/插件连接器 77/终端 31 等 25+ 域）从未进入射程
+- **B 向自造率（复现 → 官方）：官方可证 15 / 216（6.9%）**——其余 201 条中 103 条为嵌入代码注释/文档串（提取噪音），98 条为 clean-room 自拟组件演示文案（官方有同功能界面但措辞不同），无"冒充官方"风险
+- 工具入库：`scripts/pc_coverage_audit.py`（状态机字面量提取 + 双向匹配，仓库相对路径参数化）；明细数据 `docs/pc-audit-data.json`（未覆盖键 4,694 + 未覆盖值 5,800 + 自造候选 201 三清单）
+
+### 报告
+- `docs/pc-coverage-audit.md`：八章正式报告（对象版本核对/方法论/双指标/未分析域聚类/四从未分析面/与移动端口径对照/分批路线建议/复跑指南）
 
 ## v3.9.0 覆盖率冲刺：业务键 100% 逐字对齐 + 登录/环境等 9 大域组件（2026-09-04）
 
