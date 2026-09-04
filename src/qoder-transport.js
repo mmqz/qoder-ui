@@ -35,8 +35,8 @@
 (function() {
   'use strict';
   const _g = typeof globalThis !== 'undefined' ? globalThis : {};
-  if (typeof window === 'undefined') return; // SSR 安全
-  const QF = window.QoderUI = window.QoderUI || {};
+  // v3.3.2（测试发现修复）：注册不再依赖 window —— Node/SSR 亦可 import 纯逻辑 API
+  const QF = _g.QoderUI = _g.QoderUI || {};
 
   const PROTOCOL_VERSION = 1;
   let _seq = 0;
@@ -417,9 +417,9 @@
     use(type, opts) {
       const t = this.create(type, opts);
       this.active = t;
-      try { localStorage.setItem('qoder-ui:transport', JSON.stringify({ type: t.name === 'mock' ? 'mock' : type, opts: _safeOpts(opts), ts: Date.now() })); } catch (_) {}
+      try { if (typeof localStorage !== 'undefined') localStorage.setItem('qoder-ui:transport', JSON.stringify({ type: t.name === 'mock' ? 'mock' : type, opts: _safeOpts(opts), ts: Date.now() })); } catch (_) {}
       const p = t.connect ? t.connect() : Promise.resolve();
-      window.dispatchEvent(new CustomEvent('qoder-transport-change', { detail: { transport: t } }));
+      if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('qoder-transport-change', { detail: { transport: t } }));
       return p.then(function() { return t; });
     },
 
@@ -430,14 +430,15 @@
     clear() {
       const t = this.active;
       this.active = null;
-      try { localStorage.removeItem('qoder-ui:transport'); } catch (_) {}
+      try { if (typeof localStorage !== 'undefined') localStorage.removeItem('qoder-ui:transport'); } catch (_) {}
       if (t && t.close) t.close();
-      window.dispatchEvent(new CustomEvent('qoder-transport-change', { detail: { transport: null } }));
+      if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('qoder-transport-change', { detail: { transport: null } }));
     },
 
     /** 从 localStorage 恢复上次连接（demo/刷新场景） */
     restore() {
       let saved = null;
+      if (typeof localStorage === 'undefined') return Promise.resolve(null); // Node/SSR 无存储
       try { saved = JSON.parse(localStorage.getItem('qoder-ui:transport') || 'null'); } catch (_) {}
       if (!saved || !saved.type || saved.type === 'mock') return Promise.resolve(null);
       return this.use(saved.type, saved.opts || {}).then(function(t) { return t; }).catch(function() { return null; });

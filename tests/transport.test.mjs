@@ -12,8 +12,11 @@ import { fileURLToPath } from 'node:url';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const src = readFileSync(join(root, 'src/qoder-transport.js'), 'utf8');
 
-/* ---------- 在 Node 中实例化浏览器 IIFE 模块（注入最小 window/document） ---------- */
+/* ---------- 在 Node 中实例化浏览器 IIFE 模块（注入最小 window/document） ----------
+   v3.3.2：模块注册改为 globalThis.QoderUI，此处以独立 sandbox 对象作 globalThis
+   参数注入（参数遮蔽真实全局），既匹配新注册方式又保持用例间隔离 */
 function loadModule() {
+  const sandbox = {};
   const windowStub = { dispatchEvent() {} };
   const documentStub = {
     currentScript: null,
@@ -23,9 +26,9 @@ function loadModule() {
     head: { appendChild() {} },
     readyState: 'complete',
   };
-  const fn = new Function('window', 'document', 'localStorage', 'CustomEvent', src + `
-    ;return { transport: window.QoderUI.transport, mount: window.QoderUI.mount, createTransport: window.QoderUI.createTransport };`);
-  return fn(windowStub, documentStub, undefined, function CustomEvent(type, opts) { this.type = type; Object.assign(this, opts); });
+  const fn = new Function('window', 'document', 'localStorage', 'CustomEvent', 'globalThis', src + `
+    ;return { transport: globalThis.QoderUI.transport, mount: globalThis.QoderUI.mount, createTransport: globalThis.QoderUI.createTransport };`);
+  return fn(windowStub, documentStub, undefined, function CustomEvent(type, opts) { this.type = type; Object.assign(this, opts); }, sandbox);
 }
 
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));

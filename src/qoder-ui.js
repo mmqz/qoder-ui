@@ -634,7 +634,7 @@
     dialog: QoderDialog,
     toast: QoderToast,
     init,
-    version: '3.3.1'
+    version: '3.3.2'
   };
   const _g = (typeof globalThis !== 'undefined' ? globalThis : {});
   const _ns = (typeof window !== 'undefined' ? window : _g);

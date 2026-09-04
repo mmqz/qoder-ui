@@ -5,13 +5,13 @@
 (function() {
   'use strict';
 
-  if (typeof window === 'undefined') return; // SSR 安全
-
-  const QI = window.QoderUI = window.QoderUI || {};
+  // v3.3.2（测试发现修复）：注册不依赖 window，Node/SSR 可导入 API
+  const _g = typeof globalThis !== 'undefined' ? globalThis : {};
+  const QI = _g.QoderUI = _g.QoderUI || {};
 
   // v3.3.1 审计修复（L3）：innerHTML 拼接点统一转义
-  const esc = (s) => (window.QoderCore && window.QoderCore.escapeHtml
-    ? window.QoderCore.escapeHtml(s)
+  const esc = (s) => (_g.QoderCore && _g.QoderCore.escapeHtml
+    ? _g.QoderCore.escapeHtml(s)
     : String(s == null ? '' : s).replace(/[&<>"']/g, (c) =>
       ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])));
 

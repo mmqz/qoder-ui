@@ -21,16 +21,21 @@
 (function() {
   'use strict';
 
-  if (typeof window === 'undefined') return; // SSR 安全
-
-  const QI = window.QoderUI = window.QoderUI || {};
+  // v3.3.2（测试发现修复）：注册不依赖 window；HTMLElement 缺失时降为惰性基类
+  const _g = typeof globalThis !== 'undefined' ? globalThis : {};
+  const QI = _g.QoderUI = _g.QoderUI || {};
+  const HTMLElementBase = typeof HTMLElement !== 'undefined'
+    ? HTMLElement
+    : function QoderElementStub() {}; // Node/SSR：可导入、不可实例化 DOM
 
   /* ============================================================
      1. 配置
      ============================================================ */
   const config = QI.config = Object.assign(
     { shadow: true },
-    window.QoderUIConfig || {}
+    // v3.3.2：Node/SSR 无 window，安全读取全局配置
+    (typeof window !== 'undefined' && window.QoderUIConfig) ||
+    (typeof _g.QoderUIConfig !== 'undefined' ? _g.QoderUIConfig : {}) || {}
   );
 
   function shadowEnabled(el) {
@@ -191,7 +196,7 @@
         - 属性变化 -> 微任务批量重渲染
         - emit(): 派发 bubbles+composed 事件（穿透 shadow 边界）
      ============================================================ */
-  QI.ShadowElement = class QoderElement extends HTMLElement {
+  QI.ShadowElement = class QoderElement extends HTMLElementBase {
     constructor() {
       super();
       this._renderPending = false;
@@ -261,7 +266,7 @@
   /* ============================================================
      5. 辅助：转义（供组件模板使用）
      ============================================================ */
-  QI.escapeHtml = (window.QoderCore && window.QoderCore.escapeHtml) ||
+  QI.escapeHtml = (_g.QoderCore && _g.QoderCore.escapeHtml) ||
     function(s) { return String(s == null ? '' : s); };
 
 })();

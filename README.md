@@ -632,3 +632,23 @@ qoder-ui/
 - **发现 14 项问题：3 高危（含 1 个 XSS）、4 中危、7 低危 —— 全部修复**
 - 全部修复先在无头浏览器复现 → 修复 → 复验（ESC 零报错、XSS payload 以纯文本渲染、分屏双栏可见、拖拽 5 帧新增监听器 0）
 - 测试套件 43 → **52 用例**（新增 9 条审计回归，锁死每个修复点）；构建四格式全量重建
+
+## v3.3.2 SSR 导出修复（2026-09-04）
+
+> 测试驱动修复：产物导入验证发现 **ESM/CJS 在 Node 下 26 个导出中 21 个为 `undefined`**——
+> 此前的完整性测试只断言了"键的数量"，未断言"取值"。与"通用库 / 后端无关"目标直接冲突
+> （Next.js SSR、Vitest、构建工具链 import 即得空壳）。
+
+### 根因与修复
+| 问题 | 修复 |
+|------|------|
+| 6 个模块把**整个 API 注册**包进 `if (typeof window === 'undefined') return`，Node 下零注册 | 注册逻辑移至 `globalThis.QoderUI`（总是执行）；DOM 副作用单独护栏 |
+| `qoder-shadow.js` 顶层 `class extends HTMLElement` 在 Node 直接 ReferenceError | `HTMLElementBase = typeof HTMLElement !== 'undefined' ? HTMLElement :惰性 stub` |
+| `window.QoderUIConfig`（shadow）、`localStorage`（sessions/transport）、`window.dispatchEvent`（transport use/clear）等 5 处加载期/调用期全局访问 | 全部 `typeof` 护栏，Node 下安全降级（空配置/空会话/无事件派发） |
+| `customElements.define` 在 Node 无 registry | `register()` 内护栏，`WC.register` API 保持可调用 |
+
+### 修复后语义（由新增测试锁死）
+- **Node/SSR**：26 个导出全部有值；`core`/`diff`/`transport`/`createTransport` 等**纯逻辑 API 完全可用**（含 Mock 流式 chat 全链路）；DOM 类 API 可导入、调用时安全降级
+- **浏览器**：行为零变化（全部 52 条既有用例 + 无头浏览器端到端回归通过：主题/聊天/终端/词级 Diff/ESC/REST 连接）
+- 测试套件 52 → **57 用例**（新增 `tests/exports.test.mjs` 5 条，含"干净子进程 SSR 导入"语义验证）
+- 版本统一 **3.3.2**（package.json = 运行时 = 构建横幅）

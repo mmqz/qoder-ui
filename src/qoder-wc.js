@@ -17,15 +17,15 @@
 (function() {
   'use strict';
 
-  if (typeof window === 'undefined') return; // SSR 安全
-
-  const QI = window.QoderUI = window.QoderUI || {};
+  // v3.3.2（测试发现修复）：注册不依赖 window，Node/SSR 可导入 API
+  const _g = typeof globalThis !== 'undefined' ? globalThis : {};
+  const QI = _g.QoderUI = _g.QoderUI || {};
   const Base = QI.ShadowElement;
   if (!Base) {
     console.error('[QoderUI.wc] 缺少依赖 qoder-shadow.js，Web Components 未注册');
     return;
   }
-  const Core = window.QoderCore || {};
+  const Core = _g.QoderCore || {};
   const esc = Core.escapeHtml || function(s) { return String(s == null ? '' : s); };
   const json = (attr, fallback) => {
     try { return JSON.parse(attr); } catch (e) { return fallback; }
@@ -578,6 +578,7 @@
      注册
      ============================================================ */
   function register() {
+    if (typeof customElements === 'undefined') return; // Node/SSR：无 registry，静默跳过
     components.forEach(([name, cls]) => {
       if (!customElements.get(name)) customElements.define(name, cls);
     });

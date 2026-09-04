@@ -10,16 +10,16 @@
 (function() {
   'use strict';
 
-  if (typeof window === 'undefined') return; // SSR 安全
-
-  const Core = window.QoderCore || null;
+  // v3.3.2（测试发现修复）：globalThis 解析依赖，Node/SSR 亦可导入
+  const _g = typeof globalThis !== 'undefined' ? globalThis : {};
+  const Core = _g.QoderCore || null;
   if (!Core) {
     console.error('[QoderUI.diff] 需要 qoder-core.js，请先于本文件加载');
     return;
   }
   const escapeHtml = Core.escapeHtml;
 
-  const QI = window.QoderUI = window.QoderUI || {};
+  const QI = _g.QoderUI = _g.QoderUI || {};
 
   /* ============================================================
      内部工具
