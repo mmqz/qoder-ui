@@ -215,6 +215,23 @@
       </div>
     </div></div>
   </section>
+
+  <!-- ⑪ 安卓端契约 API 客户端（v3.10.0） -->
+  <section>
+    <p class="cap"><b>⑪ 安卓端契约 API 客户端</b><span class="tag">MobileApi.createClient + MockMobileServer（45 端点/SSE/控制面闭环）</span></p>
+    <div class="phone" style="max-width:420px">
+      <div class="screen" style="padding:12px">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+          <button id="apiBoot" style="padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--card)">① 启动 Mock 后端</button>
+          <button id="apiSessions" style="padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--card)">② 拉取会话</button>
+          <button id="apiFlow" style="padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--card)">③ 消息→审批 闭环</button>
+          <button id="apiMisc" style="padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--card)">④ HMAC/VPC 自检</button>
+        </div>
+        <qm-session-list id="apiList" theme="light" style="display:block;margin-bottom:10px"></qm-session-list>
+        <pre id="apiLog" style="background:#141414;color:#d5d5d5;border-radius:10px;padding:10px;font-size:11px;line-height:1.55;max-height:220px;overflow:auto;margin:0">点击 ① 启动内置 Mock 后端（零网络依赖，契约与逆向报告逐字对齐）…</pre>
+      </div>
+    </div>
+  </section>
 </div>
 
 <footer>
@@ -403,6 +420,79 @@
   }
   if (window.QoderUI && window.QoderUI.Mobile) boot();
   else window.addEventListener('load', boot);
+
+  /* ===== ⑪ MobileApi 演示（v3.10.0）：Mock 后端 + 契约客户端全闭环 ===== */
+  (function () {
+    var q = function (s) { return document.querySelector(s); };
+    var logEl = q('#apiLog'), lines = [];
+    function log(msg) {
+      lines.push(msg);
+      if (lines.length > 60) lines = lines.slice(-60);
+      logEl.textContent = lines.join('\n');
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+    var server = null, client = null, sessionId = null;
+
+    q('#apiBoot').onclick = function () {
+      var A = window.QoderUI.MobileApi;
+      server = new A.MockMobileServer({ botDelay: 120 });
+      client = A.createClient({ baseUrl: 'https://mock.local', fetchImpl: server.handle(), token: 'demo-token', deviceId: 'demo-device' });
+      log('✔ Mock 后端已启动（45 端点契约）');
+      log('✔ 客户端已创建：Bearer demo-token / X-Qoder-Mobile-Device-Id');
+    };
+
+    q('#apiSessions').onclick = function () {
+      if (!client) { log('✘ 请先点击 ①'); return; }
+      var A = window.QoderUI.MobileApi;
+      client.sessions.create({ title: '逆向对齐验证任务' }).then(function (s) {
+        sessionId = s.session_id;
+        return client.sessions.create({ title: '周报生成' });
+      }).then(function () {
+        var list = q('#apiList');
+        list.api = client; /* 数据驱动：自动拉取 + 渲染 + 状态六态映射 */
+        log('✔ 会话已创建，qm-session-list 已接 api（注意卡片状态 queued→空闲 / completed→已关闭）');
+      }).catch(function (e) { log('✘ ' + e.message); });
+    };
+
+    q('#apiFlow').onclick = function () {
+      if (!client || !sessionId) { log('✘ 请先完成 ①②'); return; }
+      var A = window.QoderUI.MobileApi;
+      var seen = [], rid = null;
+      var ctl = new AbortController();
+      client.events.stream(sessionId, {
+        signal: ctl.signal, fromSequenceNum: 0,
+        onEvent: function (e) {
+          seen.push(e.event_type);
+          if (e.event_type === 'control_request') rid = e.payload.request_id;
+          log('◀ SSE ' + e.event_type + (e.payload && e.payload.stopReason ? ' (stopReason=' + e.payload.stopReason + ')' : ''));
+          return true;
+        }
+      });
+      log('▶ 发送用户消息「列出当前目录文件」…');
+      client.events.sendUserMessage(sessionId, '列出当前目录文件').then(function () {
+        log('▶ 等待 worker 工具审批…');
+        var t = setInterval(function () {
+          if (!rid) return;
+          clearInterval(t);
+          log('▶ 应答审批 proceed_once（control_response）');
+          client.control.respondToolApproval(sessionId, rid, { outcome: 'proceed_once' });
+          setTimeout(function () { ctl.abort(); log('✔ 闭环完成：' + seen.join(' → ')); }, 700);
+        }, 150);
+      });
+    };
+
+    q('#apiMisc').onclick = function () {
+      var A = window.QoderUI.MobileApi;
+      A.HmacSigner.sign({ method: 'POST', path: '/issue/image/upload', body: '{"a":1}', version: '0.2.8', timestamp: 1757000000 })
+        .then(function (r) {
+          log('✔ HMAC 反馈签名 = ' + r.signature.slice(0, 24) + '…（§7.3 全规格）');
+          var m = A.mapVpcEndpoints({ centerNodes: ['https://center.vpc'], inferNodes: ['https://infer.vpc'], openapiNodes: ['https://openapi.vpc'] }, 'https://user.base');
+          log('✔ VPC 端点发现 → api=' + m.api + ' telemetry=' + m.telemetry);
+          log('ℹ 端点目录 ' + A.ENDPOINTS.length + ' 条 / 枚举 ' + Object.keys(A.ENUMS).length + ' 组 / 线格式 DTO ' + Object.keys(A.WIRE).length + ' 个');
+        })
+        .catch(function (e) { log('✘ ' + e.message); });
+    };
+  })();
 </script>
 </body>
 </html>

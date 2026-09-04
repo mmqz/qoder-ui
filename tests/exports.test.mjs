@@ -19,10 +19,10 @@ const EXPECTED_EXPORTS = [
   'core', 'createTransport', 'datepicker', 'default', 'dialog', 'diff',
   'draggable', 'hotkeys', 'i18n', 'markdown', 'mount', 'notificationCenter', 'palette',
   'sessions', 'setLocale', 'settings', 'shadow', 'shortcutsPanel', 'terminal',
-  't', 'theme', 'toast', 'transport', 'upload', 'Mobile'
+  't', 'theme', 'toast', 'transport', 'upload', 'Mobile', 'MobileApi'
 ];
 
-test('ESM 产物：31 个命名导出全部有值（非 undefined）', async () => {
+test('ESM 产物：32 个命名导出全部有值（非 undefined）', async () => {
   const m = await import(path.join(dist, 'qoder-ui.esm.mjs'));
   for (const k of EXPECTED_EXPORTS) {
     assert.notEqual(m[k], undefined, `ESM 导出 ${k} 为 undefined`);
@@ -30,7 +30,7 @@ test('ESM 产物：31 个命名导出全部有值（非 undefined）', async () 
   assert.equal(Object.keys(m).filter(k => k !== '__proto__').length, EXPECTED_EXPORTS.length);
 });
 
-test('CJS 产物：31 个命名导出全部有值（require 不崩溃，SSR 安全）', () => {
+test('CJS 产物：32 个命名导出全部有值（require 不崩溃，SSR 安全）', () => {
   const m = require(path.join(dist, 'qoder-ui.cjs.js'));
   for (const k of EXPECTED_EXPORTS) {
     assert.notEqual(m[k], undefined, `CJS 导出 ${k} 为 undefined`);

@@ -333,6 +333,9 @@ export interface QoderUIApi {
   markdown: QoderMarkdownApi;
   shadow: QoderShadowApi;
   ShadowElement: typeof HTMLElement;
+  /** v3.10.0 移动端组件族（qm-*）与安卓端契约 API 客户端 */
+  Mobile: QoderMobileNamespace;
+  MobileApi: QoderMobileApiApi;
   theme: QoderThemeApi;
   dialog: QoderDialogApi;
   toast: QoderToastApi;
@@ -361,6 +364,197 @@ export interface QoderUIApi {
   shadowEnabled(el?: HTMLElement): boolean;
   escapeHtml(s: unknown): string;
   init(): void;
+}
+
+/** v3.10.0 安卓端契约 API 客户端（依据 docs/android-api-contract.json 逆向契约） */
+export interface QoderMobileApiApi {
+  version: string;
+  /** 45 条端点目录（与契约 JSON 逐字一致） */
+  ENDPOINTS: ReadonlyArray<{ method: string; path: string; domain: string }>;
+  DEFAULT_BASE_URLS: { api: string; inference: string; web: string };
+  REGION: Record<string, string>;
+  APP_ID: string;
+  HEADER: Record<string, string>;
+  ENUMS: Record<string, readonly string[]>;
+  /** 精选 13 个 DTO 线格式字段序（snake 线名） */
+  WIRE: Record<string, readonly string[]>;
+  fromWire(dtoName: string, obj: Record<string, unknown>): Record<string, unknown>;
+  toWire(dtoName: string, obj: Record<string, unknown>): Record<string, unknown>;
+  deepCamel(obj: unknown): unknown;
+  uuid(): string;
+  deriveRole(source: string): 'user' | 'assistant' | 'system';
+  normalizeToolStatus(s: string): 'running' | 'pending' | 'completed' | 'failed' | '';
+  extractText(payload: Record<string, unknown> | null | undefined): string;
+  extractCommand(payload: Record<string, unknown> | null | undefined): string;
+  riskGroup(toolType: string): 'WRITE' | 'EDIT' | 'READ' | 'RAN';
+  isEndTurn(payload: unknown): boolean;
+  isInterrupt(payload: unknown): boolean;
+  isAskUser(payload: unknown): boolean;
+  approvalKind(payload: unknown): string | null;
+  normalizeOutcome(raw: string): string;
+  parseSseChunk(buf: string): { events: Array<{ id: string | null; event: string | null; data: unknown }>; rest: string };
+  sseFrame(evt: unknown): string;
+  control: {
+    interrupt(): QoderControlEvent;
+    endSession(reason?: string): QoderControlEvent;
+    setModel(model: string): QoderControlEvent;
+    setPermissionMode(mode: string): QoderControlEvent;
+    rename(title: string): QoderControlEvent;
+    prepareArtifact(path: string): QoderControlEvent;
+    cancelRequest(targetRequestId: string): QoderControlEvent;
+    respondToolApproval(requestId: string, opts?: { outcome?: string; allowed?: boolean; feedback?: string }): QoderControlEvent;
+    respondPlanReview(requestId: string, opts?: { approved?: boolean; permissionMode?: string; feedback?: string }): QoderControlEvent;
+    respondAskUser(requestId: string, answers: Record<string, string>): QoderControlEvent;
+  };
+  mapVpcEndpoints(resp: Record<string, unknown>, fallbackBase?: string): Record<string, string>;
+  SyncStore: { new (): QoderMobileSyncStore };
+  SYNC_SOURCES: readonly string[];
+  HmacSigner: {
+    sign(opts: { method?: string; path?: string; body?: string | object; version: string; contentLength?: number; timestamp?: number }): Promise<{ timestamp: string; signature: string }>;
+    headers(opts: { method?: string; path?: string; body?: string | object; version: string; contentLength?: number; timestamp?: number }): Promise<Record<string, string>>;
+  };
+  MockMobileServer: { new (opts?: { botDelay?: number; behavior?: (server: unknown, ctx: { sessionId: string; text: string }) => Promise<void> }): QoderMockMobileServer };
+  createClient(opts: QoderMobileClientOptions): QoderMobileClient;
+  createMobileClient(opts: QoderMobileClientOptions): QoderMobileClient;
+}
+
+export interface QoderControlEvent {
+  event_type: 'control_request' | 'control_response';
+  payload: Record<string, unknown>;
+}
+
+export interface QoderMobileSyncStore {
+  SOURCES: readonly string[];
+  reset(events?: unknown[]): QoderMobileSyncStore;
+  ingestPage(events: unknown[], mode?: string): QoderMobileSyncStore;
+  ingestSse(evt: unknown): QoderMobileSyncStore;
+  optimisticUser(text: string, clientId?: string): string;
+  state(): { items: Array<{ key: string; source: string; event: Record<string, unknown>; seq: number; optimistic?: boolean }>; pendingApprovals: Array<Record<string, unknown>>; lastSequence: number; sources: readonly string[] };
+}
+
+export interface QoderMockMobileServer {
+  botDelay: number;
+  lastRequest: { url: string; path: string; method: string; headers: Record<string, string> } | null;
+  handle(): typeof fetch;
+  appendEvent(sessionId: string, partial: Record<string, unknown>, source?: string): Record<string, unknown>;
+  createSession(req?: Record<string, unknown>): Record<string, unknown>;
+  emitSystem(type: string, payload?: Record<string, unknown>): Record<string, unknown>;
+}
+
+export interface QoderMobileClientOptions {
+  baseUrl?: string;
+  token?: string;
+  deviceId?: string;
+  routeToken?: string;
+  routeUser?: string;
+  appId?: string | false;
+  fetchImpl?: typeof fetch;
+  sseRetryBaseMs?: number;
+  sseRetryMaxMs?: number;
+}
+
+export interface QoderMobileClient {
+  config: Required<Omit<QoderMobileClientOptions, 'appId' | 'fetchImpl'>> & { appId: string | false; fetchImpl?: typeof fetch };
+  setToken(t: string): QoderMobileClient;
+  setRoute(routeToken: string, routeUser: string): QoderMobileClient;
+  setBaseUrl(u: string): QoderMobileClient;
+  sessions: {
+    list(): Promise<{ data: Record<string, unknown>[]; has_more: boolean; next_after_sequence_num: number }>;
+    create(req: Record<string, unknown>): Promise<Record<string, unknown>>;
+    remove(id: string): Promise<unknown>;
+    markRead(id: string): Promise<unknown>;
+    markUnread(id: string): Promise<unknown>;
+    archive(id: string): Promise<unknown>;
+    generateTitleAndBranch(id: string, body?: Record<string, unknown>): Promise<unknown>;
+    toCard(w: Record<string, unknown>): { id: string; title: string; status: string; updated: string; unread: boolean; machineName: string; connectionStatus: string };
+  };
+  events: {
+    list(id: string, q?: { after?: number; limit?: number; order?: string }): Promise<{ data: Record<string, unknown>[]; has_more: boolean; next_after_sequence_num: number }>;
+    send(id: string, events: unknown[]): Promise<unknown>;
+    sendUserMessage(id: string, text: string): Promise<unknown>;
+    sendControl(id: string, eventObj: unknown): Promise<unknown>;
+    stream(id: string, opts?: { signal?: AbortSignal; fromSequenceNum?: number; lastEventId?: string | null; onEvent?: (evt: Record<string, unknown>) => boolean | void }): Promise<{ lastSequence: number; lastEventId: string | null; reason: string }>;
+  };
+  system: {
+    stream(opts?: { signal?: AbortSignal; lastEventId?: string | null; onEvent?: (evt: Record<string, unknown>) => boolean | void }): Promise<{ lastSequence: number; lastEventId: string | null; reason: string }>;
+  };
+  environments: { list(): Promise<Record<string, unknown>[]> };
+  artifacts: {
+    list(id: string): Promise<unknown>;
+    downloadUrl(id: string, req?: Record<string, unknown>): Promise<Record<string, unknown>>;
+  };
+  sandbox: { grant(id: string, req?: Record<string, unknown>): Promise<Record<string, unknown>> };
+  auth: {
+    token(body?: Record<string, unknown>): Promise<unknown>;
+    logout(): Promise<unknown>;
+    aliyunRamInit(body?: Record<string, unknown>): Promise<unknown>;
+    aliyunCallback(body?: Record<string, unknown>): Promise<unknown>;
+    verificationCodes(body?: Record<string, unknown>): Promise<unknown>;
+  };
+  user: { info(): Promise<unknown>; usage(): Promise<unknown>; plan(): Promise<unknown> };
+  devices: {
+    register(body?: Record<string, unknown>): Promise<Record<string, unknown>>;
+    bind(id: string, body?: Record<string, unknown>): Promise<unknown>;
+    registerLegacy(body?: Record<string, unknown>): Promise<unknown>;
+  };
+  pushTokens: {
+    set(mobileDeviceId: string, body?: Record<string, unknown>): Promise<Record<string, unknown>>;
+    remove(mobileDeviceId: string, pushTokenId: string): Promise<unknown>;
+  };
+  notificationConfigs: {
+    get(deviceId: string): Promise<Record<string, unknown>>;
+    put(deviceId: string, cfg: Record<string, unknown>): Promise<unknown>;
+  };
+  update: { check(q?: Record<string, unknown>): Promise<Record<string, unknown>> };
+  github: {
+    authorizationUrl(body?: Record<string, unknown>): Promise<unknown>;
+    installUrl(body?: Record<string, unknown>): Promise<unknown>;
+    connected(body?: Record<string, unknown>): Promise<unknown>;
+    disconnect(body?: Record<string, unknown>): Promise<unknown>;
+  };
+  glasses: {
+    createPairing(body?: Record<string, unknown>): Promise<unknown>;
+    approve(id: string, body?: Record<string, unknown>): Promise<unknown>;
+    cancel(id: string, body?: Record<string, unknown>): Promise<unknown>;
+  };
+  upload: { raw(fd: FormData): Promise<unknown>; mix(fd: FormData): Promise<unknown> };
+  feedback: {
+    policy(): Promise<unknown>;
+    imageUpload(fd: FormData): Promise<unknown>;
+    diagnoseUpload(fd: FormData): Promise<unknown>;
+  };
+  telemetry: { crashValidate(body?: Record<string, unknown>): Promise<unknown>; crashUpload(body?: Record<string, unknown>): Promise<unknown> };
+  vpc: {
+    discover(discoveryUrl: string, fallbackBase?: string): Promise<Record<string, string>>;
+    map: QoderMobileApiApi['mapVpcEndpoints'];
+  };
+  control: {
+    interrupt(id: string): Promise<unknown>;
+    endSession(id: string, reason?: string): Promise<unknown>;
+    setModel(id: string, model: string): Promise<unknown>;
+    setPermissionMode(id: string, mode: string): Promise<unknown>;
+    rename(id: string, title: string): Promise<unknown>;
+    prepareArtifact(id: string, path: string): Promise<unknown>;
+    cancelRequest(id: string, targetRequestId: string): Promise<unknown>;
+    respondToolApproval(id: string, requestId: string, opts?: { outcome?: string; allowed?: boolean; feedback?: string }): Promise<unknown>;
+    respondPlanReview(id: string, requestId: string, opts?: { approved?: boolean; permissionMode?: string; feedback?: string }): Promise<unknown>;
+    respondAskUser(id: string, requestId: string, answers: Record<string, string>): Promise<unknown>;
+  };
+  signFeedback: QoderMobileApiApi['HmacSigner'];
+}
+
+/** v3.5.0+ 移动端组件族命名空间 */
+export interface QoderMobileNamespace {
+  WC: Record<string, typeof HTMLElement>;
+  register(): void;
+  t(s: string): string;
+  setLocale(name: string | null): void;
+  STRINGS: Record<string, Record<string, string>>;
+  locale(): string;
+  statusColor(s: string): string;
+  parseMermaid(src: string): unknown;
+  renderMermaidSvg(src: string): string;
+  version: string;
 }
 
 /** 默认导出（浏览器环境为 window.QoderUI） */

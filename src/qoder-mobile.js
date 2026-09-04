@@ -2519,15 +2519,53 @@
     }
     _bind(root) {
       root.querySelectorAll('.qm-opt').forEach((b) => {
-        b.addEventListener('click', () => this.emit('approve', { option: b.dataset.opt }));
+        b.addEventListener('click', () => this._approve({ option: b.dataset.opt }));
       });
       root.querySelectorAll('[data-spec]').forEach((b) => {
-        b.addEventListener('click', () => this.emit('approve', { option: b.dataset.spec === 'generate' ? 'spec' : 'direct' }));
+        b.addEventListener('click', () => this._approve({ option: b.dataset.spec === 'generate' ? 'spec' : 'direct' }));
       });
       const fb = root.querySelector('.qm-fb__ta');
       const fbSend = root.querySelector('.qm-fb__send');
       if (fbSend) fbSend.addEventListener('click', () => {
-        this.emit('approve', { option: 'reject', feedback: fb ? fb.value : '' });
+        this._approve({ option: 'reject', feedback: fb ? fb.value : '' });
+      });
+    }
+    /* —— v3.10.0 API 接线：注入 MobileApi 客户端后，审批应答直达控制面 ——
+       用法：el.api = MobileApi.createClient({...}); el.setAttribute('session-id', sid);
+             el.setAttribute('request-id', rid);   // 审批请求 ID（control_request payload）
+       未注入 api 时保持纯 UI 行为（emit 'approve' 由宿主决策）。 */
+    get api() { return this._api || null; }
+    set api(v) { this._api = v || null; }
+    _approve(detail) {
+      this.emit('approve', detail);
+      const api = this._api;
+      const sid = this.getAttribute('session-id');
+      const rid = this.getAttribute('request-id');
+      if (!api || !sid || !rid) return;
+      if (this.getAttribute('state') === 'submitting') return;
+      const opt = detail.option || '';
+      const kind = this.getAttribute('kind') || 'action';
+      this.setAttribute('state', 'submitting');
+      let p;
+      if (kind === 'plan' || kind === 'spec') {
+        // 计划评审卡：spec/direct=批准，reject=拒绝
+        p = api.control.respondPlanReview(sid, rid, { approved: opt !== 'reject', feedback: detail.feedback || '' });
+      } else if (kind === 'ask') {
+        // AskUser 卡：宿主经 detail.answers 传入 {问题ID: 答案}
+        p = api.control.respondAskUser(sid, rid, detail.answers || {});
+      } else {
+        // 工具审批卡：allow/allow_session→proceed_always，allow_once→proceed_once，reject→reject
+        const outcome = (opt === 'allow' || opt === 'allow_session') ? 'proceed_always'
+          : opt === 'allow_once' ? 'proceed_once' : 'reject';
+        p = api.control.respondToolApproval(sid, rid, { outcome, feedback: detail.feedback || '' });
+      }
+      const self = this;
+      Promise.resolve(p).then(() => {
+        self.setAttribute('state', opt === 'reject' ? 'rejected' : 'submitted');
+        self.emit('api-responded', { requestId: rid, sessionId: sid, option: opt });
+      }).catch((err) => {
+        self.setAttribute('state', 'pending');
+        self.emit('api-error', { requestId: rid, sessionId: sid, error: String((err && err.message) || err) });
       });
     }
   }
@@ -3165,11 +3203,42 @@
           const title = input ? input.value : '';
           this.setAttribute('renaming', '');
           this.emit('rename', { id: id, title: title });
+          // v3.10.0：已注入 api 时同步 control 面（session_title_changed）
+          if (this._api && id && title) {
+            this._api.control.rename(id, title).catch(() => {});
+          }
         });
       }
     }
     get sessions() { return json(this.getAttribute('sessions'), []); }
     set sessions(v) { this.setAttribute('sessions', JSON.stringify(v || [])); }
+    /* —— v3.10.0 API 接线：注入 MobileApi 客户端后，会话列表改为数据驱动 ——
+       用法：el.api = MobileApi.createClient({...});   // 自动拉取并渲染
+       事件：sessions-loaded / sessions-error；rename 后自动同步 control 面。
+       未注入 api 时保持原属性驱动行为不变。 */
+    get api() { return this._api || null; }
+    set api(v) {
+      this._api = v || null;
+      if (this._api) this.loadSessions();
+    }
+    loadSessions() {
+      const api = this._api;
+      if (!api) return Promise.resolve([]);
+      this.setAttribute('loading', 'true');
+      const self = this;
+      return Promise.resolve(api.sessions.list()).then((res) => {
+        const data = (res && res.data) || [];
+        const cards = data.map((w) => api.sessions.toCard(w));
+        self.sessions = cards;
+        self.removeAttribute('loading');
+        self.emit('sessions-loaded', { count: cards.length });
+        return cards;
+      }).catch((err) => {
+        self.removeAttribute('loading');
+        self.emit('sessions-error', { error: String((err && err.message) || err) });
+        return [];
+      });
+    }
   }
 
   /* ============================================================
@@ -3597,7 +3666,7 @@
         '<span class="qm-ac__arr">›</span></button>';
       const us = this.getAttribute('update-state') || 'idle';
       const updSub = us === 'checking' ? t('update.checking') : us === 'installing' ? t('update.installing')
-        : us === 'none' ? t('update.no_update') : fmt(t('update.title'), ['3.9.1']);
+        : us === 'none' ? t('update.no_update') : fmt(t('update.title'), ['3.10.0']);
       return '<div class="qm-ac">' +
         row('profile', t('account_security.account'), email || t('account_security.verification_title')) +
         row('update', t('tasks.time.now'), updSub) +
@@ -4000,7 +4069,7 @@
     locale: () => _locale,
     statusColor,
     parseMermaid, renderMermaidSvg,
-    version: '3.9.1'
+    version: '3.10.0'
   };
   register();
 

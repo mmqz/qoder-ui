@@ -903,3 +903,32 @@ qoder-ui/
 - 测试 **198/198 全绿**（+16：审批状态机/产物七态/设置屏/RC 引导/XSS）
 - E2E（Playwright + Chromium）**14 项断言全过、零 console 错误**（9 屏全量 + GitHub 行点击 + 退出确认对话框）
 - 构建四产物；npm pack 36 文件（qoder-ui-3.8.0.tgz）
+
+## v3.10.0 安卓端代码化：逆向契约 → 可运行 API 客户端（2026-09-05）
+
+> 把 Task 15/16 的纯分析成果（连接架构逆向 + 能力完全解析）落成**可运行的前端代码**：
+> `QoderUI.MobileApi` —— 自建 Rust/TS 后端即插即用的官方契约客户端，与 `docs/android-api-contract.json` 逐字对账。
+
+### ① 契约客户端（src/qoder-mobile-api.js，约 1,360 行，零依赖）
+- **端点目录 45 条**：与契约 JSON 的 (method, path, domain) 逐一相等，测试永久对账
+- **REST + SSE 引擎**：`Last-Event-ID` 重放 + `from_sequence_num` 续传 + 指数退避重连；`X-GwRoute-Token`/`X-Gw-User-Id`/`X-Qoder-Mobile-Device-Id`/`x-qoder-appid` 头族完整实现
+- **控制面 7 subtype**：interrupt / end_session / set_model / set_permission_mode / session_title_changed / prepare_artifact / control_cancel_request，事件体逐字段符合 §4.3
+- **三类审批应答体**：工具审批（proceed_once/proceed_always/cancel/reject + 选项归一 proceed_always_and_save|server|tool）、计划评审（approved/permissionMode/feedback）、AskUser（answers 映射）
+- **事件语义助手**：role 派生（user/controller→user，assistant/worker→assistant）、文本提取兜底链（content 块→delta→response.text→output.text→chunk→text）、工具状态四态同义词归一、风险分组 Y3、stopReason/system.interrupt 语义
+- **六源混合同步 SyncStore**：CACHE_RESTORE / REST_FULL / REST_INCREMENTAL / OLDER_BACKFILL / SSE_INCREMENTAL / DERIVED_STATE 全实现——display_key 去重 + `@occurrence:n` 冲突标注 + 乐观回显对账 + 审批队列状态机（PENDING→APPROVED/REJECTED）
+- **HMAC 反馈签名器**：§7.3 全规格（key=hex(SHA256("cosy:"+version))，msg=METHOD⏎PATH⏎BODY⏎version⏎unix秒⏎hex(SHA256(contentLength))），黄金向量与 node:crypto 独立复算逐字节一致
+- **VPC 私有化端点发现**：mapVpcEndpoints 四节点族→七基址映射 + 缺省回退 + otel 遥测端点——自建网关的官方合法接入面
+- **13 个精选 DTO 线格式**：snake↔camel 双向映射（StoredSession 线名本为 camel 恒等），与契约 dto_wire_fields 完全一致
+
+### ② MockMobileServer 内存后端
+- 会话 CRUD + 事件分页/SSE + **审批闭环机器人脚本**（消息→工具卡→审批→结果→end_turn），零网络依赖
+- fetch 兼容入口（`server.handle()` 直接注入 `fetchImpl`），Node 18+ / 浏览器同构
+
+### ③ 组件 API 接线（数据驱动，未注入时行为不变）
+- `<qm-session-list>.api`：自动拉取会话并渲染（session_status 六态映射 queued→idle / waiting_for_approval→attention / completed|cancelled→closed / failed→error），rename 自动同步 control 面（session_title_changed）
+- `<qm-approval>.api` + `session-id`/`request-id` 属性：审批点击直达控制面（kind=action/edit/mcp→工具审批体；plan/spec→计划评审体；ask→AskUser 体），state 翻转 submitting→submitted/rejected + `api-responded`/`api-error` 事件
+
+### ④ 集成与质量
+- 导出面 31→32（`MobileApi` 命名导出）；`types/index.d.ts` 补齐 Mobile + MobileApi 完整类型
+- 示例页第⑪屏：Mock 后端 + 拉取会话 + 消息→审批闭环 + HMAC/VPC 自检，四按钮可操作
+- 测试 **232/232 全绿**（+30：端点对账/控制面/事件语义/SyncStore/HMAC 黄金向量/VPC 映射/Mock 闭环/SSE 断线续传/组件接线集成）

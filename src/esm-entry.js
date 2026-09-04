@@ -11,6 +11,7 @@ import './qoder-features.js';
 import './qoder-markdown.js';
 import './qoder-diff.js';
 import './qoder-transport.js';
+import './qoder-mobile-api.js';
 import './qoder-mobile.js';
 
 const _g = typeof globalThis !== 'undefined' ? globalThis : {};
@@ -53,5 +54,6 @@ export const {
   t,
   i18n,
   setLocale,
-  Mobile
+  Mobile,
+  MobileApi
 } = QoderUI;

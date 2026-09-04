@@ -43,7 +43,7 @@ describe('v3.7.0 移动端组件注册', () => {
     assert.equal(typeof M.statusColor, 'function');
     assert.equal(typeof M.parseMermaid, 'function');
     assert.equal(typeof M.renderMermaidSvg, 'function');
-    assert.equal(M.version, '3.9.1');
+    assert.equal(M.version, '3.10.0');
   });
 
   test('22 个 qm-* 组件全部注册', () => {
