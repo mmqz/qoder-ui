@@ -43,7 +43,7 @@ describe('v3.7.0 移动端组件注册', () => {
     assert.equal(typeof M.statusColor, 'function');
     assert.equal(typeof M.parseMermaid, 'function');
     assert.equal(typeof M.renderMermaidSvg, 'function');
-    assert.equal(M.version, '3.8.0');
+    assert.equal(M.version, '3.8.1');
   });
 
   test('13 个 qm-* 组件全部注册', () => {
@@ -705,6 +705,32 @@ describe('v3.8.0 设置屏完整版（官方 T6/F.java IA + settings_integration
     assert.equal(M.t('settings.cache_cleanup.cleared'), '已清理');
     assert.equal(M.t('settings.cache_cleanup.failed'), '清理失败，请重试');
     assert.equal(M.t('settings.cache_cleanup.confirm_app_message'), '将清除本地会话与消息缓存，不影响云端数据。');
+  });
+
+  test('逐字保真：cache_cleanup en 权威值（v3.8.1 复跑裁决修正）', () => {
+    M.setLocale('en');
+    assert.equal(M.t('settings.cache_cleanup.all_title'), 'Clear All');
+    assert.equal(M.t('settings.cache_cleanup.all_description'), 'All local cache on this device');
+    assert.equal(M.t('settings.cache_cleanup.app_title'), 'App Cache');
+    assert.equal(M.t('settings.cache_cleanup.artifact_title'), 'Artifact Cache');
+    assert.equal(M.t('settings.cache_cleanup.artifact_description'), 'Downloaded artifacts and images');
+    assert.equal(M.t('settings.cache_cleanup.cleared'), 'Cache cleared');
+    assert.equal(M.t('settings.cache_cleanup.failed'), 'Failed to clear cache, please try again');
+    assert.equal(M.t('settings.cache_cleanup.confirm_app_message'), 'This clears the local cache of sessions and messages. Your cloud data is not affected.');
+    assert.equal(M.t('settings.cache_cleanup.confirm_artifact_message'), 'This clears downloaded artifacts and images. They will be downloaded again when needed.');
+    assert.equal(M.t('settings.cache_cleanup.confirm_all_message'), 'This clears the current account’s local sessions and messages, plus downloaded artifacts and temporary files on this device. Your cloud data is not affected.');
+    M.setLocale('zh');
+  });
+
+  test('逐字保真：附件单复数与空态引号（APK 字面值）', () => {
+    assert.equal(M.t('tasks.empty.description'), '"点击 + 启动任务，或在 Qoder CLI 中开启 Remote Control 同步任务"');
+    assert.equal(M.t('tool.group.files'), '读取 %d 个文件');
+    M.setLocale('en');
+    assert.equal(M.t('composer.attachment.file'), 'File');
+    assert.equal(M.t('composer.attachment.photo'), 'Photo');
+    assert.equal(M.t('tool.group.files'), 'Read %d Files');
+    assert.equal(M.t('tasks.empty.description'), '"Tap + to launch a task, or turn on Remote Control in Qoder CLI to sync tasks"');
+    M.setLocale('zh');
   });
 
   test('逐字保真：update.install/action 失败态 + settings.usage', () => {

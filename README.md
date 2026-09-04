@@ -809,6 +809,27 @@ qoder-ui/
 - 测试 182/182 全绿；构建四产物；npm pack 36 文件（qoder-ui-3.7.1.tgz）
 - CI Node 18/20/22 矩阵由本提交重新触发复验
 
+## v3.8.1 复跑裁决 + 审计工具入库（2026-09-04）
+
+> 对 v3.8.0 的全量复跑裁决：再修 15 处真实漂移、裁决 12 条模糊误配键；对账脚本与官方键名映射表正式入库，报告数字全部可复现。
+
+### 逐字复跑裁决（522 → 556 处一致）
+- 复跑 `verify_verbatim.py --all` 全量对账（339 键 × zh+en），检出 v3.8.0 遗留 **15 处真实漂移**并修复：
+  - `settings.cache_cleanup.*` 10 条 en（`'Clear All'`/`'App Cache'`/`'Artifact Cache'` 大小写、`'Cache cleared'`、`'Failed to clear cache, please try again'`、三条 confirm 整句 `'Your cloud data is not affected.'` 等，逐字对齐 `cache_cleanup_*` APK 权威值）
+  - `composer.attachment.file/photo` en 单复数（`'File'`/`'Photo'`，official_keymap.txt:585 实证同元素）
+  - `tasks.empty.description` zh+en 补 APK 字面引号（Android 资源引号保留语义，官方 UI 实际显示带引号）
+  - `tool.group.files` en 大小写（`'Read %d Files'`，zh 与 `tool_group_read_files` 全同实证同元素）
+- 裁决 **12 条模糊误配键**：6 条自拟键（`app.tab.*` 4 + `new_task.tab.*` 2，Tab 标签在 Compose 硬编码）剔除；4 条（`update.action.try_again`、`tasks.filter.running/idle`、`tool.group.files`）实证正确权威键后固化进脚本 MAP；对账脚本候选配对改排序确定性（消除 set 哈希序随机，三种子验证 556 稳定）
+- 修复后：**278 对配对 / 556 处逐字一致 / 0 漂移**；业务键覆盖率 40.8% → **40.9%**（373/912）
+- 测试守卫扩展：新增 cache_cleanup en 10 断言 + 附件/空态/工具组 6 断言
+
+### 审计工件入库（修复文档失引）
+- `scripts/coverage_audit.py`、`scripts/verify_verbatim.py` 参数化改造入库（`--res`/`--js` 可指定，默认仓库相对路径）；`scripts/official_keymap.txt`（852 对）入库
+- `docs/coverage-audit.md` 复跑指南改为仓库相对路径，反编译资源不入库（文档记录获取方式）
+
+### 验证
+- 测试 200/200 全绿（198 → 200，新增 2 个逐字保真测试块）；构建四产物；npm pack 36 文件
+
 ## v3.8.0 移动端逐字对齐 + 设置屏完整版 + 任务详情（2026-09-04）
 
 > 目标：移动端复现面从"组件级近似"推进到"文案零漂移 + 主干屏全覆盖"。业务键覆盖率 25.9% → **40.8%**（372/912）。

@@ -107,7 +107,7 @@
       'tasks.rc.title': '远程控制', 'tasks.rc.subtitle': 'Qoder Desktop & CLI',
       'tasks.count': '%d 个任务',
       'tasks.empty.title': '准备开始',
-      'tasks.empty.description': '点击 + 启动任务，或在 Qoder CLI 中开启 Remote Control 同步任务',
+      'tasks.empty.description': '"点击 + 启动任务，或在 Qoder CLI 中开启 Remote Control 同步任务"',
       'tasks.approval.enter_plan_mode.description': '你可以选择先生成并审核 Spec，再开始执行；也可以跳过 Spec，直接开始执行任务。Spec 用于明确任务范围和执行规范，帮助确认方向是否正确。',
       'tasks.approval.enter_plan_mode.generate_spec': '生成 Spec',
       'tasks.approval.enter_plan_mode.run_directly': '直接执行',
@@ -371,7 +371,7 @@
       'tasks.rc.title': 'Remote Control', 'tasks.rc.subtitle': 'Qoder Desktop & CLI',
       'tasks.count': '%d tasks',
       'tasks.empty.title': 'Ready to start',
-      'tasks.empty.description': 'Tap + to launch a task, or turn on Remote Control in Qoder CLI to sync tasks',
+      'tasks.empty.description': '"Tap + to launch a task, or turn on Remote Control in Qoder CLI to sync tasks"',
       'tasks.approval.enter_plan_mode.description': 'Choose how Quest should proceed: create a Spec before execution, or start running the task directly. A Spec helps clarify scope and implementation approaches, quickly confirming the direction before execution.',
       'tasks.approval.enter_plan_mode.generate_spec': 'Spec first',
       'tasks.approval.enter_plan_mode.run_directly': 'Run directly',
@@ -392,7 +392,7 @@
       'tool.todo': 'Update todos', 'tool.subagent': 'Sub-agent', 'tool.plan': 'Request Plan mode',
       'tool.status.running': 'Running', 'tool.status.completed': 'Completed',
       'tool.status.failed': 'Failed', 'tool.status.pending': 'Pending',
-      'tool.group.tools': 'Ran %d tools', 'tool.group.files': 'Read %d files',
+      'tool.group.tools': 'Ran %d tools', 'tool.group.files': 'Read %d Files',
       'tool.group.writes': 'Wrote %d files', 'tool.group.ops': 'Processed %d operations',
       'todo.title': 'Todo List', 'todo.empty': 'No todo items found.',
       'workspace.metric.active': 'Active', 'workspace.metric.closed': 'Closed',
@@ -439,7 +439,7 @@
       'composer.options.open': 'Open input options', 'composer.options.connectors': 'Connectors',
       'composer.options.skills': 'Skills', 'composer.options.plugins': 'Plugins',
       'composer.options.mode': 'Mode', 'composer.options.model': 'Model',
-      'composer.attachment.photo': 'Photos', 'composer.attachment.file': 'Files',
+      'composer.attachment.photo': 'Photo', 'composer.attachment.file': 'File',
       'composer.attachment.camera': 'Camera',
       'markdown.code.default_title': 'Code', 'markdown.mermaid.title': 'Diagram',
       'mermaid.loading': 'Rendering diagram…',
@@ -578,15 +578,15 @@
       'update.action.download_again': 'Download again',
       'update.action.open_settings': 'Settings', 'update.action.try_again': 'Try again',
       /* ---- v3.8.0 cache cleanup（en verbatim） ---- */
-      'settings.cache_cleanup.app_title': 'App cache', 'settings.cache_cleanup.app_description': 'Local cache of sessions and messages',
-      'settings.cache_cleanup.artifact_title': 'Artifact cache', 'settings.cache_cleanup.artifact_description': 'Downloaded artifact files and images',
-      'settings.cache_cleanup.all_title': 'Clear all', 'settings.cache_cleanup.all_description': 'Clear all local cache on this device',
+      'settings.cache_cleanup.app_title': 'App Cache', 'settings.cache_cleanup.app_description': 'Local cache of sessions and messages',
+      'settings.cache_cleanup.artifact_title': 'Artifact Cache', 'settings.cache_cleanup.artifact_description': 'Downloaded artifacts and images',
+      'settings.cache_cleanup.all_title': 'Clear All', 'settings.cache_cleanup.all_description': 'All local cache on this device',
       'settings.cache_cleanup.calculating': 'Calculating…', 'settings.cache_cleanup.clear': 'Clear',
       'settings.cache_cleanup.confirm_title': 'Clear Cache',
-      'settings.cache_cleanup.confirm_app_message': 'This clears the local cache of sessions and messages. Cloud data is not affected.',
-      'settings.cache_cleanup.confirm_artifact_message': 'This clears the cache of downloaded artifacts and images. They will be re-downloaded when needed.',
-      'settings.cache_cleanup.confirm_all_message': 'This clears the local cache of sessions and messages for the current account, plus downloaded artifacts and temp files on this device. Cloud data is not affected.',
-      'settings.cache_cleanup.cleared': 'Cleared', 'settings.cache_cleanup.failed': 'Clear failed, try again',
+      'settings.cache_cleanup.confirm_app_message': 'This clears the local cache of sessions and messages. Your cloud data is not affected.',
+      'settings.cache_cleanup.confirm_artifact_message': 'This clears downloaded artifacts and images. They will be downloaded again when needed.',
+      'settings.cache_cleanup.confirm_all_message': 'This clears the current account’s local sessions and messages, plus downloaded artifacts and temporary files on this device. Your cloud data is not affected.',
+      'settings.cache_cleanup.cleared': 'Cache cleared', 'settings.cache_cleanup.failed': 'Failed to clear cache, please try again',
       /* ---- v3.8.0 tasks_rc（en verbatim，官方键名） ---- */
       'tasks.rc.cli': 'Qoder CLI', 'tasks.rc.cli_device': 'CLI',
       'tasks.rc.desktop': 'Qoder Desktop', 'tasks.rc.desktop_device': 'Desktop',
@@ -2239,7 +2239,7 @@
     locale: () => _locale,
     statusColor,
     parseMermaid, renderMermaidSvg,
-    version: '3.8.0'
+    version: '3.8.1'
   };
   register();
 

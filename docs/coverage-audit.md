@@ -1,7 +1,7 @@
 # Qoder UI 复现项目 · 前端覆盖率审计报告
 
-**版本**：v3.8.0 ｜ **审计日期**：2026-09-04 ｜ **审计对象**：Android 官方包 `com.qoder.mobile.cn v0.2.8(46)`（反编译产物）vs 本仓库复现实现
-**审计工具**：`scripts/coverage_audit.py`（值匹配口径）、`scripts/verify_verbatim.py`（逐字对账口径）、`scripts/official_keymap.txt`（官方键名映射表）
+**版本**：v3.8.1 ｜ **审计日期**：2026-09-04（v3.8.1 复跑裁决更新） ｜ **审计对象**：Android 官方包 `com.qoder.mobile.cn v0.2.8(46)`（反编译产物）vs 本仓库复现实现
+**审计工具**（均已入库）：`scripts/coverage_audit.py`（值匹配口径）、`scripts/verify_verbatim.py`（逐字对账口径）、`scripts/official_keymap.txt`（官方键名映射表 852 对）
 
 ---
 
@@ -12,8 +12,8 @@
 | APK 静态资源键总数（en/zh-rCN 取并集） | 1,065 | 1,065 | — |
 | 其中 SDK/框架噪音键（不计入复现面） | 153 | 153 | — |
 | Qoder 业务键复现面 | 912 | 912 | — |
-| **业务键覆盖（值匹配口径）** | 236（25.9%） | **372（40.8%）** | **+136 键 / +14.9pp** |
-| 双语逐字对账（verify_verbatim --all） | 未建立 | **522 处一致，0 漂移** | 新增守卫 |
+| **业务键覆盖（值匹配口径）** | 236（25.9%） | **373（40.9%）** | **+137 键 / +15.0pp** |
+| 双语逐字对账（verify_verbatim --all） | 未建立 | **556 处一致，0 漂移**（278 对配对，自拟 6 键剔除） | 新增守卫 |
 | 组件数（qm-\*） | 12 | **13**（+qm-task-detail） | +1 |
 | 可演示屏数 | 8 | **9**（+任务详情·RC 引导） | +1 |
 
@@ -60,7 +60,7 @@
 | tool_use\* | 11 | 工具卡片族短标题 + 状态 |
 | session_details\* | 9 | 会话详情 |
 | common\* / conversation\* / cloud_sandbox_boot\* 等 | 47 | 通用按钮/对话/沙箱启动等 |
-| **合计** | **265 对配对 / 522 处（zh+en）逐字一致** | |
+| **合计** | **278 对配对 / 556 处（zh+en）逐字一致**（自拟 6 键剔除） | |
 
 ### 3.2 按屏覆盖（主干口径）
 
@@ -86,7 +86,8 @@
 
 v3.8.0 对全部 317 个 JS 键（zh+en 双语 634 项值）执行了逐字对账：
 - **首轮检出漂移 57 条**（zh 6 + en 51），含大小写（'Choose mode'→'Choose Mode'）、措辞（'Auto-approve'→'Auto'）、整段重写（Spec 说明段）、引号形态（弯引号→直引号）四类；
-- **修复后 522 处逐字一致、0 漂移**，并由 `tests/mobile.test.mjs` 的"实证文案保真"测试组永久守卫（198 用例中 86 个断言直接锁定 APK 原文）；
+- **v3.8.1 复跑裁决**（对账脚本入库后全量重跑 + 逐条取证）：再检出 **15 处真实漂移**——`settings.cache_cleanup.*` 10 条 en（大小写 'Clear All'/'App Cache'、措辞 'Cache cleared'、'Your cloud data…' 等整句）、附件单复数 2 条（'File'/'Photo'，official_keymap.txt:585 实证同元素）、任务空态文案 zh+en 缺 APK 字面引号 2 处（Android 资源引号保留语义，UI 实际显示带引号）、`tool.group.files` en 大小写 1 条（'Read %d Files'，zh 与 tool_group_read_files 全同实证同元素）；另裁决 **12 条模糊误配键**——6 条自拟键（`app.tab.*` 4 键 + `new_task.tab.*` 2 键，Tab 标签在 Compose 硬编码，无 APK 静态对应）直接剔除；4 条（`update.action.try_again`、`tasks.filter.running`、`tasks.filter.idle`、`tool.group.files`）实证正确权威键后在脚本 MAP 固化（前三者曾分别误配到 `choose_environment_connect_qoderwork_try_again`/`tasks_section_running`/`tasks_phase_idle`）；对账脚本候选配对改排序确定性（消除 set 哈希序随机，三种子验证 556 稳定）；
+- **修复后 556 处逐字一致、0 漂移**，并由 `tests/mobile.test.mjs` 的"实证文案保真"测试组永久守卫（含 v3.8.1 新增 cache_cleanup en 10 断言与附件/空态/工具组 6 断言）；
 - 检出修复案例：`tasks.empty.description`（漏了"在 Qoder CLI 中"限定）、`workspace.feedback`（APK 为"输入消息或按住说话…"）、`new_task.prompt.*` 八枚 chips 整批 en 漂移、`cloud_sandbox_boot.stage.*` en 完成时态等。
 
 ---
@@ -131,18 +132,24 @@ v3.8.0 对全部 317 个 JS 键（zh+en 双语 634 项值）执行了逐字对�
 
 ## 六、复跑指南
 
-```bash
-# 1) 值匹配口径覆盖率（业务键覆盖百分比 + 未覆盖 TOP 榜）
-python3 scripts/coverage_audit.py
+对账脚本已入库（`scripts/`），但反编译资源**不入库**，复跑前需先反编译官方 APK：
 
-# 2) 逐字对账（全量 317 键 × zh+en，输出配对表 + 漂移清单）
-python3 scripts/verify_verbatim.py --all
+```bash
+# 0) 获取反编译资源（一次性；产物目录默认被脚本识别为 mobile/apktool-out/res）
+#    apktool d qoder.apk -o mobile/apktool-out
+
+# 1) 值匹配口径覆盖率（业务键覆盖百分比 + 未覆盖 TOP 榜）
+python3 scripts/coverage_audit.py                  # 默认读 mobile/apktool-out/res
+python3 scripts/coverage_audit.py --res <res目录>   # 或显式指定（开发机：--res /home/z/my-project/mobile/apktool-out/res）
+
+# 2) 逐字对账（全量键 × zh+en，输出配对表 + 漂移清单；自拟键自动剔除）
+python3 scripts/verify_verbatim.py --all --res <res目录>
 
 # 3) 官方键名映射表（T6/F.java 提取，852 对）
 head scripts/official_keymap.txt
 ```
 
-前置条件：`/home/z/my-project/mobile/apktool-out/res/values{,-zh-rCN}/strings.xml`（反编译资源）与 `/home/z/my-project/qoder-ui/src/qoder-mobile.js`（复现实现）在位。
+新增键对账后需人工复核模糊配对结果（脚本已内置实证 MAP 与自拟键剔除清单，但新增键仍可能出现新的误配，见 §七）。
 
 ---
 
@@ -151,4 +158,4 @@ head scripts/official_keymap.txt
 1. 值匹配口径的覆盖率是**下限**：完全相同的值在两键间可能被合并计数；反之 JS 侧动态拼接的文案（如 `%d 个文件`）规范化后能命中，但纯运行时拼接的句子无法静态检出。
 2. 官方 Compose 代码中硬编码的字符串（不经过资源表）无法被静态审计捕获，实际官方文案面大于 1,065 键。
 3. 官方键名映射表仅覆盖 T6/F.java 单文件提取，官方可能存在其他映射文件（已抽查无同类文件，但不排除动态构建键名的场景）。
-4. 逐字对账的模糊配对阈值 0.6 为经验值，全部 265 对配对已人工复核，但新增键需复跑并复核。
+4. 逐字对账的模糊配对阈值 0.6 为经验值；脚本已内置两轮人工裁决成果（实证 MAP 增补 + 自拟键剔除清单），但新增键对账结果仍需人工复核。
