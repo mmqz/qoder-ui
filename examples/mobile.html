@@ -194,12 +194,31 @@
           <qm-artifact slot="artifacts" id="art-td" theme="light"></qm-artifact>
         </qm-task-detail>
       </div>
+
+  <!-- ⑩ 登录 + 环境选择器（v3.9.0） -->
+  <section>
+    <p class="cap"><b>⑩ 登录域 + 环境/设备选择器</b><span class="tag">qm-login + qm-environment（auth_*/sms_*/choose_environment_*）</span></p>
+    <div class="phone"><div class="screen">
+      <div class="notch"></div>
+      <div class="statusbar"><span>9:41</span><span>5G · 100%</span></div>
+      <div class="scroll">
+        <qm-login id="lg1" view="home" theme="light"></qm-login>
+      </div>
+    </div></div>
+    <div class="phone"><div class="screen">
+      <div class="notch"></div>
+      <div class="statusbar"><span>9:41</span><span>5G · 100%</span></div>
+      <div class="scroll">
+        <qm-environment id="ev1" view="picker" theme="light"
+          devices='[{"name":"DESKTOP-7F2K","online":true,"host":"Qoder Desktop"},{"name":"MacBook-Pro","online":false,"host":"Qoder CLI"}]'
+          sessions='[{"name":"重构登录流程","active":"14:02"}]'></qm-environment>
+      </div>
     </div></div>
   </section>
 </div>
 
 <footer>
-  复现依据：《Qoder Mobile 移动端逆向分析报告》+ v3.6.0/v3.7.0/v3.8.0 深挖。文案逐字取自安装包
+  复现依据：《Qoder Mobile 移动端逆向分析报告》+ v3.6.0/v3.7.0/v3.8.0/v3.9.0 深挖。文案逐字取自安装包
   <code>assets/dynamic-content/qoder-mobile.zh.json</code> 与 <code>res/values*/strings.xml</code>（键名对齐官方
   T6/F.java 键名映射表）；色板解码自混淆主题类（浅色 primary #5CBD61 / 深色 #2ADB5C，暖灰文字阶 #141414/#636261/#838280，
   页面底 #FDFDFD/#161612，状态色 error #FF4D4F / warning #FAAD14 / info #0B83F1 / success #5BB98B）；

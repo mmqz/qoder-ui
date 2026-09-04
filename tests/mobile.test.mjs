@@ -43,15 +43,17 @@ describe('v3.7.0 移动端组件注册', () => {
     assert.equal(typeof M.statusColor, 'function');
     assert.equal(typeof M.parseMermaid, 'function');
     assert.equal(typeof M.renderMermaidSvg, 'function');
-    assert.equal(M.version, '3.8.1');
+    assert.equal(M.version, '3.9.0');
   });
 
-  test('13 个 qm-* 组件全部注册', () => {
+  test('22 个 qm-* 组件全部注册', () => {
     const names = ['qm-app', 'qm-task-list', 'qm-new-task', 'qm-conversation',
-      'qm-composer', 'qm-approval', 'qm-sandbox-boot', 'qm-artifact',
-      'qm-session-detail', 'qm-settings', 'qm-task-detail', 'qm-session-list', 'qm-mermaid'];
+      'qm-composer', 'qm-approval', 'qm-sandbox-boot', 'qm-artifact', 'qm-session-detail',
+      'qm-settings', 'qm-task-detail', 'qm-session-list', 'qm-mermaid',
+      'qm-login', 'qm-environment', 'qm-account', 'qm-usage', 'qm-feedback',
+      'qm-notifications', 'qm-ask', 'qm-plan-review', 'qm-tool-detail'];
     for (const n of names) assert.ok(M.WC[n], '缺少组件 ' + n);
-    assert.equal(Object.keys(M.WC).length, 13);
+    assert.equal(Object.keys(M.WC).length, 22);
   });
 
   test('SSR 安全：源码无 document/window 顶层直接调用', () => {
@@ -730,6 +732,38 @@ describe('v3.8.0 设置屏完整版（官方 T6/F.java IA + settings_integration
     assert.equal(M.t('composer.attachment.photo'), 'Photo');
     assert.equal(M.t('tool.group.files'), 'Read %d Files');
     assert.equal(M.t('tasks.empty.description'), '"Tap + to launch a task, or turn on Remote Control in Qoder CLI to sync tasks"');
+    M.setLocale('zh');
+  });
+
+
+  test('v3.9.0 逐字保真：登录域（auth/sms/numberauth/password 官方键名）', () => {
+    assert.equal(M.t('auth.cn.phone_login'), '手机号登录');
+    assert.equal(M.t('sms.code_sent'), '验证码已发送');
+    assert.equal(M.t('sms.error.code_required'), '请输入6位验证码');
+    assert.equal(M.t('numberauth.one_click_login'), '一键登录');
+    assert.equal(M.t('password_login.title'), '阿里云账号登录');
+    assert.equal(M.t('auth.vpc_login_title'), 'VPC 登录');
+    assert.equal(M.t('auth.enterprise_entry.selection.title'), '选择企业账号类型');
+    M.setLocale('en');
+    assert.equal(M.t('auth.continue.github'), 'Sign in with Github');
+    assert.equal(M.t('sms.resend_countdown'), 'Resend (%1$ds)');
+    assert.equal(M.t('startup_authorization.title'), 'Welcome to Qoder');
+    M.setLocale('zh');
+  });
+
+  test('v3.9.0 逐字保真：环境/用量/反馈/通知/问答域', () => {
+    assert.equal(M.t('choose_environment.title'), '选择环境');
+    assert.equal(M.t('choose_environment.connect_computer'), '连接到你的电脑');
+    assert.equal(M.t('usage.plan_credits'), '套餐内 Credits');
+    assert.equal(M.t('feedback.source.record_screen'), '录制屏幕');
+    assert.equal(M.t('notification.channel.task_updates'), '任务更新');
+    assert.equal(M.t('tasks.question.panel_title'), '请回答以下问题');
+    assert.equal(M.t('tasks.plan_review.prompt'), '已写好计划，可以开始执行。');
+    assert.equal(M.t('account_security.verify_and_delete'), '验证并注销');
+    assert.equal(M.t('update.title'), '新版本 %s 可用');
+    M.setLocale('en');
+    assert.equal(M.t('choose_environment.offline'), 'Offline');
+    assert.equal(M.t('usage.used_summary'), '%1$s / %2$s (%3$d%% used)');
     M.setLocale('zh');
   });
 

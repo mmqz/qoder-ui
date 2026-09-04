@@ -17,8 +17,10 @@ import html as htmllib
 import os
 import re
 
-SDK_PREFIXES = ('abc_', 'androidx_', 'android.', 'm3c_', 'exo_', 'hms_', 'authsdk',
-                'google_', 'call_notification', 'credentials', 'abb_', 'common_sdk')
+SDK_PREFIXES = ('abc_', 'androidx_', 'android.', 'androidx.', 'm3c_', 'exo_', 'hms_', 'authsdk',
+                'google_', 'call_notification', 'credentials', 'abb_', 'common_sdk',
+                'common_google_play_services_', 'common_signin_button', 'status_bar_notification_',
+                'umeng_', 'ttid', 'push_cat_', 'sg_')
 
 
 def repo_root():

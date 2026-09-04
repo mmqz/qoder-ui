@@ -809,6 +809,30 @@ qoder-ui/
 - 测试 182/182 全绿；构建四产物；npm pack 36 文件（qoder-ui-3.7.1.tgz）
 - CI Node 18/20/22 矩阵由本提交重新触发复验
 
+## v3.9.0 覆盖率冲刺：业务键 100% 逐字对齐 + 登录/环境等 9 大域组件（2026-09-04）
+
+> 目标"覆盖度 70%+"一次达标超额：值匹配口径业务键覆盖 **40.9% → 100%**（885/885，SDK 剥离口径扩展后）；逐字对账 **556 → 1579 处一致、0 漂移**（851 键 × zh+en）。
+
+### 覆盖方法论修订（透明化）
+- SDK 剥离清单扩展（153 → 179 条）：新剔除 Google Play services 样板（common_google_play_services_* 15 + common_signin_button_* 2）、androidx.credentials、系统状态栏保留字、友盟 SDK（umeng_*/ttid/push_cat_*/sg_* 自动更新）共 26 条第三方资源，业务键分母 912 → 885
+- 新增 512 个 APK 键的双语逐字文案（键名 100% 取自官方 T6/F.java 键名映射表，含 auth.passport_account.* / tasks.question.* / notification.la.* 等深层命名）
+- verify_verbatim.py MAP 增补 82 条官方键名↔APK 键名形态映射
+
+### 新增 9 个 qm-* 组件（13 → 22）
+- **qm-login** 登录域聚合：一键登录/手机验证码/阿里云密码/邮箱密码/企业账号三选择（邮箱/RAM/VPC）/VPC 表单/条款/启动授权/安全策略限制/账号选择（auth_* 70 + sms_* 24 + numberauth_* 14 + password_login_* 9 + passport/security/startup）
+- **qm-environment** 环境/设备选择器：设备列表（在线/离线）/Desktop+CLI 连接指引/活跃会话结束/GitHub 仓库分支选择五态（choose_environment_* 28 + choose_github_* 11）
+- **qm-usage** 用量详情：套餐 Credits 进度条/资源包/共享额度/限时活动（日/月配额）/续期/你的额度
+- **qm-feedback** 反馈表单：描述/邮箱校验/附件四来源/录屏态（倒计时/停止/失败）/成功弹窗/权限用途说明（feedback_* 24 + permission_purpose_* 12）
+- **qm-notifications** 通知中心：五类频道开关（审批/授权/方案/问答/完成）+ 系统通知 + 通知卡
+- **qm-ask** Agent 提问卡：单选/多选后缀/自定义答案/分页/上一题/提交中
+- **qm-plan-review** 方案审核卡：全局与任务内双变体
+- **qm-account** 账号与安全：注销验证流（验证码/重发/十类错误）/更新流四态/关于五链接（account_security_* 20 + update_* 7 + about_* 5）
+- **qm-tool-detail** 工具调用详情：六种命令/路径/输出字段 + web 搜索/抓取四态 + DIFF 预览 + la 状态族
+
+### 其他
+- 演示页新增第⑩屏（登录 + 环境选择器双机）；文案保真测试新增 2 组 20 断言
+- 测试 200 → 202 全绿；构建四产物（esm.mjs 329.9KB）；覆盖率/逐字对账脚本双口径可复跑
+
 ## v3.8.1 复跑裁决 + 审计工具入库（2026-09-04）
 
 > 对 v3.8.0 的全量复跑裁决：再修 15 处真实漂移、裁决 12 条模糊误配键；对账脚本与官方键名映射表正式入库，报告数字全部可复现。

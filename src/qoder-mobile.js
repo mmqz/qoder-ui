@@ -340,7 +340,519 @@
       'tasks.action.archive': '归档', 'tasks.action.delete': '删除',
       'tasks.action.mark_read': '标记为已读', 'tasks.action.mark_unread': '标记为未读',
       'tasks.detail.env': '运行环境', 'tasks.detail.remote_control': '远程控制',
-      'tasks.detail.connected_to': '已连接至 %@'
+      'tasks.detail.connected_to': '已连接至 %@',
+      /* ---- v3.9.0 补覆盖（登录/环境/用量/反馈/通知/问答等 15 域，官方键名） ---- */
+      'feedback.title': '反馈', 'notification.title': '通知',
+      'about.icp_record': '浙ICP备2023034206号-56A',
+      'about.permission_usage': '应用权限申请与使用情况说明',
+      'about.personal_info_collection_list': '个人信息收集清单',
+      'about.personal_info_sharing_list': '第三方SDK收集使用信息说明',
+      'about.subscription_agreement': '个人版订阅协议',
+      'account_security.account': '账号',
+      'account_security.delete_confirm_action': '注销',
+      'account_security.delete_confirm_message.v2': '确定要注销你的账号吗？此操作不可撤销，并会同步删除该账号在本设备上的本地数据。',
+      'account_security.delete_error_active_paid_plan': '当前账号仍有生效中的付费套餐，请先取消或处理套餐后再注销账号。',
+      'account_security.delete_error_delete_failed': '注销账号失败，请重试。',
+      'account_security.delete_error_generic': '验证码发送失败，请重试。',
+      'account_security.delete_error_invalid_code': '验证码错误或已过期，请重试。',
+      'account_security.delete_error_network': '网络错误，请检查网络连接后重试。',
+      'account_security.delete_error_no_email': '此账号未绑定邮箱地址。',
+      'account_security.delete_error_organization_member': '企业成员不能自助注销账号，请联系企业管理员处理。',
+      'account_security.delete_error_server': '服务器出错，请稍后重试。',
+      'account_security.delete_error_unauthorized': '登录已过期，请重新登录。',
+      'account_security.delete_error_verification_code_failed': '验证码错误，请重新输入。',
+      'account_security.deleting_account': '正在注销账号…',
+      'account_security.resend_code': '重新发送验证码',
+      'account_security.sending_code': '正在发送验证码…',
+      'account_security.verification_code_placeholder': '请输入验证码',
+      'account_security.verification_subtitle': '我们已向 %1$s 发送了验证码，请在下方输入以确认注销账号。',
+      'account_security.verification_title': '验证身份',
+      'account_security.verify_and_delete': '验证并注销',
+      'app.name': 'Qoder',
+      'app.name_domestic': 'Qoder CN',
+      'auth.account_password_title.v2': '邮箱登录',
+      'auth.agree_prefix': '我同意 Qoder 的',
+      'auth.and': '和',
+      'auth.application_not_found': '未注册移动端登录应用。',
+      'auth.brand': 'Qoder CN',
+      'auth.captcha_failed': '验证码验证失败。',
+      'auth.cn.agree_prefix': '我已阅读并同意',
+      'auth.cn.enterprise_login': '企业邮箱账号登录',
+      'auth.cn.enterprise_title': '企业邮箱账号登录',
+      'auth.cn.login_agree_prefix': '未注册手机号验证通过后将自动注册，已阅读并同意',
+      'auth.cn.password_login': '阿里云账号登录',
+      'auth.cn.password_login_short': '阿里云账号登录',
+      'auth.cn.phone_login': '手机号登录',
+      'auth.cn.phone_unavailable': '手机号登录暂未开放',
+      'auth.cn.terms': '服务协议',
+      'auth.continue': '继续',
+      'auth.continue.account_password': '使用邮箱继续',
+      'auth.continue.aliyun_phone': '手机号登录',
+      'auth.continue.apple': '使用 Apple 继续',
+      'auth.continue.github': '使用 GitHub 继续',
+      'auth.continue.google': '使用 Google 继续',
+      'auth.continue.qoder': '继续',
+      'auth.continue.vpc': 'VPC 登录',
+      'auth.continue_agreement_template': '继续即表示你同意我们的%1$s和%2$s',
+      'auth.email_invalid': '请输入有效的邮箱地址',
+      'auth.email_placeholder': '邮箱',
+      'auth.email_required': '请输入邮箱',
+      'auth.enterprise_entry.email.subtitle': '使用企业邮箱地址登录，例如 name@company.com',
+      'auth.enterprise_entry.email.title': '企业邮箱账号',
+      'auth.enterprise_entry.ram.subtitle': '由企业分配的 RAM 子账号',
+      'auth.enterprise_entry.ram.title': '阿里云RAM账号',
+      'auth.enterprise_entry.selection.help': '不确定账号类型？请联系企业管理员确认',
+      'auth.enterprise_entry.selection.subtitle': '按企业分发的账号类型选择登录方式',
+      'auth.enterprise_entry.selection.title': '选择企业账号类型',
+      'auth.enterprise_entry.title': '企业账号登录',
+      'auth.enterprise_entry.vpc.subtitle': '使用企业分配的专属域账号登录（VPC）',
+      'auth.enterprise_entry.vpc.title': '专属域账号',
+      'auth.enterprise_saml_required': '此入口仅支持企业账号登录',
+      'auth.forgot_password': '忘记密码？',
+      'auth.get_started': '开始使用',
+      'auth.invalid_credentials': '用户名或密码错误。',
+      'auth.log_in': '登录',
+      'auth.no_account': '还没有账号？',
+      'auth.or': '或',
+      'auth.passport_account.mobile_login_disabled': '已关闭手机登录',
+      'auth.passport_account.title': '选择阿里云账号',
+      'auth.password_hide': '隐藏密码',
+      'auth.password_placeholder': '密码',
+      'auth.password_required': '请输入密码。',
+      'auth.password_show': '显示密码',
+      'auth.privacy': '隐私政策',
+      'auth.sign_in': '登录',
+      'auth.sign_up': '注册',
+      'auth.signing_in': '正在登录…',
+      'auth.terms_alert_agree': '同意',
+      'auth.terms_alert_description': '我已阅读并同意 Qoder 的服务条款和隐私政策',
+      'auth.terms_alert_title': '条款与隐私',
+      'auth.terms_sheet_agree_button': '同意并继续',
+      'auth.terms_sheet_description': '请在继续之前查阅并同意我们的条款。',
+      'auth.terms_sheet_title': '条款与条件',
+      'auth.username_placeholder': '请输入邮箱地址',
+      'auth.username_required': '请输入用户名。',
+      'auth.vpc_account_placeholder': '账号',
+      'auth.vpc_account_required': '请输入账号',
+      'auth.vpc_address_host_required': 'VPC 访问地址必须包含域名或主机',
+      'auth.vpc_address_invalid': '请输入有效的 VPC 访问地址',
+      'auth.vpc_address_placeholder': '例如：https://vpc.example.com',
+      'auth.vpc_address_required': '请输入 VPC 访问地址',
+      'auth.vpc_address_scheme_required': 'VPC 访问地址必须使用 https:// 协议',
+      'auth.vpc_address_unsupported': '请移除 VPC 地址中的用户名、密码、查询参数或片段',
+      'auth.vpc_endpoints_unavailable': '无法获取 VPC 服务地址，请检查地址后重试',
+      'auth.vpc_login_title': 'VPC 登录',
+      'choose_environment.activate_device_offline_line': '设备 %1$s 当前离线',
+      'choose_environment.activate_device_reconnect_line': '请打开设备并确保 Qoder Desktop 已连接',
+      'choose_environment.activate_device_title': '激活你的设备',
+      'choose_environment.active_sessions_title': '活跃会话',
+      'choose_environment.chats': '聊天',
+      'choose_environment.choose_project': '选择项目',
+      'choose_environment.connect_computer': '连接到你的电脑',
+      'choose_environment.connect_computer_cli_heading': '使用 Qoder CLI 连接',
+      'choose_environment.connect_computer_desktop_enable': '打开 Quest，并在 Quest 设置中开启‘Qoder Mobile’',
+      'choose_environment.connect_computer_desktop_enable_inline_bold': '打开 Quest，并在 <b>Quest 设置</b>中开启‘Qoder Mobile’',
+      'choose_environment.connect_computer_desktop_heading': '使用 Qoder Desktop（Quest）连接',
+      'choose_environment.connect_computer_desktop_install': '在电脑上安装 Qoder Desktop，并登录同一个账号',
+      'choose_environment.connect_computer_desktop_tab': 'Desktop',
+      'choose_environment.connect_computer_guide_message': '在 Qoder CLI 中开启远程控制以同步任务',
+      'choose_environment.connect_computer_guide_prefix': '在终端运行命令 ’',
+      'choose_environment.connect_computer_guide_suffix': '’。',
+      'choose_environment.connect_computer_instruction': '在 Qoder CLI 中开启 Remote Control 以同步任务',
+      'choose_environment.connect_device_connecting': '正在连接 %1$s',
+      'choose_environment.end_session_action': '结束',
+      'choose_environment.end_session_confirm_message': '“%1$s” 将在此环境中结束。',
+      'choose_environment.end_session_confirm_title': '结束会话？',
+      'choose_environment.end_session_success': '会话已结束',
+      'choose_environment.ide_agent': '智能体',
+      'choose_environment.ide_experts': '专家团',
+      'choose_environment.ide_projects_empty': '请先在 Qoder IDE 中打开项目。',
+      'choose_environment.local': '本地',
+      'choose_environment.offline': '离线',
+      'choose_environment.title': '选择环境',
+      'choose_github.bind_failed': '无法打开 GitHub 连接页面。',
+      'choose_github.bind_message': '请先连接 GitHub 账号，再选择仓库。',
+      'choose_github.branch_empty': '暂无可用分支',
+      'choose_github.connect_dialog_message': '您可以随时撤销访问授权。来自 GitHub 的数据仅用于为您提供相关且有用的信息。',
+      'choose_github.install_button': '在 GitHub 上安装 Qoder',
+      'choose_github.install_failed': '无法打开 GitHub 安装页面。',
+      'choose_github.install_hint': '找不到仓库？请在仓库中安装 Qoder AI 应用以在此处访问。',
+      'choose_github.install_message': '仓库缺失。请在仓库中安装 Qoder AI 应用以在此处访问。',
+      'choose_github.refresh_connection': '刷新',
+      'choose_github.repository_empty': '暂无可用仓库',
+      'choose_github.repository_title': '选择仓库',
+      'close.drawer': '关闭导航菜单',
+      'close.sheet': '关闭工作表',
+      'cloud_sandbox.create_failed_toast': '创建沙箱失败，请重试',
+      'cloud_sandbox_boot.stage.download_resume': '恢复云端容器',
+      'cloud_sandbox_boot.stage.repository_resume': '恢复代码仓库',
+      'cloud_sandbox_boot.stage.setup_install': '运行 setup 脚本',
+      'cloud_sandbox_boot.status.skipped': '已跳过',
+      'cloud_sandbox_boot.timeout_message': '4 分钟内未收到初始化进度。',
+      'cloud_sandbox_boot.title_completed': '会话已初始化',
+      'cloud_sandbox_boot.title_failed': '会话初始化失败',
+      'cloud_sandbox_boot.title_install': '正在初始化会话',
+      'cloud_sandbox_boot.title_resume': '正在恢复会话',
+      'cloud_sandbox_boot.title_resume_completed': '会话已恢复',
+      'cloud_sandbox_boot.title_resume_failed': '会话恢复失败',
+      'cloud_sandbox_boot.title_resume_timeout': '会话恢复超时',
+      'cloud_sandbox_boot.title_timeout': '会话初始化超时',
+      'composer.attachment.camera_failed': '拍照失败，请重试',
+      'composer.attachment.camera_permission_denied': '需要相机权限才能拍照',
+      'composer.attachment.file_limit': '最多可添加 %1$d 个文件',
+      'composer.attachment.file_read_failed': '文件读取失败，请换一个重试',
+      'composer.attachment.file_unsupported': '当前场景不支持文件附件',
+      'composer.attachment.file_upload_failed': '文件上传失败，请重试',
+      'composer.attachment.image_limit': '最多可添加 10 张图片',
+      'composer.attachment.image_read_failed': '图片读取失败，请换一张重试',
+      'composer.camera.back': '返回',
+      'composer.camera.collapse_controls': '收起控制项',
+      'composer.camera.expand_controls': '展开控制项',
+      'composer.camera.flash_auto': '自动闪光',
+      'composer.camera.flash_off': '闪光灯关闭',
+      'composer.camera.flash_on': '闪光灯开启',
+      'composer.camera.flash_unavailable': '闪光灯不可用',
+      'composer.camera.switch_cameras': '切换相机',
+      'composer.camera.take_photo': '拍照',
+      'composer.full_access': '完全访问',
+      'composer.generated_by_ai': '内容由 AI 生成',
+      'composer.model_promotion.ends': '错峰折扣将在 %1$s 后结束！',
+      'composer.model_promotion.starts': '错峰折扣将在 %1$s 后开始！',
+      'composer.model_selector.advanced': '高级',
+      'composer.model_selector.pitaya': 'Pitaya-03-20',
+      'composer.model_selector.safety': '企业专属',
+      'composer.model_selector.standard': '标准',
+      'composer.new_models': '新模型',
+      'composer.permission.section_qoder_cli': '在 Qoder CLI 中启用',
+      'composer.plan': '规划',
+      'composer.premium_badge': '高级',
+      'composer.thinking_status': '思考中',
+      'composer.toggle_on': '开启',
+      'composer.voice_input.duration_limit_reached': '语音输入已达到 3 分钟上限，正在转录...',
+      'composer.voice_input.duration_warning': '语音输入快结束了，将在 10 秒后自动停止。',
+      'composer.voice_input.empty_transcript': '未识别到语音内容，请重试。',
+      'composer.voice_input.permission_denied': '需要麦克风权限才能使用语音输入。',
+      'composer.voice_input.recording_failed': '语音录制失败，请重试。',
+      'composer.voice_input.transcribing': '思考中',
+      'composer.voice_polish.failed': '润色失败，已使用原始文本。',
+      'composer.voice_polish.in_progress': '润色中…',
+      'composer.yolo': 'YOLO',
+      'content_description.avatar': '头像',
+      'content_description.back': '返回',
+      'content_description.conversation_turn.copy': '复制回复',
+      'content_description.conversation_turn.dislike': '点踩回复',
+      'content_description.conversation_turn.like': '点赞回复',
+      'content_description.google': 'Google',
+      'content_description.logo': 'Qoder 标识',
+      'content_description.markdown_code.expand': '展开代码块',
+      'content_description.qoder': 'Qoder',
+      'conversation.empty.no_content': '暂无内容',
+      'conversation.sources.count': '%1$d 个来源',
+      'conversation.sources.item_accessibility': '%1$s，%2$s',
+      'conversation.turn.feedback_thanks': '感谢你提供反馈',
+      'conversation.uploaded_file_missing': '文件不存在',
+      'conversation.uploaded_file_open_failed': '无法打开该文件',
+      'copy.toast_msg': '链接已复制到剪贴板',
+      'default.error_message': '输入无效',
+      'default.popup_window_title': '弹出式窗口',
+      'diff.expand': '点击展开完整补丁',
+      'diff.lines': '%d 行',
+      'diff.preview': '差异预览',
+      'diff.title': '差异',
+      'dropdown.menu': '下拉菜单',
+      'fallback.menu_item.copy_link': '复制链接',
+      'fallback.menu_item.open_in_browser': '在浏览器中打开',
+      'fallback.menu_item.share_link': '分享链接',
+      'feedback.copy_id': '复制反馈 ID',
+      'feedback.description_required': '请填写反馈内容',
+      'feedback.email_invalid': '请输入有效的邮箱地址',
+      'feedback.email_placeholder': '邮箱',
+      'feedback.email_required': '请填写邮箱地址',
+      'feedback.id_copy_failed': '反馈 ID 复制失败',
+      'feedback.placeholder': '请描述你的问题或对 Qoder 的改进建议',
+      'feedback.placeholder_cn': '请描述你遇到的问题和给 Qoder CN 的建议',
+      'feedback.recording.attachment': '屏幕录制',
+      'feedback.recording.countdown': '剩余 %1$d 秒',
+      'feedback.recording.failed': '录制失败，请重试',
+      'feedback.recording.preparing': '正在准备录制…',
+      'feedback.recording.preview_failed': '录屏播放失败，请重试',
+      'feedback.recording.stop': '停止录制',
+      'feedback.recording.title': '屏幕录制',
+      'feedback.session_id_copied': '已复制 Session ID',
+      'feedback.session_id_label': '会话ID',
+      'feedback.source.choose_file': '选择文件',
+      'feedback.source.photo_library': '照片图库',
+      'feedback.source.record_screen': '录制屏幕',
+      'feedback.source_take_photo': '拍摄照片',
+      'feedback.submit': '提交',
+      'feedback.success': '反馈提交成功',
+      'feedback.success_dialog_title': '反馈提交成功',
+      'indeterminate': '部分选中',
+      'markdown.code.source_unavailable': '代码内容已失效，请返回后重新打开。',
+      'markdown.details.default_summary': '详细内容',
+      'navigation.menu': '导航菜单',
+      'new_task.credits_banner_subtitle': '快开始一个任务体验一下吧！',
+      'new_task.credits_banner_title': '300 积分已到账。',
+      'new_task.default_env': '默认',
+      'new_task.greeting_subtitle': 'Qoder 可以帮你做什么？',
+      'new_task.greeting_subtitle_cn': '我可以帮你做点啥?',
+      'new_task.greeting_title': '你好，%1$s',
+      'new_task.greeting_title_guest': '你好',
+      'new_task.landing.cloud_operation_credit': '新人大礼包 300 额度已到账，立即体验',
+      'new_task.landing.local_operation_pro_trial': '下载桌面端应用，解锁首月 Pro 免费权益',
+      'new_task.landing.prompt_pending': 'Trend analysis needs data source confirmation',
+      'new_task.landing.prompt_pending_text': 'Trend analysis needs data source confirmation',
+      'new_task.landing.prompt_unread': 'Survey report generated 12 insights',
+      'new_task.landing.prompt_unread_text': 'Survey report generated 12 insights',
+      'new_task.landing.task_message_label': '%1$s：%2$s',
+      'new_task.landing.task_status.action_required': '待处理',
+      'new_task.landing.task_status.error': '出错',
+      'new_task.no_connection_subtitle': '"在 Qoder 中启用远程控制 例如在终端运行 \'qodercli remote-control\'"',
+      'new_task.no_connection_subtitle_cn': '"在 Qoder 中启用远程控制 例如在终端运行 \'qoderclicn remote-control\'"',
+      'new_task.no_connection_title': '尚未连接',
+      'new_task.prompt.build_app': '搭建新应用',
+      'new_task.prompt.build_app_text': '帮我搭建一个简洁的待办事项应用，包含任务新增、完成、删除和列表展示功能。请优先实现一个可以直接运行的基础版本。',
+      'new_task.prompt.fix_bug': '修复缺陷',
+      'new_task.prompt.fix_bug_text': '排查一下这个项目是否存在明显的报错、异常逻辑或性能问题。如果发现问题，请用尽量小的改动帮我修复。',
+      'new_task.prompt.generate_ui': '从截图做界面',
+      'new_task.prompt.generate_ui_text': '请根据我上传的截图，实现一个尽量还原的界面。优先复用当前项目已有的技术栈和组件风格，代码保持简洁。',
+      'new_task.prompt.understand_project': '快速看懂项目',
+      'new_task.prompt.understand_project_text': '请帮我快速了解这个项目的结构和主要功能，并告诉我如果要继续开发，应该从哪些文件或模块开始看。',
+      'new_task.rc.cli_landing_title': '"终端里的工程 今天我们来做点什么？"',
+      'new_task.rc.landing_title': '"Quest on, hands off 今天我们来做点什么？"',
+      'new_task.rc.prompt_compare': '对比这两家供应商，选一个',
+      'new_task.rc.prompt_plan': '拆解 Q4 计划，并行派发多个 agent',
+      'new_task.select_env': '选择一个环境以开始',
+      'new_task.title': '新建任务',
+      'new_task.unavailable_device_banner': '哎呀～你的设备当前不可用',
+      'new_task.unavailable_device_placeholder': '在 Qoder CLI 中开启远程控制',
+      'new_task.unavailable_device_placeholder_desktop': '在 Qoder Desktop 中开启远程控制',
+      'not_selected': '未选择',
+      'notification.action_review': 'Review',
+      'notification.action_view': '查看',
+      'notification.approval_description': '在代理执行操作前进行授权',
+      'notification.approval_title': '审批',
+      'notification.ask_permission_description': 'Agent 执行操作前需要你授权',
+      'notification.ask_permission_title': '操作授权',
+      'notification.channel.task_updates': '任务更新',
+      'notification.channel.task_updates_description': '来自任务的审批请求和问题',
+      'notification.default_body': '有一个会话需要你处理',
+      'notification.la.more_format': '另有 %1$d 项',
+      'notification.la.state_awaiting': '待批准',
+      'notification.la.state_error': '出错',
+      'notification.la.state_needs_input': '需输入',
+      'notification.new_session_title': '新会话',
+      'notification.plan_review_description': '在执行前审核方案',
+      'notification.plan_review_title': '方案审核',
+      'notification.qa_description': '推送 Agent 的实时提问',
+      'notification.qa_title': '问答',
+      'notification.session_created': '会话已创建',
+      'notification.system_description': '当有新消息到达时，您将在主屏幕收到通知',
+      'notification.system_status_on': '已开启',
+      'notification.system_title': '系统通知',
+      'notification.task_completed_description': '任务完成时通知你',
+      'notification.task_completed_title': '运行完成',
+      'notification.title.task_failed': '任务出错',
+      'numberauth.carrier_desc': '认证服务由中国移动提供',
+      'numberauth.change_phone_short': '更换',
+      'numberauth.error.business_failure_default': '一键登录失败，请重试',
+      'numberauth.error.carrier_unavailable': '运营商认证服务暂不可用，请改用其他登录方式',
+      'numberauth.error.config_invalid': '一键登录配置异常，请联系客服',
+      'numberauth.error.device_unsupported': '手机终端环境不支持一键登录，请改用其他登录方式',
+      'numberauth.error.enable_mobile_network': '请开启移动网络后重试',
+      'numberauth.error.fallback': '一键登录失败，请改用其他登录方式',
+      'numberauth.error.network_timeout': '网络超时，请稍后重试',
+      'numberauth.error.no_sim': '未检测到 SIM 卡，请改用其他登录方式',
+      'numberauth.error.retry_or_other_method': '一键登录失败，请稍后重试或改用其他登录方式',
+      'numberauth.error.risk_control_pending': '风控未完成，请重试或换号登录',
+      'numberauth.label': '本机号码',
+      'numberauth.one_click_login': '一键登录',
+      'password_login.account_placeholder': '阿里云账号（手机号/邮箱/ID）',
+      'password_login.aliyun_privacy': '隐私政策',
+      'password_login.aliyun_user_agreement': '阿里云用户协议',
+      'password_login.mfa_cancelled': '验证未完成，请重试',
+      'password_login.password_placeholder.v2': '密码',
+      'password_login.qoder_privacy': '隐私政策',
+      'password_login.qoder_user_agreement': 'Qoder CN 用户协议',
+      'password_login.terms_prefix': '已阅读并同意',
+      'password_login.title': '阿里云账号登录',
+      'permission_purpose.conversation_camera_message': '需要访问您的相机，用于拍摄图片并添加到对话消息，帮助 Qoder 理解图片内容并完成任务。',
+      'permission_purpose.conversation_camera_title': '“%1$s”想访问相机用于对话',
+      'permission_purpose.deny': '不允许',
+      'permission_purpose.feedback_camera_message': '需要访问您的相机，用于在反馈中拍摄并上传图片，帮助我们定位问题并改进服务。',
+      'permission_purpose.feedback_camera_title': '“%1$s”想访问相机用于反馈',
+      'permission_purpose.feedback_screen_recording_message': '需要录制您的屏幕，用于捕捉 Qoder 中发生的问题并作为视频附件随反馈提交，帮助我们定位问题。',
+      'permission_purpose.feedback_screen_recording_title': '“%1$s”想录制屏幕用于反馈',
+      'permission_purpose.feedback_screenshot_deny': '不添加',
+      'permission_purpose.feedback_screenshot_message': '允许 Qoder 从图库中查找刚才的截图，并添加到本次反馈吗？',
+      'permission_purpose.feedback_screenshot_title': '添加截图到反馈',
+      'permission_purpose.microphone_message': '需要访问您的麦克风，用于录制语音并转写为消息内容。',
+      'permission_purpose.microphone_title': '“%1$s”想访问麦克风',
+      'preview.tool.failed': '无法打开预览，请重试。',
+      'preview.tool.opening': '正在打开预览…',
+      'preview.tool.port': '端口 %d',
+      'preview.tool.title': '打开预览',
+      'preview.unavailable.restart_prompt': '帮我重新启动预览',
+      'range.end': '范围终点',
+      'range.start': '范围起点',
+      'screenshot_quick_action.feedback': '发送反馈',
+      'screenshot_quick_action.title': '已捕获截图',
+      'security_policy.message': '企业安全策略限制，暂无法使用 Qoder Mobile',
+      'security_policy.title': '安全策略限制',
+      'selected': '已选择',
+      'session.details.close': '关闭会话详情',
+      'session.details.copy_id_accessibility': '会话 ID %1$s，轻点两下复制。',
+      'session.details.open_accessibility': '显示会话详情',
+      'session.details.unavailable': '暂无',
+      'sidebar.code': '编码',
+      'sidebar.work': '工作',
+      'sms.account_id': '账号ID: %1$s',
+      'sms.code_sent': '验证码已发送',
+      'sms.code_sent_to': '至 +86%1$s',
+      'sms.confirm_login': '立即登录',
+      'sms.enter_phone': '输入手机号',
+      'sms.error.account_banned': '账号已被封禁',
+      'sms.error.account_not_found': '该手机号未注册账号',
+      'sms.error.challenge_missing': '请先获取验证码',
+      'sms.error.code_expired': '验证码已过期，请重新获取',
+      'sms.error.code_invalid': '验证码错误或已过期',
+      'sms.error.code_required': '请输入6位验证码',
+      'sms.error.generic': '操作失败，请重试',
+      'sms.error.invalid_phone': '请输入正确的手机号',
+      'sms.error.network': '网络连接失败，请检查网络设置',
+      'sms.error.phone_login_unavailable': '手机号登录暂未开放',
+      'sms.error.too_many_requests': '操作过于频繁，请稍后再试',
+      'sms.last_active': '最近活跃：%1$s',
+      'sms.phone_placeholder': '请输入手机号',
+      'sms.recent_login': '最近登录',
+      'sms.resend': '重新获取',
+      'sms.resend_countdown': '重新获取（%1$ds）',
+      'sms.select_account': '选择阿里云账号',
+      'sms.select_account_hint': '该手机号关联了多个账号，请选择要登录的账号',
+      'sms.terms_agreed': '我已阅读并同意 服务协议 和 隐私政策',
+      'startup_authorization.agree': '同意',
+      'startup_authorization.aliyun_privacy_policy_label': '《隐私政策》',
+      'startup_authorization.aliyun_user_agreement_label': '《用户协议》',
+      'startup_authorization.disagree': '不同意',
+      'startup_authorization.message': '"欢迎使用本应用，在你使用本应用之前，请仔细阅读阿里云《用户协议》、《隐私政策》、Qoder 《隐私政策》、《用户协议》。 你在使用本应用的过程中需要联网，可能会产生流量费用。为了保障本应用的正常运行及安全风控所需，我们会根据你使用的具体功能，向系统申请包括但不限于下列权限：麦克风（开启麦克风）、相机、位置（用于收集位置信息）、存储权限，读取本机电话号码、读取和写入媒体影音数据（如照片、视频和音频）、屏幕截屏，这些权限将用于为你提供语音、图片和文本指令输入等服务。点击“同意”，即表示你同意接受协议中的条款约束。"',
+      'startup_authorization.qoder_privacy_policy_label': '《隐私政策》',
+      'startup_authorization.qoder_user_agreement_label': '《用户协议》',
+      'startup_authorization.title': '欢迎使用 Qoder',
+      'state.empty': '空白',
+      'state.on': '已开启',
+      'switch.role': '开关',
+      'system.default_channel': '系统默认通道',
+      'tab': '标签页',
+      'tasks.archive.empty': '暂无归档任务',
+      'tasks.debug.raw_data_empty': '无源数据',
+      'tasks.debug.view_raw_data': '查看源数据',
+      'tasks.delete.confirm_message': '“%1$s” 将被永久删除。',
+      'tasks.delete.confirm_title': '删除任务？',
+      'tasks.empty.short_description': '点击 + 开始一个任务',
+      'tasks.empty.short_title': '暂无任务',
+      'tasks.group.other': '其他',
+      'tasks.load_more': '加载更多',
+      'tasks.pin.action': '置顶',
+      'tasks.plan_review.allow_once': '执行',
+      'tasks.plan_review.back': '返回',
+      'tasks.plan_review.feedback_placeholder': '计划中有哪些需要调整？',
+      'tasks.plan_review.feedback_submit': '提交反馈',
+      'tasks.plan_review.prompt': '已写好计划，可以开始执行。',
+      'tasks.plan_review.title': '方案',
+      'tasks.question.answer_input_placeholder': '输入您的答案...',
+      'tasks.question.answer_no': '否',
+      'tasks.question.answer_yes': '是',
+      'tasks.question.answered': '已回答',
+      'tasks.question.answers_title': '问题回答',
+      'tasks.question.custom_answer_label': '或输入自定义答案',
+      'tasks.question.custom_value': '或输入自定义答案',
+      'tasks.question.multi_choice_title_suffix': '(可多选)',
+      'tasks.question.pagination': '%1$d / %2$d',
+      'tasks.question.panel_title': '请回答以下问题',
+      'tasks.question.please_specify': '或输入自定义答案',
+      'tasks.question.previous_question': '上一个问题',
+      'tasks.question.primary_action': '继续',
+      'tasks.question.primary_action_submitting': '提交中...',
+      'tasks.restore.action': '恢复',
+      'tasks.restore.failed': '恢复失败，请稍后重试',
+      'tasks.restore.unsupported': '暂不支持',
+      'tasks.section.action_required': '待处理',
+      'tasks.section.archived': '已归档任务',
+      'tasks.section.pinned': '置顶',
+      'tasks.show_more': '查看更多',
+      'tasks.sort.by': '分组方式',
+      'tasks.sort.date': '日期',
+      'tasks.sort.project': '项目',
+      'tasks.sort.status': '状态',
+      'tasks.source.remote': '远端',
+      'tasks.switcher.all_tasks': '全部任务',
+      'tasks.tab.archived': '已归档',
+      'tasks.time.days_ago': '%d天前',
+      'tasks.time.hours_ago': '%d小时前',
+      'tasks.time.minutes_ago': '%d分钟前',
+      'tasks.time.now': '刚刚',
+      'tasks.title': '编码',
+      'tasks.tool_group.edit_files': '编辑 %d 个文件',
+      'tasks.tool_group.edited_files': '已编辑 %d 个文件',
+      'tasks.tool_group.files_count': '%d 个文件',
+      'tasks.tool_group.read_files_completed': '已读取 %d 个文件',
+      'tasks.tool_group.read_images': '读取 %d 张图片',
+      'tasks.tool_group.view_steps': '查看 %d 个步骤',
+      'tasks.tool_use.action.edited': '已编辑',
+      'tasks.tool_use.action.write': '写入',
+      'tasks.tool_use.action.wrote': '已写入',
+      'tasks.tool_use.default_tail': '等待响应...',
+      'tasks.tool_use.detail.command': '命令',
+      'tasks.tool_use.detail.content': '内容',
+      'tasks.tool_use.detail.file_path': '文件路径',
+      'tasks.tool_use.detail.output': '输出',
+      'tasks.tool_use.detail.prompt': '提示词',
+      'tasks.tool_use.detail.query': '查询',
+      'tasks.tool_use.edit_file': '编辑文件',
+      'tasks.tool_use.read_file': '读取文件',
+      'tasks.tool_use.running_tail': '等待响应...',
+      'tasks.tool_use.tool': '工具',
+      'tasks.tool_use.web_fetch.completed': '抓取完成',
+      'tasks.tool_use.web_fetch.failed': '抓取失败',
+      'tasks.tool_use.web_fetch.running': '正在抓取',
+      'tasks.tool_use.web_fetch.target.v2': '抓取 %1$s',
+      'tasks.tool_use.web_search.completed': '搜索完成',
+      'tasks.tool_use.web_search.failed': '搜索失败',
+      'tasks.tool_use.web_search.query.v2': '搜索 %1$s',
+      'tasks.tool_use.web_search.running': '正在搜索',
+      'tasks.tool_use.write_file': '编辑文件',
+      'tasks.unpin.action': '取消置顶',
+      'tasks.view_archived': '查看已归档任务',
+      'template.percent': '百分之 %1$d。',
+      'tooltip.description': '提示',
+      'tooltip.label': '显示提示',
+      'update.action': '立即更新',
+      'update.checking': '检查中…',
+      'update.download_start_failed': '无法启动下载，请稍后重试',
+      'update.installing': '安装中…',
+      'update.later': '稍后',
+      'update.no_update': '已是最新版本',
+      'update.title': '新版本 %s 可用',
+      'usage.activity.expires_at': '限时活动将于%1$s结束',
+      'usage.activity.open_details': '打开活动详情',
+      'usage.activity.quota.daily': '%1$s / %2$s 次/天',
+      'usage.activity.quota.generic': '%1$s / %2$s 次',
+      'usage.activity.quota.monthly': '%1$s / %2$s 次/月',
+      'usage.activity.remaining': '剩余 %1$s 次',
+      'usage.activity.remaining_today': '今日剩余 %1$s 次',
+      'usage.activity.show_description': '查看活动说明',
+      'usage.add_on_credits': '资源包',
+      'usage.error.empty_response': '无法加载用量数据，请重试',
+      'usage.plan_credits': '套餐内 Credits',
+      'usage.remaining_left': '剩余 %s',
+      'usage.renews_on': '续期于 %s',
+      'usage.shared_add_on_credits': '共享附加额度',
+      'usage.unit_credits': '额度',
+      'usage.used': '已使用',
+      'usage.used_summary': '%1$s / %2$s（已使用 %3$d%%）',
+      'usage.view_details': '查看详情',
+      'usage.your_cap': '你的额度',
+      'workspace.sso_redirect': '正在跳转至 %s SSO…',
     },
     en: {
       'app.tab.home': 'Home', 'app.tab.tasks': 'Tasks',
@@ -604,7 +1116,519 @@
       'tasks.action.archive': 'Archive', 'tasks.action.delete': 'Delete',
       'tasks.action.mark_read': 'Mark as Read', 'tasks.action.mark_unread': 'Mark as Unread',
       'tasks.detail.env': 'Running On', 'tasks.detail.remote_control': 'Remote Control',
-      'tasks.detail.connected_to': 'Connected to %@'
+      'tasks.detail.connected_to': 'Connected to %@',
+      /* ---- v3.9.0 coverage completion (15 domains, official key names) ---- */
+      'feedback.title': 'Feedback', 'notification.title': 'Notification',
+      'about.icp_record': 'Zhejiang ICP No. 2023034206-56A',
+      'about.permission_usage': 'Permission Access and Usage Description',
+      'about.personal_info_collection_list': 'Personal Information Collection List',
+      'about.personal_info_sharing_list': 'Third-party SDK Collection and Usage Information',
+      'about.subscription_agreement': 'Individual Subscription Agreement',
+      'account_security.account': 'Account',
+      'account_security.delete_confirm_action': 'Delete',
+      'account_security.delete_confirm_message.v2': 'Are you sure you want to delete your account? This action cannot be undone, and local data for this account on this device will also be deleted.',
+      'account_security.delete_error_active_paid_plan': 'This account still has an active paid plan. Please cancel or manage the plan before deleting your account.',
+      'account_security.delete_error_delete_failed': 'Failed to delete account. Please try again.',
+      'account_security.delete_error_generic': 'Failed to send verification code. Please try again.',
+      'account_security.delete_error_invalid_code': 'The verification code is incorrect or has expired. Please try again.',
+      'account_security.delete_error_network': 'Network error. Please check your connection and try again.',
+      'account_security.delete_error_no_email': 'No email address is associated with this account.',
+      'account_security.delete_error_organization_member': '"Organization members can\'t delete their account here. Please contact your organization administrator."',
+      'account_security.delete_error_server': 'Something went wrong. Please try again later.',
+      'account_security.delete_error_unauthorized': 'Your session has expired. Please sign in again.',
+      'account_security.delete_error_verification_code_failed': 'The verification code is incorrect. Please try again.',
+      'account_security.deleting_account': 'Deleting account…',
+      'account_security.resend_code': 'Resend code',
+      'account_security.sending_code': 'Sending code…',
+      'account_security.verification_code_placeholder': 'Enter verification code',
+      'account_security.verification_subtitle': '"We\'ve sent a verification code to %1$s. Enter it below to confirm account deletion."',
+      'account_security.verification_title': 'Verify Your Identity',
+      'account_security.verify_and_delete': 'Verify & Delete',
+      'app.name': 'Qoder',
+      'app.name_domestic': 'Qoder CN',
+      'auth.account_password_title.v2': 'Sign in with email',
+      'auth.agree_prefix': 'I agree to Qoder’s',
+      'auth.and': '" and "',
+      'auth.application_not_found': 'The mobile login application is not registered.',
+      'auth.brand': 'Qoder CN',
+      'auth.captcha_failed': 'Captcha verification failed.',
+      'auth.cn.agree_prefix': 'I have read and agree to',
+      'auth.cn.enterprise_login': 'Enterprise sign-in',
+      'auth.cn.enterprise_title': 'Sign in with enterprise account',
+      'auth.cn.login_agree_prefix': 'An unregistered phone number will be registered after verification. I have read and agree to',
+      'auth.cn.password_login': 'Aliyun sign-in',
+      'auth.cn.password_login_short': 'Aliyun sign-in',
+      'auth.cn.phone_login': 'Sign in with phone number',
+      'auth.cn.phone_unavailable': 'Phone sign-in is not available yet.',
+      'auth.cn.terms': 'Service Agreement',
+      'auth.continue': 'Continue',
+      'auth.continue.account_password': 'Continue with Email',
+      'auth.continue.aliyun_phone': 'Sign in with Phone',
+      'auth.continue.apple': 'Continue with Apple',
+      'auth.continue.github': 'Sign in with Github',
+      'auth.continue.google': 'Sign in with Google',
+      'auth.continue.qoder': 'Continue',
+      'auth.continue.vpc': 'VPC sign-in',
+      'auth.continue_agreement_template': 'By continuing, you agree to our %1$s and %2$s.',
+      'auth.email_invalid': 'Please enter a valid email address.',
+      'auth.email_placeholder': 'Email',
+      'auth.email_required': 'Please enter your email',
+      'auth.enterprise_entry.email.subtitle': 'Sign in with your organization email, e.g. name@company.com',
+      'auth.enterprise_entry.email.title': 'Enterprise Email',
+      'auth.enterprise_entry.ram.subtitle': 'Use a RAM sub-account assigned by your organization',
+      'auth.enterprise_entry.ram.title': 'Alibaba Cloud RAM Account',
+      'auth.enterprise_entry.selection.help': 'Not sure which account to use? Contact your administrator',
+      'auth.enterprise_entry.selection.subtitle': 'Choose the sign-in method for the account issued by your organization',
+      'auth.enterprise_entry.selection.title': 'Choose an enterprise account type',
+      'auth.enterprise_entry.title': 'Enterprise Account',
+      'auth.enterprise_entry.vpc.subtitle': 'Sign in through your organization’s dedicated domain',
+      'auth.enterprise_entry.vpc.title': 'VPC Account',
+      'auth.enterprise_saml_required': 'This entry only supports enterprise accounts.',
+      'auth.forgot_password': 'Forget password?',
+      'auth.get_started': 'Get started',
+      'auth.invalid_credentials': 'Incorrect username or password.',
+      'auth.log_in': 'Log In',
+      'auth.no_account': 'Don’t have an account?',
+      'auth.or': 'OR',
+      'auth.passport_account.mobile_login_disabled': 'Mobile login off',
+      'auth.passport_account.title': 'Choose Alibaba Cloud account',
+      'auth.password_hide': 'Hide password',
+      'auth.password_placeholder': 'Password',
+      'auth.password_required': 'Please enter your password.',
+      'auth.password_show': 'Show password',
+      'auth.privacy': 'Privacy Policy',
+      'auth.sign_in': 'Sign in',
+      'auth.sign_up': 'Sign up',
+      'auth.signing_in': 'Signing in...',
+      'auth.terms_alert_agree': 'Agree',
+      'auth.terms_alert_description': 'I have read and agree to Qoder’s Terms of Service and Privacy Policy',
+      'auth.terms_alert_title': 'Terms & Privacy',
+      'auth.terms_sheet_agree_button': 'Agree & Continue',
+      'auth.terms_sheet_description': 'Please review and agree to our terms before continuing.',
+      'auth.terms_sheet_title': 'Terms & Conditions',
+      'auth.username_placeholder': 'Enter your email address',
+      'auth.username_required': 'Please enter your username.',
+      'auth.vpc_account_placeholder': 'Account',
+      'auth.vpc_account_required': 'Please enter your account.',
+      'auth.vpc_address_host_required': 'VPC address must include a host.',
+      'auth.vpc_address_invalid': 'Please enter a valid VPC address.',
+      'auth.vpc_address_placeholder': 'https://vpc.example.com',
+      'auth.vpc_address_required': 'Please enter your VPC address.',
+      'auth.vpc_address_scheme_required': 'VPC address must use https://.',
+      'auth.vpc_address_unsupported': 'Remove username, password, query, or fragment from the VPC address.',
+      'auth.vpc_endpoints_unavailable': 'Could not fetch VPC service addresses. Check the address and try again.',
+      'auth.vpc_login_title': 'VPC sign-in',
+      'choose_environment.activate_device_offline_line': 'Device %1$s is currently offline',
+      'choose_environment.activate_device_reconnect_line': 'Please turn on the device and ensure Qoder Desktop is connected',
+      'choose_environment.activate_device_title': 'Activate Your Device',
+      'choose_environment.active_sessions_title': 'Active Sessions',
+      'choose_environment.chats': 'Chats',
+      'choose_environment.choose_project': 'Choose Project',
+      'choose_environment.connect_computer': 'Connect to your computer',
+      'choose_environment.connect_computer_cli_heading': 'Connect with Qoder CLI',
+      'choose_environment.connect_computer_desktop_enable': '"Open Quest and enable \'Qoder Mobile\' in Quest Settings"',
+      'choose_environment.connect_computer_desktop_enable_inline_bold': '"Open Quest and enable \'Qoder Mobile\' in <b>Quest Settings</b>"',
+      'choose_environment.connect_computer_desktop_heading': 'Connect with Qoder Desktop (Quest)',
+      'choose_environment.connect_computer_desktop_install': 'Install Qoder Desktop on your computer and log in with the same account',
+      'choose_environment.connect_computer_desktop_tab': 'Desktop',
+      'choose_environment.connect_computer_guide_message': 'Turn on Remote Control in Qoder CLI to sync tasks',
+      'choose_environment.connect_computer_guide_prefix': 'Run command ’',
+      'choose_environment.connect_computer_guide_suffix': '’ in the terminal.',
+      'choose_environment.connect_computer_instruction': 'Turn on Remote Control in Qoder CLI to sync tasks',
+      'choose_environment.connect_device_connecting': 'Connecting with %1$s',
+      'choose_environment.end_session_action': 'End',
+      'choose_environment.end_session_confirm_message': '“%1$s” will be ended on this environment.',
+      'choose_environment.end_session_confirm_title': 'End session?',
+      'choose_environment.end_session_success': 'Session ended',
+      'choose_environment.ide_agent': 'Agent',
+      'choose_environment.ide_experts': 'Experts',
+      'choose_environment.ide_projects_empty': 'Open a project in Qoder IDE to continue.',
+      'choose_environment.local': 'Local',
+      'choose_environment.offline': 'Offline',
+      'choose_environment.title': 'Choose Environment',
+      'choose_github.bind_failed': 'Unable to open GitHub connection page.',
+      'choose_github.bind_message': 'Connect your GitHub account before choosing repositories.',
+      'choose_github.branch_empty': 'No branches available',
+      'choose_github.connect_dialog_message': 'You can revoke access at any time. Data from GitHub is only used to provide you with relevant and useful information.',
+      'choose_github.install_button': 'Install Qoder on GitHub',
+      'choose_github.install_failed': 'Unable to open GitHub install page.',
+      'choose_github.install_hint': 'Repo missing? Install the Qoder AI app in a repository to access it here.',
+      'choose_github.install_message': 'Repo missing. Install the Qoder AI app in a repository to access it here.',
+      'choose_github.refresh_connection': 'Refresh',
+      'choose_github.repository_empty': 'No repositories available',
+      'choose_github.repository_title': 'Choose Repository',
+      'close.drawer': 'Close navigation menu',
+      'close.sheet': 'Close sheet',
+      'cloud_sandbox.create_failed_toast': 'Failed to create sandbox. Please try again.',
+      'cloud_sandbox_boot.stage.download_resume': 'Restored cloud container',
+      'cloud_sandbox_boot.stage.repository_resume': 'Restored repository',
+      'cloud_sandbox_boot.stage.setup_install': 'Run setup script',
+      'cloud_sandbox_boot.status.skipped': 'Skipped',
+      'cloud_sandbox_boot.timeout_message': 'No setup progress was received for 4 minutes.',
+      'cloud_sandbox_boot.title_completed': 'Initialized session',
+      'cloud_sandbox_boot.title_failed': 'Session initialization failed',
+      'cloud_sandbox_boot.title_install': 'Initializing session',
+      'cloud_sandbox_boot.title_resume': 'Resuming session',
+      'cloud_sandbox_boot.title_resume_completed': 'Resumed session',
+      'cloud_sandbox_boot.title_resume_failed': 'Session resume failed',
+      'cloud_sandbox_boot.title_resume_timeout': 'Session resume timed out',
+      'cloud_sandbox_boot.title_timeout': 'Session initialization timed out',
+      'composer.attachment.camera_failed': 'Couldn’t capture this photo. Please try again.',
+      'composer.attachment.camera_permission_denied': 'Camera access is required to take a photo',
+      'composer.attachment.file_limit': 'You can attach up to %1$d files.',
+      'composer.attachment.file_read_failed': 'File could not be read. Please try another file.',
+      'composer.attachment.file_unsupported': 'File attachments are not available here.',
+      'composer.attachment.file_upload_failed': 'File upload failed. Please try again.',
+      'composer.attachment.image_limit': 'You can add up to 10 images',
+      'composer.attachment.image_read_failed': 'Couldn’t read this image. Please try another one.',
+      'composer.camera.back': 'Back',
+      'composer.camera.collapse_controls': 'Collapse controls',
+      'composer.camera.expand_controls': 'Expand controls',
+      'composer.camera.flash_auto': 'Flash auto',
+      'composer.camera.flash_off': 'Flash off',
+      'composer.camera.flash_on': 'Flash on',
+      'composer.camera.flash_unavailable': 'Flash unavailable',
+      'composer.camera.switch_cameras': 'Switch cameras',
+      'composer.camera.take_photo': 'Take photo',
+      'composer.full_access': 'Full Access',
+      'composer.generated_by_ai': 'Generated by AI',
+      'composer.model_promotion.ends': 'Off-peak Discount Ends in %1$s!',
+      'composer.model_promotion.starts': 'Off-peak Discount Starts in %1$s!',
+      'composer.model_selector.advanced': 'Advanced',
+      'composer.model_selector.pitaya': 'Pitaya-03-20',
+      'composer.model_selector.safety': 'Enterprise',
+      'composer.model_selector.standard': 'Standard',
+      'composer.new_models': 'New Models',
+      'composer.permission.section_qoder_cli': 'Enable in Qoder CLI',
+      'composer.plan': 'Plan',
+      'composer.premium_badge': 'Advanced',
+      'composer.thinking_status': 'Thinking',
+      'composer.toggle_on': 'On',
+      'composer.voice_input.duration_limit_reached': 'Voice input reached the 3-minute limit. Transcribing...',
+      'composer.voice_input.duration_warning': 'Voice input will stop automatically in 10 seconds.',
+      'composer.voice_input.empty_transcript': 'No speech was detected. Please try again.',
+      'composer.voice_input.permission_denied': 'Microphone permission is required for voice input.',
+      'composer.voice_input.recording_failed': 'Unable to record voice input. Please try again.',
+      'composer.voice_input.transcribing': 'Thinking',
+      'composer.voice_polish.failed': 'Polishing failed; using raw transcript.',
+      'composer.voice_polish.in_progress': 'Polishing…',
+      'composer.yolo': 'YOLO',
+      'content_description.avatar': 'Avatar',
+      'content_description.back': 'Back',
+      'content_description.conversation_turn.copy': 'Copy response',
+      'content_description.conversation_turn.dislike': 'Dislike response',
+      'content_description.conversation_turn.like': 'Like response',
+      'content_description.google': 'Google',
+      'content_description.logo': 'Qoder Logo',
+      'content_description.markdown_code.expand': 'Expand code block',
+      'content_description.qoder': 'Qoder',
+      'conversation.empty.no_content': 'No content',
+      'conversation.sources.count': '%1$d Sources',
+      'conversation.sources.item_accessibility': '%1$s, %2$s',
+      'conversation.turn.feedback_thanks': 'Thanks for your feedback',
+      'conversation.uploaded_file_missing': 'File no longer exists',
+      'conversation.uploaded_file_open_failed': '"Couldn\'t open this file"',
+      'copy.toast_msg': 'Link copied to clipboard',
+      'default.error_message': 'Invalid input',
+      'default.popup_window_title': 'Pop-Up Window',
+      'diff.expand': 'Tap to expand full patch',
+      'diff.lines': '%d lines',
+      'diff.preview': 'DIFF PREVIEW',
+      'diff.title': 'DIFF',
+      'dropdown.menu': 'Dropdown menu',
+      'fallback.menu_item.copy_link': 'Copy link',
+      'fallback.menu_item.open_in_browser': 'Open in browser',
+      'fallback.menu_item.share_link': 'Share link',
+      'feedback.copy_id': 'Copy Feedback ID',
+      'feedback.description_required': 'Please enter your feedback.',
+      'feedback.email_invalid': 'Please enter a valid email address.',
+      'feedback.email_placeholder': 'Email',
+      'feedback.email_required': 'Please enter your email address.',
+      'feedback.id_copy_failed': 'Failed to copy Feedback ID',
+      'feedback.placeholder': 'Please describe your issue or suggest improvements for Qoder',
+      'feedback.placeholder_cn': 'Please describe the issue you encountered and your suggestions for Qoder CN',
+      'feedback.recording.attachment': 'Screen recording',
+      'feedback.recording.countdown': '%1$ds remaining',
+      'feedback.recording.failed': 'Failed to record screen. Please try again.',
+      'feedback.recording.preparing': 'Preparing recording…',
+      'feedback.recording.preview_failed': 'Failed to play screen recording. Please try again.',
+      'feedback.recording.stop': 'Stop recording',
+      'feedback.recording.title': 'Screen recording',
+      'feedback.session_id_copied': 'Session ID copied',
+      'feedback.session_id_label': 'Session ID',
+      'feedback.source.choose_file': 'Choose File',
+      'feedback.source.photo_library': 'Photo Library',
+      'feedback.source.record_screen': 'Record Screen',
+      'feedback.source_take_photo': 'Take Photo',
+      'feedback.submit': 'Submit',
+      'feedback.success': 'Feedback submitted successfully',
+      'feedback.success_dialog_title': 'Feedback submitted successfully',
+      'indeterminate': 'Partially checked',
+      'markdown.code.source_unavailable': 'This code is no longer available. Go back and open it again.',
+      'markdown.details.default_summary': 'Details',
+      'navigation.menu': 'Navigation menu',
+      'new_task.credits_banner_subtitle': 'Start a task and give it a try!',
+      'new_task.credits_banner_title': '300 credits added.',
+      'new_task.default_env': 'Default',
+      'new_task.greeting_subtitle': 'How can Qoder help you?',
+      'new_task.greeting_subtitle_cn': 'What can I help you with?',
+      'new_task.greeting_title': 'Hi, %1$s',
+      'new_task.greeting_title_guest': 'Hi there',
+      'new_task.landing.cloud_operation_credit': '300 Welcome credits added. Explore now!',
+      'new_task.landing.local_operation_pro_trial': 'Download desktop app. Pro FREE for 1st month.',
+      'new_task.landing.prompt_pending': 'Trend analysis needs data source confirmation',
+      'new_task.landing.prompt_pending_text': 'Trend analysis needs data source confirmation',
+      'new_task.landing.prompt_unread': 'Survey report generated 12 insights',
+      'new_task.landing.prompt_unread_text': 'Survey report generated 12 insights',
+      'new_task.landing.task_message_label': '%1$s %2$s',
+      'new_task.landing.task_status.action_required': 'Action Required',
+      'new_task.landing.task_status.error': 'Error',
+      'new_task.no_connection_subtitle': '"Launch Remote Control in Qoder eg. run \'qodercli remote-control\' in terminal"',
+      'new_task.no_connection_subtitle_cn': '"Launch Remote Control in Qoder eg. run \'qoderclicn remote-control\' in terminal"',
+      'new_task.no_connection_title': 'No connection yet',
+      'new_task.prompt.build_app': 'Build a new app',
+      'new_task.prompt.build_app_text': 'Build a simple todo app with task creation, completion, deletion, and list display. Please prioritize a basic version that can run directly.',
+      'new_task.prompt.fix_bug': 'Fix a defect',
+      'new_task.prompt.fix_bug_text': 'Check whether this project has obvious errors, abnormal logic, or performance issues. If you find problems, help me fix them with the smallest reasonable changes.',
+      'new_task.prompt.generate_ui': 'Build UI from screenshot',
+      'new_task.prompt.generate_ui_text': 'Implement an interface that matches the screenshot I uploaded as closely as possible. Prefer reusing the current project technology stack and component style, and keep the code simple.',
+      'new_task.prompt.understand_project': 'Understand project',
+      'new_task.prompt.understand_project_text': 'Help me quickly understand the project structure and main features, and tell me which files or modules I should start with if I want to keep developing it.',
+      'new_task.rc.cli_landing_title': '"Engineering in the terminal What are we building today ?"',
+      'new_task.rc.landing_title': '"Quest on, hands off What are we building today ?"',
+      'new_task.rc.prompt_compare': 'Compare these two vendors - pick one',
+      'new_task.rc.prompt_plan': 'Break down Q4 plan, dispatch agents in parallel',
+      'new_task.select_env': 'Select an environment to get started',
+      'new_task.title': 'New Task',
+      'new_task.unavailable_device_banner': 'Oops~ Your device is not available now',
+      'new_task.unavailable_device_placeholder': 'Turn on remote control in Qoder CLI',
+      'new_task.unavailable_device_placeholder_desktop': 'Turn on remote control in Qoder Desktop',
+      'not_selected': 'Not selected',
+      'notification.action_review': 'Review',
+      'notification.action_view': 'View',
+      'notification.approval_description': 'Authorize agent before it takes action',
+      'notification.approval_title': 'Approval',
+      'notification.ask_permission_description': 'Authorize agent before it takes action',
+      'notification.ask_permission_title': 'Ask Permission',
+      'notification.channel.task_updates': 'Task Updates',
+      'notification.channel.task_updates_description': 'Approval requests and questions from your tasks',
+      'notification.default_body': 'A session needs your attention',
+      'notification.la.more_format': '%1$d More',
+      'notification.la.state_awaiting': 'Awaiting Approval',
+      'notification.la.state_error': 'Error',
+      'notification.la.state_needs_input': 'Needs Input',
+      'notification.new_session_title': 'New Session',
+      'notification.plan_review_description': 'Review development plans before execution',
+      'notification.plan_review_title': 'Plan Review',
+      'notification.qa_description': 'Respond to live queries from agent',
+      'notification.qa_title': 'Q&A',
+      'notification.session_created': 'Session created',
+      'notification.system_description': '"You\'ll receive notifications on home screen when new messages arrive"',
+      'notification.system_status_on': 'On',
+      'notification.system_title': 'System Notification',
+      'notification.task_completed_description': 'Get notified when a task run completes',
+      'notification.task_completed_title': 'Completed by turns',
+      'notification.title.task_failed': 'Task failed',
+      'numberauth.carrier_desc': 'Authentication service provided by China Mobile',
+      'numberauth.change_phone_short': 'Change',
+      'numberauth.error.business_failure_default': 'One-click login failed. Please try again.',
+      'numberauth.error.carrier_unavailable': 'Carrier authentication is temporarily unavailable. Please use another sign-in method.',
+      'numberauth.error.config_invalid': 'One-click login configuration error. Please contact support.',
+      'numberauth.error.device_unsupported': 'This device does not support one-click login. Please use another sign-in method.',
+      'numberauth.error.enable_mobile_network': 'Turn on mobile data and try again.',
+      'numberauth.error.fallback': 'One-click login failed. Please use another sign-in method.',
+      'numberauth.error.network_timeout': 'Network timed out. Please try again later.',
+      'numberauth.error.no_sim': 'No SIM card detected. Please use another sign-in method.',
+      'numberauth.error.retry_or_other_method': 'One-click login failed. Please try again later or use another sign-in method.',
+      'numberauth.error.risk_control_pending': 'Security check is not complete. Please try again or use another sign-in method.',
+      'numberauth.label': 'Phone number',
+      'numberauth.one_click_login': 'One-Click Login',
+      'password_login.account_placeholder': 'Aliyun account (phone/email/ID)',
+      'password_login.aliyun_privacy': 'Privacy Policy',
+      'password_login.aliyun_user_agreement': 'Alibaba Cloud User Agreement',
+      'password_login.mfa_cancelled': 'Verification was not completed. Please try again.',
+      'password_login.password_placeholder.v2': 'Password',
+      'password_login.qoder_privacy': 'Privacy Policy',
+      'password_login.qoder_user_agreement': 'Qoder CN User Agreement',
+      'password_login.terms_prefix': 'I have read and agree to',
+      'password_login.title': 'Sign in with Aliyun',
+      'permission_purpose.conversation_camera_message': 'Camera access is used to take photos and add them to your message so Qoder can understand image content and complete your task.',
+      'permission_purpose.conversation_camera_title': '“%1$s” wants to access Camera for Conversations.',
+      'permission_purpose.deny': '"Don\'t Allow"',
+      'permission_purpose.feedback_camera_message': 'Camera access is used to take photos for feedback attachments so we can understand your issue and help troubleshoot.',
+      'permission_purpose.feedback_camera_title': '“%1$s” wants to access Camera for Feedback.',
+      'permission_purpose.feedback_screen_recording_message': 'Screen recording access is used to capture what happens in Qoder and attach the video to your feedback so we can troubleshoot the issue.',
+      'permission_purpose.feedback_screen_recording_title': '“%1$s” wants to record your screen for Feedback.',
+      'permission_purpose.feedback_screenshot_deny': 'Don’t Add',
+      'permission_purpose.feedback_screenshot_message': 'Allow Qoder to find the screenshot you just took in Photos and add it to this feedback?',
+      'permission_purpose.feedback_screenshot_title': 'Add screenshot to feedback',
+      'permission_purpose.microphone_message': 'Microphone access is used to record your voice and transcribe it into message text.',
+      'permission_purpose.microphone_title': '“%1$s” wants to access Microphone.',
+      'preview.tool.failed': 'Could not open the preview. Please try again.',
+      'preview.tool.opening': 'Opening preview…',
+      'preview.tool.port': 'Port %d',
+      'preview.tool.title': 'Open Preview',
+      'preview.unavailable.restart_prompt': 'Restart the preview',
+      'range.end': 'Range end',
+      'range.start': 'Range start',
+      'screenshot_quick_action.feedback': 'Send as feedback',
+      'screenshot_quick_action.title': 'Screenshot captured',
+      'security_policy.message': '"Your organization\'s security policy currently prevents access to Qoder Mobile."',
+      'security_policy.title': 'Security Policy Restriction',
+      'selected': 'Selected',
+      'session.details.close': 'Close session details',
+      'session.details.copy_id_accessibility': 'Session ID %1$s. Double tap to copy.',
+      'session.details.open_accessibility': 'Show session details',
+      'session.details.unavailable': 'Not available',
+      'sidebar.code': 'Code',
+      'sidebar.work': 'Work',
+      'sms.account_id': 'Account ID: %1$s',
+      'sms.code_sent': 'Verification code sent',
+      'sms.code_sent_to': 'to +86%1$s',
+      'sms.confirm_login': 'Sign in now',
+      'sms.enter_phone': 'Enter phone number',
+      'sms.error.account_banned': 'Account has been banned',
+      'sms.error.account_not_found': 'No account registered with this number',
+      'sms.error.challenge_missing': 'Please request a verification code first',
+      'sms.error.code_expired': 'Code has expired. Please request a new one.',
+      'sms.error.code_invalid': 'Invalid or expired code',
+      'sms.error.code_required': 'Please enter 6-digit code',
+      'sms.error.generic': 'Operation failed. Please try again.',
+      'sms.error.invalid_phone': 'Please enter a valid phone number',
+      'sms.error.network': 'Network error. Please check your connection.',
+      'sms.error.phone_login_unavailable': 'Phone sign-in is not available yet',
+      'sms.error.too_many_requests': 'Too many requests. Please try again later.',
+      'sms.last_active': 'Last active: %1$s',
+      'sms.phone_placeholder': 'Enter your phone number',
+      'sms.recent_login': 'Recent login',
+      'sms.resend': 'Resend',
+      'sms.resend_countdown': 'Resend (%1$ds)',
+      'sms.select_account': 'Choose Alibaba Cloud account',
+      'sms.select_account_hint': 'This phone number is linked to multiple accounts. Please select one to sign in.',
+      'sms.terms_agreed': 'I have read and agree to the Service Agreement and Privacy Policy',
+      'startup_authorization.agree': 'Agree',
+      'startup_authorization.aliyun_privacy_policy_label': 'Privacy Policy',
+      'startup_authorization.aliyun_user_agreement_label': 'User Agreement',
+      'startup_authorization.disagree': 'Disagree',
+      'startup_authorization.message': '"Welcome to this app. Before using this app, please carefully read the Alibaba Cloud User Agreement, Privacy Policy, Qoder Privacy Policy, and User Agreement. This app requires network access during use, which may incur data charges. To ensure normal operation, security, and risk control, we may request system permissions based on the features you use, including but not limited to microphone, camera, location, storage, reading the local phone number, reading and writing media data such as photos, videos, and audio, and screen capture. These permissions are used to provide voice, image, and text instruction input services. By tapping “Agree”, you agree to be bound by the terms of the agreements."',
+      'startup_authorization.qoder_privacy_policy_label': 'Privacy Policy',
+      'startup_authorization.qoder_user_agreement_label': 'User Agreement',
+      'startup_authorization.title': 'Welcome to Qoder',
+      'state.empty': 'Empty',
+      'state.on': 'On',
+      'switch.role': 'Switch',
+      'system.default_channel': 'System Default Channel',
+      'tab': 'Tab',
+      'tasks.archive.empty': 'No archived tasks',
+      'tasks.debug.raw_data_empty': 'No data',
+      'tasks.debug.view_raw_data': 'View raw data',
+      'tasks.delete.confirm_message': '“%1$s” will be permanently deleted.',
+      'tasks.delete.confirm_title': 'Delete task?',
+      'tasks.empty.short_description': 'Tap + to start a task',
+      'tasks.empty.short_title': 'No tasks yet',
+      'tasks.group.other': 'Other',
+      'tasks.load_more': 'Load more',
+      'tasks.pin.action': 'Pin',
+      'tasks.plan_review.allow_once': 'Run',
+      'tasks.plan_review.back': 'Back',
+      'tasks.plan_review.feedback_placeholder': 'What would you like to adjust in the plan?',
+      'tasks.plan_review.feedback_submit': 'Submit feedback',
+      'tasks.plan_review.prompt': 'The plan is ready for execution.',
+      'tasks.plan_review.title': 'Plan',
+      'tasks.question.answer_input_placeholder': 'Enter your answer...',
+      'tasks.question.answer_no': 'No',
+      'tasks.question.answer_yes': 'Yes',
+      'tasks.question.answered': 'Answered',
+      'tasks.question.answers_title': 'Question Answers',
+      'tasks.question.custom_answer_label': 'Or enter a custom answer',
+      'tasks.question.custom_value': 'Or enter a custom answer',
+      'tasks.question.multi_choice_title_suffix': '(Multi-choice)',
+      'tasks.question.pagination': '%1$d of %2$d',
+      'tasks.question.panel_title': 'Questions',
+      'tasks.question.please_specify': 'Or enter a custom answer',
+      'tasks.question.previous_question': 'Previous question',
+      'tasks.question.primary_action': 'Continue',
+      'tasks.question.primary_action_submitting': 'Submitting...',
+      'tasks.restore.action': 'Restore',
+      'tasks.restore.failed': 'Failed to restore, please try again',
+      'tasks.restore.unsupported': 'Not supported yet',
+      'tasks.section.action_required': 'Action Required',
+      'tasks.section.archived': 'Archived Tasks',
+      'tasks.section.pinned': 'Pinned',
+      'tasks.show_more': 'Show more',
+      'tasks.sort.by': 'Group by',
+      'tasks.sort.date': 'Date',
+      'tasks.sort.project': 'Project',
+      'tasks.sort.status': 'Status',
+      'tasks.source.remote': 'Remote',
+      'tasks.switcher.all_tasks': 'All tasks',
+      'tasks.tab.archived': 'Archived',
+      'tasks.time.days_ago': '%dd ago',
+      'tasks.time.hours_ago': '%dh ago',
+      'tasks.time.minutes_ago': '%dm ago',
+      'tasks.time.now': 'Just now',
+      'tasks.title': 'Code',
+      'tasks.tool_group.edit_files': 'Edit %d files',
+      'tasks.tool_group.edited_files': 'Edited %d files',
+      'tasks.tool_group.files_count': '%d files',
+      'tasks.tool_group.read_files_completed': 'Read %d files',
+      'tasks.tool_group.read_images': 'Read %d images',
+      'tasks.tool_group.view_steps': 'View %d steps',
+      'tasks.tool_use.action.edited': 'Edited',
+      'tasks.tool_use.action.write': 'Write',
+      'tasks.tool_use.action.wrote': 'Wrote',
+      'tasks.tool_use.default_tail': 'Waiting for response...',
+      'tasks.tool_use.detail.command': 'Command',
+      'tasks.tool_use.detail.content': 'Content',
+      'tasks.tool_use.detail.file_path': 'File path',
+      'tasks.tool_use.detail.output': 'Output',
+      'tasks.tool_use.detail.prompt': 'Prompt',
+      'tasks.tool_use.detail.query': 'Query',
+      'tasks.tool_use.edit_file': 'Edit file',
+      'tasks.tool_use.read_file': 'Read file',
+      'tasks.tool_use.running_tail': 'Waiting for response...',
+      'tasks.tool_use.tool': 'Tool',
+      'tasks.tool_use.web_fetch.completed': 'Fetch completed',
+      'tasks.tool_use.web_fetch.failed': 'Fetch failed',
+      'tasks.tool_use.web_fetch.running': 'Fetching',
+      'tasks.tool_use.web_fetch.target.v2': 'Fetched %1$s',
+      'tasks.tool_use.web_search.completed': 'Search completed',
+      'tasks.tool_use.web_search.failed': 'Search failed',
+      'tasks.tool_use.web_search.query.v2': 'Searched %1$s',
+      'tasks.tool_use.web_search.running': 'Searching the web',
+      'tasks.tool_use.write_file': 'Edit File',
+      'tasks.unpin.action': 'Unpin',
+      'tasks.view_archived': 'View Archived Tasks',
+      'template.percent': '%1$d percent.',
+      'tooltip.description': 'tooltip',
+      'tooltip.label': 'show tooltip',
+      'update.action': 'Update Now',
+      'update.checking': 'Checking…',
+      'update.download_start_failed': 'Unable to start download. Please try again later.',
+      'update.installing': 'Installing…',
+      'update.later': 'Later',
+      'update.no_update': 'Already up to date',
+      'update.title': 'New Version %s Available',
+      'usage.activity.expires_at': 'Limited-time offer ends on %1$s',
+      'usage.activity.open_details': 'Open activity details',
+      'usage.activity.quota.daily': '%1$s / %2$s times per day',
+      'usage.activity.quota.generic': '%1$s / %2$s times',
+      'usage.activity.quota.monthly': '%1$s / %2$s times per month',
+      'usage.activity.remaining': '%1$s left',
+      'usage.activity.remaining_today': '%1$s left today',
+      'usage.activity.show_description': 'Show activity details',
+      'usage.add_on_credits': 'Add-on Credits',
+      'usage.error.empty_response': 'Unable to load usage data. Please try again.',
+      'usage.plan_credits': 'Plan Credits',
+      'usage.remaining_left': '%s left',
+      'usage.renews_on': 'Renews on %s',
+      'usage.shared_add_on_credits': 'Shared Add-on Credits',
+      'usage.unit_credits': 'credits',
+      'usage.used': 'Used',
+      'usage.used_summary': '%1$s / %2$s (%3$d%% used)',
+      'usage.view_details': 'View Details',
+      'usage.your_cap': 'Your Cap',
+      'workspace.sso_redirect': 'Redirecting to %s SSO…',
     }
   };
   let _locale = 'zh';
@@ -2211,6 +3235,734 @@
   /* ============================================================
      注册（Node/SSR：无 registry，静默跳过）
      ============================================================ */
+  /* ============================================================
+     <qm-login> — 登录注册域 v3.9.0（官方键名 auth.* · sms.* · numberauth.* ·
+     password_login.* · passport.* · security_policy.* · startup_authorization.*）
+     view: home(聚合登录) | sms(验证码) | password(邮箱密码) | aliyun(阿里云密码)
+           | enterprise(企业账号选择) | vpc(VPC 表单) | terms(条款) | startup(启动授权)
+           | security(安全策略限制) | accounts(账号选择)
+     事件：oauth / submit / terms-open / view-change
+     ============================================================ */
+  class QmLogin extends Base {
+    static get observedAttributes() { return ['view', 'phone', 'countdown', 'theme']; }
+    static get hostCss() {
+      return baseCss(
+        '.qm-lg{padding:22px 20px 26px;display:flex;flex-direction:column;min-height:100%;}' +
+        '.qm-lg__brand{display:flex;flex-direction:column;align-items:center;padding:8px 0 18px;}' +
+        '.qm-lg__logo{width:56px;height:56px;border-radius:16px;background:var(--qm-primary-weak);' +
+        'color:var(--qm-primary);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:26px;}' +
+        '.qm-lg__hi{font-size:21px;font-weight:700;margin-top:14px;}' +
+        '.qm-lg__sub{font-size:13px;color:var(--qm-text-3);margin-top:4px;}' +
+        '.qm-lg__btns{display:flex;flex-direction:column;gap:10px;margin-top:8px;}' +
+        '.qm-oa{display:flex;align-items:center;gap:10px;width:100%;padding:11px 14px;border-radius:var(--qm-radius);' +
+        'border:1px solid var(--qm-line);background:var(--qm-surface);font-size:14.5px;font-weight:600;}' +
+        '.qm-oa__ic{width:22px;height:22px;border-radius:6px;flex:none;display:flex;align-items:center;' +
+        'justify-content:center;background:var(--qm-surface-2);font-size:12px;font-weight:800;color:var(--qm-text-2);}' +
+        '.qm-oa--pri{background:var(--qm-primary);border-color:var(--qm-primary);color:var(--qm-on-primary);justify-content:center;}' +
+        '.qm-or{display:flex;align-items:center;gap:12px;color:var(--qm-text-4);font-size:11.5px;margin:6px 0;}' +
+        '.qm-or::before,.qm-or::after{content:"";flex:1;height:1px;background:var(--qm-line);}' +
+        '.qm-lg__fld{margin-top:12px;}' +
+        '.qm-lg__inp{width:100%;padding:11px 13px;border:1px solid var(--qm-line);border-radius:10px;' +
+        'background:var(--qm-surface);font-size:14.5px;color:var(--qm-text);}' +
+        '.qm-lg__row{display:flex;gap:10px;}' +
+        '.qm-lg__hint{font-size:12px;color:var(--qm-text-3);margin-top:6px;}' +
+        '.qm-lg__err{font-size:12.5px;color:var(--qm-error);margin-top:6px;}' +
+        '.qm-lg__link{font-size:12.5px;color:var(--qm-primary);font-weight:600;}' +
+        '.qm-lg__agree{font-size:11.5px;color:var(--qm-text-3);line-height:1.6;margin-top:14px;}' +
+        '.qm-ent{border:1px solid var(--qm-line);border-radius:var(--qm-radius);padding:13px 14px;text-align:left;' +
+        'background:var(--qm-surface);margin-bottom:10px;width:100%;}' +
+        '.qm-ent__t{font-size:14.5px;font-weight:600;}' +
+        '.qm-ent__s{font-size:12px;color:var(--qm-text-3);margin-top:3px;}' +
+        '.qm-lg__title{font-size:19px;font-weight:700;margin-bottom:4px;}' +
+        '.qm-back{font-size:13px;color:var(--qm-text-2);padding:0 0 10px;}' +
+        '.qm-code{display:flex;gap:8px;margin-top:14px;}' +
+        '.qm-code i{flex:1;height:46px;border:1px solid var(--qm-line);border-radius:10px;background:var(--qm-surface);}' +
+        '.qm-terms p{font-size:13px;color:var(--qm-text-2);line-height:1.7;margin-top:10px;}');
+    }
+    template() {
+      const view = this.getAttribute('view') || 'home';
+      const agree = '<div class="qm-lg__agree">' + esc(t('auth.agree_prefix')) + ' ' +
+        '<span class="qm-lg__link">' + esc(t('auth.terms_sheet_title')) + '</span> ' + esc(t('auth.and')) + ' ' +
+        '<span class="qm-lg__link">' + esc(t('auth.privacy')) + '</span></div>';
+      const inp = (ph) => '<div class="qm-lg__fld"><input class="qm-lg__inp" placeholder="' + esc(t(ph)) + '"></div>';
+      if (view === 'startup') {
+        return '<div class="qm-lg"><div class="qm-lg__title">' + esc(t('startup_authorization.title')) + '</div>' +
+          '<div class="qm-terms"><p>' + esc(t('startup_authorization.message')) + '</p></div>' +
+          '<div class="qm-lg__agree">' + esc(t('startup_authorization.aliyun_user_agreement_label')) + ' · ' +
+          esc(t('startup_authorization.aliyun_privacy_policy_label')) + ' · ' +
+          esc(t('startup_authorization.qoder_user_agreement_label')) + ' · ' +
+          esc(t('startup_authorization.qoder_privacy_policy_label')) + '</div>' +
+          '<div class="qm-lg__btns"><button class="qm-oa qm-oa--pri" data-act="agree">' + esc(t('startup_authorization.agree')) + '</button>' +
+          '<button class="qm-oa" data-act="disagree">' + esc(t('startup_authorization.disagree')) + '</button></div></div>';
+      }
+      if (view === 'security') {
+        return '<div class="qm-lg"><div class="qm-lg__title">' + esc(t('security_policy.title')) + '</div>' +
+          '<div class="qm-lg__hint">' + esc(t('security_policy.message')) + '</div></div>';
+      }
+      if (view === 'terms') {
+        return '<div class="qm-lg"><div class="qm-back" data-act="back">‹ ' + esc(t('tasks.plan_review.back')) + '</div>' +
+          '<div class="qm-lg__title">' + esc(t('auth.terms_sheet_title')) + '</div>' +
+          '<div class="qm-terms"><p>' + esc(t('auth.terms_sheet_description')) + '</p>' +
+          '<p>' + esc(t('auth.terms_alert_description')) + '</p></div>' +
+          '<div class="qm-lg__btns"><button class="qm-oa qm-oa--pri" data-act="agree-continue">' +
+          esc(t('auth.terms_sheet_agree_button')) + '</button></div></div>';
+      }
+      if (view === 'enterprise') {
+        const card = (act, tk, sk) => '<button class="qm-ent" data-act="' + act + '"><div class="qm-ent__t">' +
+          esc(t(tk)) + '</div><div class="qm-ent__s">' + esc(t(sk)) + '</div></button>';
+        return '<div class="qm-lg"><div class="qm-back" data-act="back">‹ ' + esc(t('tasks.plan_review.back')) + '</div>' +
+          '<div class="qm-lg__title">' + esc(t('auth.enterprise_entry.selection.title')) + '</div>' +
+          '<div class="qm-lg__hint">' + esc(t('auth.enterprise_entry.selection.subtitle')) + '</div>' +
+          '<div class="qm-lg__btns" style="margin-top:14px">' +
+          card('email', 'auth.enterprise_entry.email.title', 'auth.enterprise_entry.email.subtitle') +
+          card('ram', 'auth.enterprise_entry.ram.title', 'auth.enterprise_entry.ram.subtitle') +
+          card('vpc', 'auth.enterprise_entry.vpc.title', 'auth.enterprise_entry.vpc.subtitle') + '</div>' +
+          '<div class="qm-lg__hint">' + esc(t('auth.enterprise_entry.selection.help')) + '</div>' +
+          '<div class="qm-lg__err">' + esc(t('auth.enterprise_saml_required')) + '</div></div>';
+      }
+      if (view === 'vpc') {
+        return '<div class="qm-lg"><div class="qm-back" data-act="back">‹ ' + esc(t('tasks.plan_review.back')) + '</div>' +
+          '<div class="qm-lg__title">' + esc(t('auth.vpc_login_title')) + '</div>' +
+          inp('auth.vpc_address_placeholder') +
+          '<div class="qm-lg__err">' + esc(t('auth.vpc_address_required')) + '</div>' +
+          inp('auth.vpc_account_placeholder') +
+          '<div class="qm-lg__err">' + esc(t('auth.vpc_account_required')) + '</div>' +
+          inp('auth.password_placeholder') +
+          '<div class="qm-lg__btns"><button class="qm-oa qm-oa--pri" data-act="submit">' + esc(t('auth.log_in')) + '</button></div>' +
+          '<div class="qm-lg__hint">' + esc(t('auth.vpc_address_scheme_required')) + '</div>' +
+          '<div class="qm-lg__hint">' + esc(t('auth.vpc_address_invalid')) + '</div>' +
+          '<div class="qm-lg__hint">' + esc(t('auth.vpc_address_host_required')) + '</div>' +
+          '<div class="qm-lg__hint">' + esc(t('auth.vpc_address_unsupported')) + '</div>' +
+          '<div class="qm-lg__hint">' + esc(t('auth.vpc_endpoints_unavailable')) + '</div></div>';
+      }
+      if (view === 'sms') {
+        const cd = parseInt(this.getAttribute('countdown') || '0', 10) || 0;
+        return '<div class="qm-lg"><div class="qm-back" data-act="back">‹ ' + esc(t('tasks.plan_review.back')) + '</div>' +
+          '<div class="qm-lg__title">' + esc(t('auth.cn.phone_login')) + '</div>' +
+          '<div class="qm-lg__hint">' + esc(t('sms.code_sent')) + ' ' + esc(t('sms.code_sent_to')) + '</div>' +
+          '<div class="qm-code"><i></i><i></i><i></i><i></i><i></i><i></i></div>' +
+          '<div class="qm-lg__row" style="margin-top:12px">' +
+          '<span class="qm-lg__link" data-act="resend">' +
+          (cd > 0 ? esc(fmt(t('sms.resend_countdown'), [cd])) : esc(t('sms.resend'))) + '</span></div>' +
+          '<div class="qm-lg__err">' + esc(t('sms.error.code_required')) + '</div>' +
+          '<div class="qm-lg__btns"><button class="qm-oa qm-oa--pri" data-act="submit">' + esc(t('sms.confirm_login')) + '</button></div>' +
+          '<div class="qm-lg__agree">' + esc(t('sms.terms_agreed')) + '</div>' +
+          '<div class="qm-lg__hint">' + esc(t('numberauth.carrier_desc')) + '</div></div>';
+      }
+      if (view === 'aliyun') {
+        return '<div class="qm-lg"><div class="qm-back" data-act="back">‹ ' + esc(t('tasks.plan_review.back')) + '</div>' +
+          '<div class="qm-lg__title">' + esc(t('password_login.title')) + '</div>' +
+          inp('password_login.account_placeholder') + inp('auth.password_placeholder') +
+          '<div class="qm-lg__err">' + esc(t('auth.invalid_credentials')) + '</div>' +
+          '<div class="qm-lg__row" style="margin-top:8px"><span class="qm-lg__link">' + esc(t('auth.forgot_password')) + '</span></div>' +
+          '<div class="qm-lg__btns"><button class="qm-oa qm-oa--pri" data-act="submit">' + esc(t('auth.log_in')) + '</button></div>' +
+          '<div class="qm-lg__agree">' + esc(t('password_login.terms_prefix')) + ' ' +
+          '<span class="qm-lg__link">' + esc(t('password_login.qoder_user_agreement')) + '</span> ' + esc(t('auth.and')) + ' ' +
+          '<span class="qm-lg__link">' + esc(t('password_login.qoder_privacy')) + '</span></div></div>';
+      }
+      if (view === 'accounts') {
+        return '<div class="qm-lg"><div class="qm-lg__title">' + esc(t('auth.passport_account.title')) + '</div>' +
+          '<div class="qm-lg__hint">' + esc(t('sms.select_account_hint')) + '</div>' +
+          '<button class="qm-ent" style="margin-top:12px" data-act="pick"><div class="qm-ent__t">' +
+          esc(t('sms.phone_placeholder')) + '</div><div class="qm-ent__s">' + esc(t('sms.last_active')) + '</div></button>' +
+          '<div class="qm-lg__hint">' + esc(t('auth.passport_account.mobile_login_disabled')) + '</div>' +
+          '<div class="qm-lg__hint">' + esc(fmt(t('sms.account_id'), ['1001'])) + '</div></div>';
+      }
+      if (view === 'password') {
+        return '<div class="qm-lg"><div class="qm-back" data-act="back">‹ ' + esc(t('tasks.plan_review.back')) + '</div>' +
+          '<div class="qm-lg__title">' + esc(t('auth.account_password_title.v2')) + '</div>' +
+          inp('auth.email_placeholder') + inp('auth.password_placeholder') +
+          '<div class="qm-lg__row" style="margin-top:8px;justify-content:space-between">' +
+          '<span class="qm-lg__err">' + esc(t('auth.email_invalid')) + '</span>' +
+          '<span class="qm-lg__link">' + esc(t('auth.forgot_password')) + '</span></div>' +
+          '<div class="qm-lg__btns"><button class="qm-oa qm-oa--pri" data-act="submit">' + esc(t('auth.log_in')) + '</button></div>' +
+          '<div class="qm-lg__agree">' + esc(fmt(t('auth.continue_agreement_template'),
+            [t('auth.terms_alert_title'), t('auth.privacy')])) + '</div></div>';
+      }
+      /* home：聚合登录 */
+      const oa = (act, ic, key) => '<button class="qm-oa" data-act="' + act + '">' +
+        '<span class="qm-oa__ic">' + ic + '</span>' + esc(t(key)) + '</button>';
+      return '<div class="qm-lg"><div class="qm-lg__brand"><div class="qm-lg__logo">Q</div>' +
+        '<div class="qm-lg__hi">' + esc(t('new_task.greeting_title_guest')) + '</div>' +
+        '<div class="qm-lg__sub">' + esc(t('new_task.greeting_subtitle')) + '</div></div>' +
+        '<div class="qm-lg__btns">' +
+        '<button class="qm-oa qm-oa--pri" data-act="one-click">' + esc(t('numberauth.one_click_login')) + '</button>' +
+        oa('sms', svg(ICONS.phone), 'auth.cn.phone_login') +
+        oa('aliyun', '阿', 'auth.cn.password_login') +
+        oa('password', '@', 'auth.continue.account_password') +
+        '</div><div class="qm-or">' + esc(t('auth.or')) + '</div>' +
+        '<div class="qm-lg__btns">' +
+        oa('enterprise', '企', 'auth.cn.enterprise_login') +
+        oa('vpc', 'V', 'auth.continue.vpc') +
+        oa('github', 'G', 'auth.continue.github') +
+        oa('google', 'G', 'auth.continue.google') +
+        oa('apple', '', 'auth.continue.apple') + '</div>' +
+        agree +
+        '<div class="qm-lg__hint" style="margin-top:10px">' + esc(t('auth.cn.login_agree_prefix')) + '</div>' +
+        '<div class="qm-lg__row" style="justify-content:space-between;margin-top:12px">' +
+        '<span class="qm-lg__hint">' + esc(t('auth.no_account')) + ' <span class="qm-lg__link">' + esc(t('auth.sign_up')) + '</span></span>' +
+        '<span class="qm-lg__hint">' + esc(t('auth.get_started')) + '</span></div>' +
+        '<div class="qm-lg__hint">' + esc(t('auth.brand')) + ' · ' + esc(t('auth.cn.phone_unavailable')) + ' · ' +
+        esc(t('auth.signing_in')) + ' · ' + esc(t('auth.application_not_found')) + ' · ' +
+        esc(t('auth.captcha_failed')) + ' · ' + esc(t('auth.username_required')) + ' · ' +
+        esc(t('auth.password_required')) + ' · ' + esc(t('auth.email_required')) + ' · ' +
+        esc(t('auth.password_show')) + ' / ' + esc(t('auth.password_hide')) + ' · ' +
+        esc(t('auth.terms_alert_agree')) + ' · ' + esc(t('auth.terms_alert_title')) + ' · ' +
+        esc(t('auth.username_placeholder')) + ' · ' + esc(t('auth.continue.qoder')) + ' · ' +
+        esc(t('auth.sign_in')) + ' · ' + esc(t('auth.email_placeholder')) + ' · ' +
+        esc(t('auth.cn.terms')) + '</div></div>';
+    }
+    _bind(root) {
+      root.querySelectorAll('[data-act]').forEach((b) => {
+        b.addEventListener('click', () => {
+          const act = b.dataset.act;
+          if (['sms', 'aliyun', 'password', 'enterprise', 'vpc', 'terms', 'accounts'].includes(act)) {
+            this.setAttribute('view', act);
+            this.emit('view-change', { view: act });
+          } else if (act === 'back') {
+            this.setAttribute('view', 'home');
+          } else {
+            this.emit(act, { view: this.getAttribute('view') });
+          }
+        });
+      });
+      root.querySelectorAll('.qm-lg__inp').forEach((i) =>
+        i.addEventListener('input', () => this.emit('input', { value: i.value })));
+    }
+    get view() { return this.getAttribute('view') || 'home'; }
+    set view(v) { this.setAttribute('view', v); }
+  }
+
+  /* ============================================================
+     <qm-environment> — 环境/设备选择器 v3.9.0（choose_environment.* 与
+     choose_github.* 官方键名；RC 闭环最后一环）
+     view: picker | guide | github | connecting | activate
+     devices=[{name,online,host}] sessions=[{name,active}]
+     事件：pick / end-session / refresh / install
+     ============================================================ */
+  class QmEnvironment extends Base {
+    static get observedAttributes() { return ['view', 'devices', 'sessions', 'theme']; }
+    static get hostCss() {
+      return baseCss(
+        '.qm-ev{padding:16px;}' +
+        '.qm-ev__t{font-size:20px;font-weight:700;margin-bottom:4px;}' +
+        '.qm-ev__s{font-size:12.5px;color:var(--qm-text-3);margin-bottom:10px;line-height:1.6;}' +
+        '.qm-ev__sec{font-size:12.5px;color:var(--qm-text-3);padding:10px 2px 6px;}' +
+        '.qm-dev{display:flex;align-items:center;gap:11px;width:100%;padding:12px 13px;margin-bottom:8px;' +
+        'border:1px solid var(--qm-line);border-radius:var(--qm-radius);background:var(--qm-surface);text-align:left;}' +
+        '.qm-dev__ic{width:36px;height:36px;border-radius:10px;background:var(--qm-primary-weak);color:var(--qm-primary);' +
+        'display:flex;align-items:center;justify-content:center;flex:none;}' +
+        '.qm-dev__ic svg{width:19px;height:19px;}' +
+        '.qm-dev__t{font-size:14.5px;font-weight:600;}' +
+        '.qm-dev__s{font-size:12px;color:var(--qm-text-3);margin-top:1px;}' +
+        '.qm-dev__st{margin-left:auto;font-size:11.5px;font-weight:600;flex:none;}' +
+        '.qm-tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;}' +
+        '.qm-ev__cmd{font-family:var(--qm-font-mono,monospace);font-size:12.5px;background:var(--qm-surface-2);' +
+        'border-radius:8px;padding:9px 11px;margin:6px 0;}' +
+        '.qm-ev__step{display:flex;gap:9px;padding:5px 0;font-size:13.5px;line-height:1.55;}' +
+        '.qm-ev__n{width:18px;height:18px;border-radius:50%;background:var(--qm-primary-weak);color:var(--qm-primary);' +
+        'font-size:11px;display:flex;align-items:center;justify-content:center;flex:none;margin-top:2px;}' +
+        '.qm-ev__end{margin-left:auto;font-size:12px;color:var(--qm-error);flex:none;font-weight:600;}');
+    }
+    template() {
+      const view = this.getAttribute('view') || 'picker';
+      const devices = json(this.getAttribute('devices'), []) || [];
+      const sessions = json(this.getAttribute('sessions'), []) || [];
+      if (view === 'guide') {
+        return '<div class="qm-ev"><div class="qm-ev__t">' + esc(t('choose_environment.connect_computer')) + '</div>' +
+          '<div class="qm-ev__sec">' + esc(t('choose_environment.connect_computer_desktop_heading')) + '</div>' +
+          '<div class="qm-ev__step"><span class="qm-ev__n">1</span><span>' + esc(t('choose_environment.connect_computer_desktop_install')) + '</span></div>' +
+          '<div class="qm-ev__step"><span class="qm-ev__n">2</span><span>' + esc(t('choose_environment.connect_computer_desktop_enable_inline_bold')) + '</span></div>' +
+          '<div class="qm-ev__sec">' + esc(t('choose_environment.connect_computer_cli_heading')) + '</div>' +
+          '<div class="qm-ev__step"><span class="qm-ev__n">1</span><span>' + esc(t('choose_environment.connect_computer_guide_prefix')) + '</span></div>' +
+          '<div class="qm-ev__cmd">qodercli remote-control</div>' +
+          '<div class="qm-ev__step"><span class="qm-ev__n">2</span><span>' + esc(t('choose_environment.connect_computer_guide_suffix')) + ' ' +
+          esc(t('choose_environment.connect_computer_instruction')) + '</span></div>' +
+          '<div class="qm-ev__step"><span class="qm-ev__n">3</span><span>' + esc(t('choose_environment.connect_computer_guide_message')) + '</span></div></div>';
+      }
+      if (view === 'github') {
+        return '<div class="qm-ev"><div class="qm-ev__t">' + esc(t('choose_github.repository_title')) + '</div>' +
+          '<div class="qm-ev__s">' + esc(t('choose_github.install_hint')) + '</div>' +
+          '<button class="qm-dev" data-act="install"><span class="qm-dev__ic">G</span>' +
+          '<span><span class="qm-dev__t">' + esc(t('choose_github.install_button')) + '</span>' +
+          '<span class="qm-dev__s">' + esc(t('choose_github.install_message')) + '</span></span></button>' +
+          '<div class="qm-ev__s">' + esc(t('choose_github.bind_message')) + '</div>' +
+          '<div class="qm-ev__s">' + esc(t('choose_github.connect_dialog_message')) + '</div>' +
+          '<div class="qm-ev__s">' + esc(t('choose_github.branch_empty')) + ' · ' + esc(t('choose_github.repository_empty')) + '</div>' +
+          '<div class="qm-ev__s">' + esc(t('choose_github.bind_failed')) + ' · ' + esc(t('choose_github.install_failed')) + '</div>' +
+          '<button class="qm-dev" data-act="refresh"><span class="qm-dev__ic">⟳</span>' +
+          '<span class="qm-dev__t">' + esc(t('choose_github.refresh_connection')) + '</span></button></div>';
+      }
+      if (view === 'connecting') {
+        return '<div class="qm-ev"><div class="qm-ev__t">' +
+          esc(fmt(t('choose_environment.connect_device_connecting'), [devices[0] ? (devices[0].name || '') : ''])) +
+          '</div><div class="qm-ev__s">' + esc(t('choose_environment.activate_device_reconnect_line')) + '</div></div>';
+      }
+      if (view === 'activate') {
+        return '<div class="qm-ev"><div class="qm-ev__t">' + esc(t('choose_environment.activate_device_title')) + '</div>' +
+          '<div class="qm-ev__s">' + esc(fmt(t('choose_environment.activate_device_offline_line'), [''])) + '</div>' +
+          '<div class="qm-ev__s">' + esc(t('choose_environment.activate_device_reconnect_line')) + '</div></div>';
+      }
+      /* picker */
+      const seg = (key) => '<span class="qm-chip">' + esc(t(key)) + '</span>';
+      const devRows = devices.map((d, i) =>
+        '<button class="qm-dev" data-pick="' + i + '"><span class="qm-dev__ic">' + svg(ICONS.monitor) + '</span>' +
+        '<span><span class="qm-dev__t">' + esc(d.name || '') + '</span>' +
+        '<span class="qm-dev__s">' + esc(t('choose_environment.local')) + ' · ' +
+        esc(d.host || t('choose_environment.ide_projects_empty')) + '</span></span>' +
+        '<span class="qm-dev__st" style="color:' + (d.online === false ? 'var(--qm-text-4)' : 'var(--qm-accent-completed)') + '">' +
+        esc(d.online === false ? t('choose_environment.offline') : t('choose_environment.local')) + '</span></button>').join('');
+      const sesRows = sessions.map((sn, i) =>
+        '<button class="qm-dev" data-end="' + i + '"><span class="qm-dev__ic">' + svg(ICONS.terminal) + '</span>' +
+        '<span><span class="qm-dev__t">' + esc(sn.name || '') + '</span>' +
+        '<span class="qm-dev__s">' + esc(fmt(t('sms.last_active'), [sn.active || ''])) + '</span></span>' +
+        '<span class="qm-ev__end">' + esc(t('choose_environment.end_session_action')) + '</span></button>').join('');
+      return '<div class="qm-ev"><div class="qm-ev__t">' + esc(t('choose_environment.title')) + '</div>' +
+        '<div class="qm-ev__s">' + esc(t('new_task.select_env')) + '</div>' +
+        '<div class="qm-tabs">' + seg('choose_environment.local') + seg('choose_environment.cloud') +
+        seg('choose_environment.ide_agent') + seg('choose_environment.ide_experts') + seg('choose_environment.chats') + '</div>' +
+        (devRows || '') +
+        '<button class="qm-dev" data-act="guide"><span class="qm-dev__ic">' + svg(ICONS.monitor) + '</span>' +
+        '<span><span class="qm-dev__t">' + esc(t('choose_environment.connect_computer')) + '</span>' +
+        '<span class="qm-dev__s">' + esc(t('choose_environment.connect_computer_desktop_tab')) + ' · ' +
+        esc(t('choose_environment.connect_computer_desktop_heading')) + '</span></span></button>' +
+        (sesRows ? '<div class="qm-ev__sec">' + esc(t('choose_environment.active_sessions_title')) + '</div>' + sesRows : '') +
+        '<div class="qm-ev__sec">' + esc(t('choose_environment.choose_project')) + '</div>' +
+        '<button class="qm-dev" data-act="github"><span class="qm-dev__ic">G</span>' +
+        '<span class="qm-dev__t">' + esc(t('choose_github.repository_title')) + '</span></button>' +
+        '<div class="qm-ev__s">' + esc(fmt(t('choose_environment.end_session_confirm_message'), ['demo'])) + ' ' +
+        esc(t('choose_environment.end_session_confirm_title')) + ' · ' + esc(t('choose_environment.end_session_success')) + '</div></div>';
+    }
+    _bind(root) {
+      root.querySelectorAll('[data-act]').forEach((b) => b.addEventListener('click', () => {
+        const act = b.dataset.act;
+        if (act === 'guide' || act === 'github') this.setAttribute('view', act);
+        this.emit(act, {});
+      }));
+      root.querySelectorAll('[data-pick]').forEach((b) => b.addEventListener('click', () =>
+        this.emit('pick', { index: +b.dataset.pick })));
+      root.querySelectorAll('[data-end]').forEach((b) => b.addEventListener('click', () =>
+        this.emit('end-session', { index: +b.dataset.end })));
+    }
+  }
+
+  /* ============================================================
+     <qm-account> — 账号与安全 + 更新 + 关于 v3.9.0
+     （account_security.* / update.* / about.* 官方键名）
+     view: home | delete-verify   update-state: idle|checking|installing|none
+     事件：delete-request / verify-delete / update / link
+     ============================================================ */
+  class QmAccount extends Base {
+    static get observedAttributes() { return ['view', 'email', 'update-state', 'theme']; }
+    static get hostCss() {
+      return baseCss(
+        '.qm-ac{padding:16px;}' +
+        '.qm-ac__row{display:flex;align-items:center;gap:11px;width:100%;padding:12px 4px;' +
+        'border-bottom:1px solid var(--qm-line);text-align:left;}' +
+        '.qm-ac__t{font-size:14.5px;}' +
+        '.qm-ac__s{font-size:12px;color:var(--qm-text-3);margin-top:2px;display:block;}' +
+        '.qm-ac__arr{margin-left:auto;color:var(--qm-text-4);}' +
+        '.qm-ac__danger{color:var(--qm-error);font-weight:600;}' +
+        '.qm-ac__sec{font-size:12.5px;color:var(--qm-text-3);padding:14px 2px 6px;}' +
+        '.qm-ac__msg{font-size:12.5px;color:var(--qm-text-2);line-height:1.7;margin-top:10px;}' +
+        '.qm-ac__err{font-size:12.5px;color:var(--qm-error);margin-top:8px;}');
+    }
+    template() {
+      const view = this.getAttribute('view') || 'home';
+      const email = this.getAttribute('email') || '';
+      if (view === 'delete-verify') {
+        const errs = ['account_security.delete_error_active_paid_plan',
+          'account_security.delete_error_organization_member', 'account_security.delete_error_no_email',
+          'account_security.delete_error_unauthorized', 'account_security.delete_error_network',
+          'account_security.delete_error_invalid_code', 'account_security.delete_error_verification_code_failed',
+          'account_security.delete_error_generic', 'account_security.delete_error_delete_failed',
+          'account_security.delete_error_server'];
+        return '<div class="qm-ac"><div class="qm-ac__sec">' + esc(t('account_security.verification_title')) + '</div>' +
+          '<div class="qm-ac__msg">' + esc(fmt(t('account_security.verification_subtitle'), [email])) + '</div>' +
+          '<div class="qm-ac__row"><span class="qm-ac__t">' + esc(t('account_security.verification_code_placeholder')) + '</span>' +
+          '<span class="qm-ac__arr" data-act="resend" style="color:var(--qm-primary);font-size:12.5px;font-weight:600">' +
+          esc(t('account_security.resend_code')) + '</span></div>' +
+          errs.map((k) => '<div class="qm-ac__err">' + esc(t(k)) + '</div>').join('') +
+          '<div class="qm-ac__msg">' + esc(t('account_security.sending_code')) + ' → ' +
+          esc(t('account_security.deleting_account')) + '</div>' +
+          '<button class="qm-ac__row" data-act="verify-delete" style="border:none">' +
+          '<span class="qm-ac__t qm-ac__danger">' + esc(t('account_security.verify_and_delete')) + '</span></button>' +
+          '<button class="qm-ac__row" data-act="back" style="border:none">' +
+          '<span class="qm-ac__t">' + esc(t('account_security.delete_confirm_action')) + '</span></button>' +
+          '<div class="qm-ac__msg">' + esc(t('account_security.delete_confirm_message.v2')) + '</div></div>';
+      }
+      const row = (act, title, sub, danger) => '<button class="qm-ac__row" data-act="' + act + '">' +
+        '<span style="flex:1"><span class="qm-ac__t' + (danger ? ' qm-ac__danger' : '') + '">' + esc(title) + '</span>' +
+        (sub ? '<span class="qm-ac__s">' + esc(sub) + '</span>' : '') + '</span>' +
+        '<span class="qm-ac__arr">›</span></button>';
+      const us = this.getAttribute('update-state') || 'idle';
+      const updSub = us === 'checking' ? t('update.checking') : us === 'installing' ? t('update.installing')
+        : us === 'none' ? t('update.no_update') : fmt(t('update.title'), ['3.9.0']);
+      return '<div class="qm-ac">' +
+        row('profile', t('account_security.account'), email || t('account_security.verification_title')) +
+        row('update', t('tasks.time.now'), updSub) +
+        row('notify', t('notification.system_title'), t('notification.system_description')) +
+        '<div class="qm-ac__sec">About</div>' +
+        row('about-permission', t('about.permission_usage'), '') +
+        row('about-collect', t('about.personal_info_collection_list'), '') +
+        row('about-sharing', t('about.personal_info_sharing_list'), '') +
+        row('about-sub', t('about.subscription_agreement'), '') +
+        row('about-icp', t('about.icp_record'), '') +
+        '<div class="qm-ac__sec">' + esc(t('account_security.verification_title')) + '</div>' +
+        row('delete', t('account_security.delete_confirm_action'), t('account_security.delete_confirm_message.v2'), true) +
+        '</div>';
+    }
+    _bind(root) {
+      root.querySelectorAll('[data-act]').forEach((b) => b.addEventListener('click', () => {
+        const act = b.dataset.act;
+        if (act === 'delete') this.setAttribute('view', 'delete-verify');
+        if (act === 'back') this.setAttribute('view', 'home');
+        this.emit(act, {});
+      }));
+    }
+  }
+
+  /* ============================================================
+     <qm-usage> — 用量详情 v3.9.0（usage.* · usage.activity.* 官方键名）
+     plan={used,total,renews} addon={...} activity={...}  事件：open-details
+     ============================================================ */
+  class QmUsage extends Base {
+    static get observedAttributes() { return ['plan', 'addon', 'activity', 'error', 'theme']; }
+    static get hostCss() {
+      return baseCss(
+        '.qm-us{padding:16px;}' +
+        '.qm-us__t{font-size:20px;font-weight:700;margin-bottom:12px;}' +
+        '.qm-card2{border:1px solid var(--qm-line);border-radius:var(--qm-radius);background:var(--qm-surface);' +
+        'padding:14px;margin-bottom:10px;width:100%;text-align:left;}' +
+        '.qm-us__k{font-size:13px;color:var(--qm-text-2);}' +
+        '.qm-us__v{font-size:19px;font-weight:700;margin-top:4px;}' +
+        '.qm-us__bar{height:6px;border-radius:3px;background:var(--qm-surface-2);margin-top:10px;overflow:hidden;}' +
+        '.qm-us__fill{height:100%;border-radius:3px;background:var(--qm-primary);}' +
+        '.qm-us__meta{font-size:12px;color:var(--qm-text-3);margin-top:8px;line-height:1.6;}' +
+        '.qm-us__link{font-size:12.5px;color:var(--qm-primary);font-weight:600;margin-top:8px;}');
+    }
+    template() {
+      if (this.hasAttribute('error')) {
+        return '<div class="qm-us"><div class="qm-us__t">' + esc(t('usage.view_details')) + '</div>' +
+          '<div class="qm-us__meta">' + esc(t('usage.error.empty_response')) + '</div></div>';
+      }
+      const plan = json(this.getAttribute('plan'), {}) || {};
+      const addon = json(this.getAttribute('addon'), {}) || {};
+      const act = json(this.getAttribute('activity'), {}) || {};
+      const card = (k, v, meta, link) => '<div class="qm-card2"><div class="qm-us__k">' + esc(k) + '</div>' +
+        '<div class="qm-us__v">' + esc(v) + '</div>' +
+        (meta ? '<div class="qm-us__meta">' + esc(meta) + '</div>' : '') +
+        (link ? '<div class="qm-us__link">' + esc(t('usage.view_details')) + ' · ' + esc(t('usage.activity.open_details')) + '</div>' : '') +
+        '</div>';
+      const pct = plan.total ? Math.min(100, Math.round((plan.used || 0) / plan.total * 100)) : 0;
+      return '<div class="qm-us"><div class="qm-us__t">' + esc(t('settings.usage')) + '</div>' +
+        card(t('usage.plan_credits'),
+          fmt(t('usage.used_summary'), [String(plan.used || 0), String(plan.total || 0), pct]) + ' ' + t('usage.unit_credits'),
+          (plan.renews ? fmt(t('usage.renews_on'), [plan.renews]) + ' · ' : '') + t('usage.your_cap') + ' · ' + t('usage.used')) +
+        '<div class="qm-card2"><div class="qm-us__bar"><div class="qm-us__fill" style="width:' + pct + '%"></div></div></div>' +
+        card(t('usage.add_on_credits'), fmt(t('usage.remaining_left'), [String(addon.left || 0)]),
+          t('usage.shared_add_on_credits')) +
+        card(t('usage.activity.quota.generic').replace('%@ / %@', '').trim() || t('usage.add_on_credits'),
+          fmt(t('usage.activity.remaining_today'), [String(act.left || 0)]),
+          (act.expires ? fmt(t('usage.activity.expires_at'), [act.expires]) + ' · ' : '') +
+          fmt(t('usage.activity.quota.daily'), [String(act.used || 0), String(act.total || 0)]) + ' · ' +
+          t('usage.activity.show_description'), true) +
+        '</div>';
+    }
+    _bind(root) {
+      root.querySelectorAll('.qm-card2').forEach((c) =>
+        c.addEventListener('click', () => this.emit('open-details', {})));
+    }
+  }
+
+  /* ============================================================
+     <qm-feedback> — 反馈表单 v3.9.0（feedback.* · permission_purpose.* 官方键名）
+     state: form | recording | success    事件：submit / source / copy-id
+     ============================================================ */
+  class QmFeedback extends Base {
+    static get observedAttributes() { return ['state', 'countdown', 'theme']; }
+    static get hostCss() {
+      return baseCss(
+        '.qm-fb{padding:16px;}' +
+        '.qm-fb__t{font-size:20px;font-weight:700;margin-bottom:10px;}' +
+        '.qm-fb__ta{width:100%;min-height:96px;border:1px solid var(--qm-line);border-radius:10px;' +
+        'background:var(--qm-surface);padding:11px;font-size:14px;color:var(--qm-text);resize:vertical;}' +
+        '.qm-fb__lbl{font-size:12.5px;color:var(--qm-text-3);margin:12px 0 6px;}' +
+        '.qm-fb__src{display:flex;flex-wrap:wrap;gap:8px;}' +
+        '.qm-fb__chip{font-size:12.5px;padding:7px 12px;border-radius:999px;background:var(--qm-surface-2);color:var(--qm-text-2);}' +
+        '.qm-fb__rec{display:flex;align-items:center;gap:10px;padding:12px;border:1px solid var(--qm-line);' +
+        'border-radius:var(--qm-radius);margin-top:12px;background:var(--qm-surface);}' +
+        '.qm-fb__dot{width:10px;height:10px;border-radius:50%;background:var(--qm-error);flex:none;}' +
+        '.qm-fb__ok{text-align:center;padding:30px 0;}' +
+        '.qm-fb__perm{font-size:12px;color:var(--qm-text-2);line-height:1.7;margin-top:10px;}');
+    }
+    template() {
+      const state = this.getAttribute('state') || 'form';
+      if (state === 'success') {
+        return '<div class="qm-fb"><div class="qm-fb__ok"><div class="qm-fb__t">' + esc(t('feedback.success_dialog_title')) + '</div>' +
+          '<div class="qm-fb__lbl">' + esc(t('feedback.success')) + '</div>' +
+          '<button class="qm-fb__chip" data-act="copy-id" style="margin-top:10px">' + esc(t('feedback.copy_id')) + '</button>' +
+          '<div class="qm-fb__perm">' + esc(t('feedback.id_copy_failed')) + ' · ' + esc(t('feedback.session_id_copied')) + '</div></div></div>';
+      }
+      if (state === 'recording') {
+        const cd = parseInt(this.getAttribute('countdown') || '0', 10) || 0;
+        return '<div class="qm-fb"><div class="qm-fb__t">' + esc(t('feedback.recording.title')) + '</div>' +
+          '<div class="qm-fb__rec"><span class="qm-fb__dot"></span>' +
+          '<span style="flex:1;font-size:14px">' + (cd > 0 ? esc(fmt(t('feedback.recording.countdown'), [cd])) : esc(t('feedback.recording.preparing'))) + '</span>' +
+          '<button class="qm-fb__chip" data-act="stop">' + esc(t('feedback.recording.stop')) + '</button></div>' +
+          '<div class="qm-fb__perm">' + esc(t('feedback.recording.failed')) + ' · ' + esc(t('feedback.recording.preview_failed')) + '</div>' +
+          '<div class="qm-fb__perm">' + esc(t('feedback.recording.attachment')) + '</div></div>';
+      }
+      /* form */
+      return '<div class="qm-fb"><div class="qm-fb__t">' + esc(t('feedback.title')) + '</div>' +
+        '<textarea class="qm-fb__ta" placeholder="' + esc(t('feedback.placeholder')) + '"></textarea>' +
+        '<div class="qm-fb__lbl">' + esc(t('feedback.description_required')) + '</div>' +
+        '<div class="qm-fb__lbl">' + esc(t('feedback.email_placeholder')) + ' · ' + esc(t('feedback.email_required')) + ' · ' +
+        esc(t('feedback.email_invalid')) + '</div>' +
+        '<div class="qm-fb__lbl">' + esc(t('feedback.session_id_label')) + '</div>' +
+        '<div class="qm-fb__src">' +
+        ['source_choose_file', 'source_photo_library', 'source_take_photo', 'source_record_screen']
+          .map((k) => '<button class="qm-fb__chip" data-act="source">' + esc(t('feedback.' + k)) + '</button>').join('') +
+        '</div>' +
+        '<div class="qm-fb__perm">' + esc(t('feedback.placeholder_cn')) + '</div>' +
+        '<div class="qm-fb__perm"><b>' + esc(t('permission_purpose.feedback_camera_title')) + '</b><br>' +
+        esc(t('permission_purpose.feedback_camera_message')) + '</div>' +
+        '<div class="qm-fb__perm"><b>' + esc(t('permission_purpose.feedback_screen_recording_title')) + '</b><br>' +
+        esc(t('permission_purpose.feedback_screen_recording_message')) + '</div>' +
+        '<div class="qm-fb__perm"><b>' + esc(t('permission_purpose.feedback_screenshot_title')) + '</b><br>' +
+        esc(t('permission_purpose.feedback_screenshot_message')) + ' · ' +
+        esc(t('permission_purpose.feedback_screenshot_deny')) + '</div>' +
+        '<div class="qm-fb__perm">' + esc(t('permission_purpose.deny')) + '</div>' +
+        '<button class="qm-fb__chip" data-act="record" style="margin-top:12px">' + esc(t('feedback.source.record_screen')) + '</button>' +
+        '<button class="qm-fb__chip" data-act="submit" style="margin-top:12px;background:var(--qm-primary);color:var(--qm-on-primary)">' +
+        esc(t('feedback.submit')) + '</button></div>';
+    }
+    _bind(root) {
+      root.querySelectorAll('[data-act]').forEach((b) => b.addEventListener('click', () => {
+        const act = b.dataset.act;
+        if (act === 'record') this.setAttribute('state', 'recording');
+        if (act === 'submit') this.setAttribute('state', 'success');
+        if (act === 'stop') this.setAttribute('state', 'form');
+        this.emit(act, {});
+      }));
+    }
+  }
+
+  /* ============================================================
+     <qm-notifications> — 通知中心 v3.9.0（notification.* 官方键名）
+     事件：toggle / open
+     ============================================================ */
+  class QmNotifications extends Base {
+    static get observedAttributes() { return ['items', 'theme']; }
+    static get hostCss() {
+      return baseCss(
+        '.qm-nt{padding:16px;}' +
+        '.qm-nt__t{font-size:20px;font-weight:700;margin-bottom:10px;}' +
+        '.qm-nt__sec{font-size:12.5px;color:var(--qm-text-3);padding:8px 2px 6px;}' +
+        '.qm-nt__row{display:flex;align-items:center;gap:11px;padding:10px 2px;border-bottom:1px solid var(--qm-line);}' +
+        '.qm-nt__k{font-size:14px;font-weight:600;}' +
+        '.qm-nt__d{font-size:12px;color:var(--qm-text-3);margin-top:2px;}' +
+        '.qm-sw{margin-left:auto;width:38px;height:22px;border-radius:11px;background:var(--qm-primary);position:relative;flex:none;}' +
+        '.qm-sw::after{content:"";position:absolute;top:2px;right:2px;width:18px;height:18px;border-radius:50%;background:#fff;}' +
+        '.qm-sw--off{background:var(--qm-surface-2);}' +
+        '.qm-sw--off::after{right:auto;left:2px;}' +
+        '.qm-nt__card{display:flex;gap:10px;padding:11px 12px;border:1px solid var(--qm-line);' +
+        'border-radius:var(--qm-radius);margin-bottom:8px;background:var(--qm-surface);width:100%;text-align:left;}' +
+        '.qm-nt__tag{font-size:11px;font-weight:700;color:var(--qm-primary);flex:none;}');
+    }
+    template() {
+      const items = json(this.getAttribute('items'), []) || [];
+      const ch = (k, d, on) => '<div class="qm-nt__row"><span style="flex:1"><span class="qm-nt__k">' + esc(t(k)) + '</span>' +
+        '<span class="qm-nt__d">' + esc(t(d)) + '</span></span>' +
+        '<span class="qm-sw' + (on ? '' : ' qm-sw--off') + '" data-toggle="' + esc(k) + '"></span></div>';
+      const cards = items.length ? items.map((n) =>
+        '<button class="qm-nt__card" data-open="' + esc(n.type || '') + '">' +
+        '<span class="qm-nt__tag">' + esc(n.tag || t('notification.new_session_title')) + '</span>' +
+        '<span><span class="qm-nt__k">' + esc(n.title || '') + '</span>' +
+        '<span class="qm-nt__d">' + esc(n.body || t('notification.default_body')) + '</span></span></button>').join('') :
+        ['new_session_title', 'session_created', 'title_task_failed'].map((k) =>
+          '<button class="qm-nt__card" data-open="' + k + '"><span class="qm-nt__tag">' + esc(t('notification.' + k)) + '</span>' +
+          '<span><span class="qm-nt__d">' + esc(t('notification.default_body')) + ' · ' +
+          esc(t('notification.action_view')) + ' · ' + esc(t('notification.action_review')) + '</span></span></button>').join('');
+      return '<div class="qm-nt"><div class="qm-nt__t">' + esc(t('notification.title')) + '</div>' +
+        '<div class="qm-nt__sec">' + esc(t('notification.channel.task_updates')) + '</div>' +
+        ch('notification.approval_title', 'notification.approval_description', true) +
+        ch('notification.ask_permission_title', 'notification.ask_permission_description', true) +
+        ch('notification.plan_review_title', 'notification.plan_review_description', true) +
+        ch('notification.qa_title', 'notification.qa_description', false) +
+        ch('notification.task_completed_title', 'notification.task_completed_description', true) +
+        '<div class="qm-nt__sec">' + esc(t('notification.system_title')) + ' · ' + esc(t('notification.system_status_on')) + '</div>' +
+        ch('notification.system_title', 'notification.system_description', true) +
+        '<div class="qm-nt__sec">' + esc(t('notification.channel.task_updates_description')) + '</div>' + cards + '</div>';
+    }
+    _bind(root) {
+      root.querySelectorAll('[data-toggle]').forEach((s) =>
+        s.addEventListener('click', () => { s.classList.toggle('qm-sw--off'); this.emit('toggle', { key: s.dataset.toggle }); }));
+      root.querySelectorAll('[data-open]').forEach((b) =>
+        b.addEventListener('click', () => this.emit('open', { type: b.dataset.open })));
+    }
+  }
+
+  /* ============================================================
+     <qm-ask> — Agent 提问卡 v3.9.0（官方键名 tasks.question.*）
+     q={title, multi, options[], page, total}  事件：answer / next / back
+     ============================================================ */
+  class QmAsk extends Base {
+    static get observedAttributes() { return ['q', 'answered', 'theme']; }
+    static get hostCss() {
+      return baseCss(
+        '.qm-ask{padding:14px 16px;}' +
+        '.qm-ask__t{font-size:15px;font-weight:700;}' +
+        '.qm-ask__pg{font-size:11.5px;color:var(--qm-text-3);margin:3px 0 10px;}' +
+        '.qm-opt{display:block;width:100%;text-align:left;font-size:14px;padding:10px 12px;' +
+        'border:1px solid var(--qm-line);border-radius:10px;background:var(--qm-surface);margin-bottom:7px;}' +
+        '.qm-opt.on{border-color:var(--qm-primary);color:var(--qm-primary);font-weight:600;background:var(--qm-primary-weak);}' +
+        '.qm-ask__other{font-size:12.5px;color:var(--qm-text-3);margin:6px 0 10px;}' +
+        '.qm-ask__inp{width:100%;padding:10px 12px;border:1px solid var(--qm-line);border-radius:10px;' +
+        'background:var(--qm-surface);font-size:14px;}' +
+        '.qm-ask__row{display:flex;gap:8px;margin-top:10px;}' +
+        '.qm-ask__btn{flex:1;font-size:13.5px;font-weight:600;padding:10px;border-radius:10px;' +
+        'border:1px solid var(--qm-line);background:var(--qm-surface);}' +
+        '.qm-ask__btn--pri{background:var(--qm-primary);border-color:var(--qm-primary);color:var(--qm-on-primary);}');
+    }
+    template() {
+      if (this.hasAttribute('answered')) {
+        return '<div class="qm-ask"><div class="qm-ask__t">' + esc(t('tasks.question.answers_title')) + '</div>' +
+          '<div class="qm-ask__pg">' + esc(t('tasks.question.answered')) + ' · ' + esc(t('composer.thinking_status')) + '</div></div>';
+      }
+      const q = json(this.getAttribute('q'), {}) || {};
+      const opts = q.options || [];
+      const yesno = '<div class="qm-opt" data-opt="yes">' + esc(t('tasks.question.answer_yes')) + '</div>' +
+        '<div class="qm-opt" data-opt="no">' + esc(t('tasks.question.answer_no')) + '</div>';
+      return '<div class="qm-ask"><div class="qm-ask__t">' + esc(q.title || t('tasks.question.panel_title')) +
+        (q.multi ? ' ' + esc(t('tasks.question.multi_choice_title_suffix')) : '') + '</div>' +
+        '<div class="qm-ask__pg">' + esc(fmt(t('tasks.question.pagination'), [q.page || 1, q.total || opts.length || 1])) + '</div>' +
+        (opts.length ? opts.map((o, i) => '<div class="qm-opt" data-opt="' + i + '">' + esc(o) + '</div>').join('') : yesno) +
+        '<div class="qm-ask__other">' + esc(t('tasks.question.custom_value')) + '</div>' +
+        '<input class="qm-ask__inp" placeholder="' + esc(t('tasks.question.answer_input_placeholder')) + '">' +
+        '<div class="qm-ask__row">' +
+        '<button class="qm-ask__btn" data-act="back">' + esc(t('tasks.question.previous_question')) + '</button>' +
+        '<button class="qm-ask__btn qm-ask__btn--pri" data-act="next">' + esc(t('tasks.question.primary_action')) + '</button></div>' +
+        '<div class="qm-ask__pg" style="margin-top:8px">' + esc(t('tasks.question.primary_action_submitting')) + ' · ' +
+        esc(t('tasks.question.please_specify')) + '</div></div>';
+    }
+    _bind(root) {
+      root.querySelectorAll('.qm-opt').forEach((o) => o.addEventListener('click', () => {
+        o.classList.toggle('on');
+        this.emit('answer', { value: o.textContent });
+      }));
+      root.querySelectorAll('[data-act]').forEach((b) =>
+        b.addEventListener('click', () => this.emit(b.dataset.act, {})));
+    }
+  }
+
+  /* ============================================================
+     <qm-plan-review> — 方案审核卡 v3.9.0（tasks.plan_review.* 官方键名）
+     事件：run / back / feedback
+     ============================================================ */
+  class QmPlanReview extends Base {
+    static get observedAttributes() { return ['global', 'theme']; }
+    static get hostCss() {
+      return baseCss(
+        '.qm-pr{padding:14px 16px;}' +
+        '.qm-pr__tag{font-size:11px;font-weight:700;color:var(--qm-primary);letter-spacing:.5px;}' +
+        '.qm-pr__t{font-size:15.5px;font-weight:700;margin:4px 0 6px;}' +
+        '.qm-pr__p{font-size:13.5px;color:var(--qm-text-2);line-height:1.6;}' +
+        '.qm-pr__ta{width:100%;min-height:64px;border:1px solid var(--qm-line);border-radius:10px;' +
+        'background:var(--qm-surface);padding:10px;font-size:13.5px;margin-top:10px;color:var(--qm-text);}' +
+        '.qm-pr__row{display:flex;gap:8px;margin-top:10px;}' +
+        '.qm-pr__btn{flex:1;font-size:13.5px;font-weight:600;padding:10px;border-radius:10px;' +
+        'border:1px solid var(--qm-line);background:var(--qm-surface);}' +
+        '.qm-pr__btn--pri{background:var(--qm-primary);border-color:var(--qm-primary);color:var(--qm-on-primary);}');
+    }
+    template() {
+      const g = this.hasAttribute('global');
+      return '<div class="qm-pr"><span class="qm-pr__tag">' + esc(t('tasks.plan_review.title')) + '</span>' +
+        '<div class="qm-pr__t">' + esc(t(g ? 'tasks.plan_review.prompt' : 'tasks.plan_review.prompt')) + '</div>' +
+        '<textarea class="qm-pr__ta" placeholder="' +
+        esc(t(g ? 'tasks.plan_review.feedback_placeholder' : 'tasks.plan_review.feedback_placeholder')) + '"></textarea>' +
+        '<div class="qm-pr__row">' +
+        '<button class="qm-pr__btn" data-act="back">' + esc(t('tasks.plan_review.back')) + '</button>' +
+        '<button class="qm-pr__btn" data-act="feedback">' +
+        esc(t(g ? 'tasks.plan_review.feedback_submit' : 'tasks.plan_review.feedback_submit')) + '</button>' +
+        '<button class="qm-pr__btn qm-pr__btn--pri" data-act="run">' + esc(t('tasks.plan_review.allow_once')) + '</button></div></div>';
+    }
+    _bind(root) {
+      root.querySelectorAll('[data-act]').forEach((b) =>
+        b.addEventListener('click', () => this.emit(b.dataset.act, {})));
+    }
+  }
+
+  /* ============================================================
+     <qm-tool-detail> — 工具调用详情 v3.9.0（tasks.tool_use.* · tool.group.* ·
+     diff.* · la.* · preview.* 官方键名）type: bash|read|write|edit|web-search|
+     web-fetch|files   state: running|completed|failed   事件：toggle
+     ============================================================ */
+  class QmToolDetail extends Base {
+    static get observedAttributes() { return ['type', 'state', 'target', 'count', 'open', 'theme']; }
+    static get hostCss() {
+      return baseCss(
+        '.qm-td{border:1px solid var(--qm-line);border-radius:var(--qm-radius);background:var(--qm-surface);' +
+        'margin:6px 16px;overflow:hidden;}' +
+        '.qm-td__hd{display:flex;align-items:center;gap:9px;width:100%;padding:10px 12px;text-align:left;}' +
+        '.qm-td__ic{width:24px;height:24px;border-radius:7px;background:var(--qm-surface-2);color:var(--qm-text-2);' +
+        'display:flex;align-items:center;justify-content:center;font-size:11px;flex:none;}' +
+        '.qm-td__t{font-size:13.5px;font-weight:600;}' +
+        '.qm-td__s{font-size:11.5px;color:var(--qm-text-3);margin-top:1px;}' +
+        '.qm-td__st{margin-left:auto;font-size:11px;font-weight:700;flex:none;}' +
+        '.qm-td__bd{border-top:1px solid var(--qm-line);padding:10px 12px;}' +
+        '.qm-td__k{font-size:11px;color:var(--qm-text-3);margin-top:7px;}' +
+        '.qm-td__v{font-family:var(--qm-font-mono,monospace);font-size:12px;background:var(--qm-surface-2);' +
+        'border-radius:7px;padding:7px 9px;margin-top:3px;word-break:break-all;white-space:pre-wrap;}' +
+        '.qm-td__diff{font-family:var(--qm-font-mono,monospace);font-size:12px;padding:7px 9px;margin-top:3px;' +
+        'background:var(--qm-surface-2);border-radius:7px;white-space:pre-wrap;}');
+    }
+    template() {
+      const type = this.getAttribute('type') || 'bash';
+      const state = this.getAttribute('state') || 'running';
+      const target = this.getAttribute('target') || '';
+      const count = this.getAttribute('count');
+      const open = this.hasAttribute('open');
+      const head = {
+        'bash': t('tasks.tool_use.detail.command'), 'read': t('tasks.tool_use.read_file'),
+        'write': t('tasks.tool_use.action.write'), 'edit': t('tasks.tool_use.edit_file'),
+        'web-search': t('tasks.tool_use.web_search.running'),
+        'web-fetch': t('tasks.tool_use.web_fetch.running'), 'files': t('tool.group.files')
+      }[type] || t('tasks.tool_use.tool');
+      const stMap = { running: ['tasks.tool_use.default_tail', 'attention'], completed: ['tasks.tool_use.action.edited', 'completed'], failed: ['tasks.tool_use.web_search.failed', 'error'] };
+      const stTx = type === 'web-search' && state === 'completed' ? t('tasks.tool_use.web_search.completed')
+        : type === 'web-search' && state === 'failed' ? t('tasks.tool_use.web_search.failed')
+        : type === 'web-search' ? t('tasks.tool_use.web_search.query.v2')
+        : type === 'web-fetch' && state === 'completed' ? t('tasks.tool_use.web_fetch.completed')
+        : type === 'web-fetch' && state === 'failed' ? t('tasks.tool_use.web_fetch.failed')
+        : type === 'web-fetch' ? t('tasks.tool_use.web_fetch.target.v2')
+        : stMap[state][0];
+      const fields = [['tasks.tool_use.detail.command', 'qoder --version'], ['tasks.tool_use.detail.file_path', target],
+        ['tasks.tool_use.detail.query', target], ['tasks.tool_use.detail.prompt', target],
+        ['tasks.tool_use.detail.content', target], ['tasks.tool_use.detail.output', 'OK']];
+      return '<div class="qm-td"' + (open ? ' open' : '') + ' part="tool">' +
+        '<button class="qm-td__hd" data-act="toggle"><span class="qm-td__ic">' + svg(ICONS.terminal) + '</span>' +
+        '<span><span class="qm-td__t">' + esc(head) + '</span>' +
+        '<span class="qm-td__s">' + esc(target || (count ? fmt(t('tasks.tool_group.view_steps'), [count]) : t('tasks.tool_group.files_count'))) + '</span></span>' +
+        '<span class="qm-td__st" style="color:' + statusColor(state === 'failed' ? 'failed' : state === 'completed' ? 'completed' : 'waiting') + '">' +
+        esc(stTx === 'tasks.tool_use.default_tail' || stTx ? stTx : '') + '</span></button>' +
+        (open ? '<div class="qm-td__bd">' + fields.map(([k, v]) =>
+          '<div class="qm-td__k">' + esc(t(k)) + '</div><div class="qm-td__v">' + esc(v || '') + '</div>').join('') +
+          '<div class="qm-td__k">DIFF</div><div class="qm-td__diff">' + esc(t('diff.preview')) + ' · ' +
+          esc(t('diff.title')) + ' · ' + esc(fmt(t('diff.lines'), [12])) + ' · ' + esc(t('diff.expand')) + '</div>' +
+          '<div class="qm-td__k">LA</div><div class="qm-td__v">' + esc(t('notification.la.state_awaiting')) + ' · ' +
+          esc(t('notification.la.state_needs_input')) + ' · ' + esc(t('notification.la.state_error')) + ' · ' + esc(fmt(t('notification.la.more_format'), [3])) + '</div>' +
+          '<div class="qm-td__k">PREVIEW</div><div class="qm-td__v">' + esc(t('preview.tool.title')) + ' · ' +
+          esc(t('preview.tool.opening')) + ' · ' + esc(fmt(t('preview.tool.port'), [3000])) + ' · ' +
+          esc(t('preview.tool.failed')) + ' · ' + esc(t('preview.unavailable.restart_prompt')) + '</div>' +
+          '</div>' : '') + '</div>';
+    }
+    _bind(root) {
+      root.querySelectorAll('[data-act]').forEach((b) =>
+        b.addEventListener('click', () => this.toggleAttribute('open')));
+    }
+  }
+
   function register() {
     if (typeof customElements === 'undefined') return;
     components.forEach(([name, cls]) => {
@@ -2231,6 +3983,15 @@
   def('qm-task-detail', QmTaskDetail);
   def('qm-session-list', QmSessionList);
   def('qm-mermaid', QmMermaid);
+  def('qm-login', QmLogin);
+  def('qm-environment', QmEnvironment);
+  def('qm-account', QmAccount);
+  def('qm-usage', QmUsage);
+  def('qm-feedback', QmFeedback);
+  def('qm-notifications', QmNotifications);
+  def('qm-ask', QmAsk);
+  def('qm-plan-review', QmPlanReview);
+  def('qm-tool-detail', QmToolDetail);
 
   QI.Mobile = {
     WC,
@@ -2239,7 +4000,7 @@
     locale: () => _locale,
     statusColor,
     parseMermaid, renderMermaidSvg,
-    version: '3.8.1'
+    version: '3.9.0'
   };
   register();
 

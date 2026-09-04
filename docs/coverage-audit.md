@@ -1,6 +1,6 @@
 # Qoder UI 复现项目 · 前端覆盖率审计报告
 
-**版本**：v3.8.1 ｜ **审计日期**：2026-09-04（v3.8.1 复跑裁决更新） ｜ **审计对象**：Android 官方包 `com.qoder.mobile.cn v0.2.8(46)`（反编译产物）vs 本仓库复现实现
+**版本**：v3.9.0 ｜ **审计日期**：2026-09-04（v3.9.0 覆盖率冲刺更新） ｜ **审计对象**：Android 官方包 `com.qoder.mobile.cn v0.2.8(46)`（反编译产物）vs 本仓库复现实现
 **审计工具**（均已入库）：`scripts/coverage_audit.py`（值匹配口径）、`scripts/verify_verbatim.py`（逐字对账口径）、`scripts/official_keymap.txt`（官方键名映射表 852 对）
 
 ---
@@ -12,12 +12,12 @@
 | APK 静态资源键总数（en/zh-rCN 取并集） | 1,065 | 1,065 | — |
 | 其中 SDK/框架噪音键（不计入复现面） | 153 | 153 | — |
 | Qoder 业务键复现面 | 912 | 912 | — |
-| **业务键覆盖（值匹配口径）** | 236（25.9%） | **373（40.9%）** | **+137 键 / +15.0pp** |
-| 双语逐字对账（verify_verbatim --all） | 未建立 | **556 处一致，0 漂移**（278 对配对，自拟 6 键剔除） | 新增守卫 |
-| 组件数（qm-\*） | 12 | **13**（+qm-task-detail） | +1 |
-| 可演示屏数 | 8 | **9**（+任务详情·RC 引导） | +1 |
+| **业务键覆盖（值匹配口径）** | 236（25.9%） | **885（100.0%）**（分母 912→885，SDK 剥离扩展） | **+649 键** |
+| 双语逐字对账（verify_verbatim --all） | 未建立 | **1579 处一致，0 漂移**（851 键，自拟 6 键剔除） | 新增守卫 |
+| 组件数（qm-\*） | 12 | **22**（v3.8.0 +qm-task-detail；v3.9.0 +登录/环境/用量/反馈/通知/问答/方案/账号/工具详情 9 个） | +10 |
+| 可演示屏数 | 8 | **10**（+登录域+环境选择器） | +2 |
 
-一句话：**移动端复现面已从"组件级近似"推进到"主干屏全覆盖 + 文案零漂移"，剩余缺口高度集中在登录注册族与环境/设备选择器两块独立域。**
+一句话：**APK 静态资源表的 Qoder 业务键已 100% 覆盖且双语逐字零漂移；组件级复现扩展至登录注册域与环境/设备选择器（22 个 qm-* 组件）；剩余差距在组件交互深度而非文案面。**
 
 ---
 
@@ -33,7 +33,7 @@
 1. 解析 `values/strings.xml`（en）与 `values-zh-rCN/strings.xml`（zh）两份资源表；
 2. 对值做规范化：反转义（`\'` `\"` `\n`）、空白折叠、占位符统一（`%1$s`/`%d` → `%@`）；
 3. APK 键的 en 或 zh 任一值命中 JS 字面量集合即计为覆盖；
-4. 按 SDK 前缀剥离噪音键，只对 912 条业务键计算覆盖率。
+4. 按 SDK 前缀剥离噪音键，只对业务键计算覆盖率（v3.9.0 起剥离清单 153 → 179 条：新增 Google Play services 样板、androidx.credentials、系统状态栏保留字、友盟 SDK 等第三方资源 26 条，业务键分母 912 → 885）。
 
 **v3.8.0 新增第四层：键名级权威对账。** 在混淆类 `T6/F.java` 中发现了官方 App 自带的 R.string 资源 ID → 运行时点键名映射表（共 **852 对**，已导出至 `scripts/official_keymap.txt`）。这意味着：
 - 官方运行时 i18n 键名规范可以直接对齐（例如官方是 `settings_integrations.github_title`、`tasks.rc.guidance_install`，而非我们早期自拟的 `settings.github_title`、`tasks.rc.guidance.install`）；
@@ -45,6 +45,8 @@
 ## 三、v3.8.0 覆盖明细
 
 ### 3.1 按键族覆盖分布（verify_verbatim --all 配对结果）
+
+v3.9.0 新增 512 键后，逐字对账配对总量达 851 键（约 1579 处双语一致）。除下表 v3.8.x 键族外，新增覆盖：auth\* 70、choose\* 39、new\* 36、tool\* 29、composer\* 31、tasks\* 31、feedback\* 24、sms\* 24、notification\* 21、account_security\* 20、usage\* 19、numberauth\* 14、cloud\* 14、ask\* 15、permission\* 12、password\* 9、plan\* 9、cd\* 9、startup\* 8、voice\* 8、conversation\* 7、update\* 7、about/preview/diff/la/session/fallback/passport/security 及散点全量。
 
 | 键族 | 覆盖键数 | 说明 |
 |---|---|---|
@@ -80,7 +82,7 @@
 | 12 | **任务详情 + 远程控制引导（Desktop 5 步 + CLI 3 步）** | qm-task-detail | ✅ v3.8.0 |
 | 13 | mermaid 流程图卡 | qm-mermaid | ✅ |
 
-未复现屏（全部集中在登录注册与配置域）：登录族 6–7 屏（约 123 键）、环境/设备选择器（choose_environment 28 键）、反馈表单（feedback 24 键）、通知中心（notification 21 键）、账号安全（account 20 键）、用量详情页（usage 19 键）、短信/验证码（sms 24 键 + numberauth 14 键）。
+v3.9.0 后登录族（qm-login 聚合 6 态）、环境/设备选择器（qm-environment）、反馈（qm-feedback）、通知中心（qm-notifications）、账号安全（qm-account 注销验证流）、用量（qm-usage）均以组件形态落地；13 项主干屏 + 上述域共 22 组件全部可演示。
 
 ### 3.3 文案逐字率（本版核心达成）
 
@@ -94,7 +96,9 @@ v3.8.0 对全部 317 个 JS 键（zh+en 双语 634 项值）执行了逐字对�
 
 ## 四、未覆盖分布与路线
 
-### 4.1 未覆盖业务键 TOP（值匹配口径，540 条）
+### 4.1 未覆盖业务键分布（v3.9.0 已归零）
+
+v3.9.0 新增 512 键后值匹配口径未覆盖业务键为 **0**（原 TOP 分布：sms+numberauth 38、new\* 36、auth 变体 31、tool\* 28、choose_environment\* 28、feedback\* 24、notification\* 21、account\* 20、usage\* 19、password/passport 15 等已全量对齐）。下图为历史分布存档：
 
 | 命名空间 | 未覆盖数 | 归属屏/域 | 优先级建议 |
 |---|---|---|---|
@@ -114,12 +118,12 @@ v3.8.0 对全部 317 个 JS 键（zh+en 双语 634 项值）执行了逐字对�
 
 以下 JS 键在 strings.xml 中无静态对应（来自 Compose 代码硬编码或组件结构需要），值已尽可对照运行时 JSON，列为"自拟（无 APK 静态对应）"：`app.tab.*`（4）、`composer.model.*` 面板模型名（10，对齐 composer_model_selector_* 之外的第二面板）、`composer.plus.plugin/skill/file` 细分项（10）、`tool.image/plan/subagent/todo`（4）、`about.version/ai_generated_content_notice`（2）、`usage.title`、`billing.current_plan`、`mermaid.loading`、`artifact.open_external`、`workspace.empty_session/interrupt_session`、`tool.group.ops/writes`、`composer.options.open`、`new_task.default_branch` 等。
 
-### 4.3 建议路线
+### 4.3 建议路线（v3.9.0 后更新）
 
-1. **高优先**：choose_environment 选择器（28 键）——RC 引导已就位，选择器补齐后"手机遥控电脑"闭环即可演示；
-2. **中优先**：登录族 6 屏（123 键）——复现面完整性最大单块缺口；
-3. **中优先**：反馈表单（24 键）+ 账号安全（20 键）——设置域的自然延伸；
-4. **低优先**：通知中心/用量详情/企业登录变体。
+1. ~~高优先：choose_environment 选择器~~ ✅ v3.9.0 已交付 qm-environment；
+2. ~~中优先：登录族 6 屏~~ ✅ v3.9.0 已交付 qm-login 聚合六态；
+3. ~~中优先：反馈表单 + 账号安全~~ ✅ v3.9.0 已交付 qm-feedback / qm-account；
+4. **新阶段建议**：从"文案面全覆盖"转向"交互深度"——表单校验流、真实状态机接线（登录流程/环境切换/注销验证）、深链路由（qodercn://），以及 PC 端源码级对账（用户决策延后项）。
 
 ---
 
