@@ -1,0 +1,2994 @@
+{
+ "meta": {
+  "apk": "com.qoder.mobile.cn v0.2.8(46)",
+  "method": "apktool 2.10.0 + jadx 1.5.1 静态提取 (Moshi JsonAdapter F0.A1 线名 × 构造器参数类型)",
+  "generated": "2026-09-04",
+  "note": "字段名即服务端 JSON 线名(snake_case 为主); 类型为 Java 侧原始类型, List<X>/Map 为容器"
+ },
+ "base_urls": {
+  "api": "https://openapi.qoder.com.cn   (/api/... 主 REST)",
+  "sash": "<api 或网关>/sash/... (GitHub 集成/眼镜配对子域)",
+  "inference": "https://gateway.qoder.com.cn",
+  "web": "https://qoder.com.cn",
+  "override": "E3.ServiceEndpointOverrides 七基址可服务端覆盖; VPC 模式端点发现 VPCServiceEndpointsResponse"
+ },
+ "endpoints": [
+  {
+   "path": "/api/v1/remote/sessions/",
+   "method": "POST",
+   "domain": "sessions",
+   "purpose": "创建会话 CreateSessionRequest→ControlSessionDTO"
+  },
+  {
+   "path": "/api/v1/remote/sessions/",
+   "method": "GET",
+   "domain": "sessions",
+   "purpose": "列表 ControlSessionsResponse (分组/项目/过滤参数族)"
+  },
+  {
+   "path": "/api/v1/remote/sessions/{id}",
+   "method": "DELETE",
+   "domain": "sessions",
+   "purpose": "删除会话"
+  },
+  {
+   "path": "/api/v1/remote/sessions/{id}/read",
+   "method": "POST",
+   "domain": "sessions",
+   "purpose": "标记已读 MarkSessionReadRequest"
+  },
+  {
+   "path": "/api/v1/remote/sessions/{id}/unread",
+   "method": "POST",
+   "domain": "sessions",
+   "purpose": "标记未读"
+  },
+  {
+   "path": "/api/v1/remote/sessions/{id}/archive",
+   "method": "POST",
+   "domain": "sessions",
+   "purpose": "归档"
+  },
+  {
+   "path": "/api/v1/remote/sessions/{id}/events",
+   "method": "POST",
+   "domain": "sessions",
+   "purpose": "上报事件/控制指令 {events:[{event_type,payload}]} → ControllerEventsResultResponse"
+  },
+  {
+   "path": "/api/v1/remote/sessions/{id}/events",
+   "method": "GET",
+   "domain": "sessions",
+   "purpose": "历史事件分页 SessionEventsResponse{data,has_more,next_after_sequence_num} order=ASC|DESC"
+  },
+  {
+   "path": "/api/v1/remote/sessions/{id}/events/stream",
+   "method": "GET SSE",
+   "domain": "sessions",
+   "purpose": "实时事件流 Accept:text/event-stream; Last-Event-ID 重放; ?from_sequence_num 续传"
+  },
+  {
+   "path": "/api/v1/remote/sessions/{id}/artifacts",
+   "method": "GET",
+   "domain": "artifacts",
+   "purpose": "产物清单 ArtifactListResponse (?sessionId&folderPath)"
+  },
+  {
+   "path": "/api/v1/remote/sessions/{id}/artifacts/download-url",
+   "method": "POST",
+   "domain": "artifacts",
+   "purpose": "产物下载授权 ArtifactDownloadURLRequest{path}→{presign_url,download_url,download_expires_at}"
+  },
+  {
+   "path": "/api/v1/remote/sessions/{id}/sandbox/grants",
+   "method": "POST",
+   "domain": "sandbox",
+   "purpose": "沙箱预览授权 SandboxPreviewGrantRequest{session_id,port}→{grant,url,expires_at}"
+  },
+  {
+   "path": "/api/v1/remote/system-events/stream",
+   "method": "GET SSE",
+   "domain": "system",
+   "purpose": "全局系统事件流(session.created/updated, environment.created/updated, task.live_activity, notification)"
+  },
+  {
+   "path": "/api/v1/remote/environments",
+   "method": "GET",
+   "domain": "environments",
+   "purpose": "环境列表 EnvironmentsResponseDTO→EnvironmentDTO"
+  },
+  {
+   "path": "/app/auth/token",
+   "method": "POST",
+   "domain": "auth",
+   "purpose": "授权码/回调换令牌 AuthorizationCodeExchangeRequest|AliyunCallbackRequest→SSODeviceTokenResponse"
+  },
+  {
+   "path": "/app/auth/logout",
+   "method": "POST",
+   "domain": "auth",
+   "purpose": "登出"
+  },
+  {
+   "path": "/app/auth/aliyun-ram/init",
+   "method": "POST",
+   "domain": "auth",
+   "purpose": "RAM OAuth 初始化 PKCE(code_challenge S256)"
+  },
+  {
+   "path": "/app/auth/aliyun/callback",
+   "method": "POST",
+   "domain": "auth",
+   "purpose": "阿里通行证回调换 Qoder token (client_id=c23680aa-aa43-4e55-9a1e-146c6d752cdd)"
+  },
+  {
+   "path": "/api/v1/me/verificationCodes",
+   "method": "POST",
+   "domain": "auth",
+   "purpose": "发送验证码 SendVerificationCodeRequestDTO{channel,scene}"
+  },
+  {
+   "path": "/api/v1/userinfo",
+   "method": "GET",
+   "domain": "user",
+   "purpose": "UserInfoResponse"
+  },
+  {
+   "path": "/api/v1/me/usage",
+   "method": "GET",
+   "domain": "user",
+   "purpose": "用量"
+  },
+  {
+   "path": "/api/v1/me/plan",
+   "method": "GET",
+   "domain": "user",
+   "purpose": "套餐"
+  },
+  {
+   "path": "/api/v1/mobile/me/devices/",
+   "method": "POST",
+   "domain": "device",
+   "purpose": "登录态设备绑定 RegisterDeviceRequestDTO{mobile_device_id,platform,device_name}"
+  },
+  {
+   "path": "/api/v1/mobile/me/devices/{id}/bind",
+   "method": "POST",
+   "domain": "device",
+   "purpose": "设备绑定到用户 (body {})"
+  },
+  {
+   "path": "/api/v1/mobile/devices/",
+   "method": "POST",
+   "domain": "device",
+   "purpose": "设备注册"
+  },
+  {
+   "path": "/api/v1/mobile/devices/{mobile_device_id}/push-tokens",
+   "method": "POST",
+   "domain": "push",
+   "purpose": "推送 token 注册 PushTokenRequestDTO{provider:'umeng',token,locale}→PushTokenResponseDTO"
+  },
+  {
+   "path": "/api/v1/mobile/devices/{mobile_device_id}/push-tokens/{push_token_id}",
+   "method": "DELETE",
+   "domain": "push",
+   "purpose": "删除推送 token"
+  },
+  {
+   "path": "/api/v1/mobile/devices/{id}/configs/notification",
+   "method": "GET/PUT",
+   "domain": "push",
+   "purpose": "通知偏好 NotificationConfigDTO{task_completed,qa,ask_permission,plan_review}"
+  },
+  {
+   "path": "/api/v1/mobile/app-versions/check",
+   "method": "GET",
+   "domain": "update",
+   "purpose": "版本检查 ?platform=android&version_code&channel → AppVersionCheckResponse"
+  },
+  {
+   "path": "/api/v2/service/ws/asr",
+   "method": "WS",
+   "domain": "voice",
+   "purpose": "语音识别 WS; AsrWebSocketMessage/AsrClientControlMessage/AsrBusinessPayload; 双鉴权 Cosy-* 或 Authorization: Signature"
+  },
+  {
+   "path": "/api/v1/raw/upload",
+   "method": "POST",
+   "domain": "upload",
+   "purpose": "原始文件上传→CMAFileUploadResponse{file_id,filename,size_bytes,mime_type}"
+  },
+  {
+   "path": "/api/v1/mix/upload",
+   "method": "POST",
+   "domain": "upload",
+   "purpose": "混合上传"
+  },
+  {
+   "path": "/sash/api/v1/mobile/me/integrations/github/authorization-url",
+   "method": "POST",
+   "domain": "github",
+   "purpose": "GitHub App 授权 URL→GitHubAuthorizationURLResponseDTO"
+  },
+  {
+   "path": "/sash/api/v1/mobile/me/integrations/github/install-url",
+   "method": "POST",
+   "domain": "github",
+   "purpose": "安装 URL→GitHubInstallURLResponseDTO"
+  },
+  {
+   "path": "/sash/api/v1/mobile/me/integrations/github/connected",
+   "method": "POST",
+   "domain": "github",
+   "purpose": "连接回调 GitHubConnectedRequestDTO"
+  },
+  {
+   "path": "/sash/api/v1/mobile/me/integrations/github/disconnect",
+   "method": "POST",
+   "domain": "github",
+   "purpose": "断开"
+  },
+  {
+   "path": "/sash/api/v1/glasses/pairings",
+   "method": "POST",
+   "domain": "glasses",
+   "purpose": "创建配对→GlassesPairingResponseDTO{pairing_id,ticket,expires_at,status}"
+  },
+  {
+   "path": "/sash/api/v1/glasses/pairings/{id}/approve",
+   "method": "POST",
+   "domain": "glasses",
+   "purpose": "批准配对"
+  },
+  {
+   "path": "/sash/api/v1/glasses/pairings/{id}/cancel",
+   "method": "POST",
+   "domain": "glasses",
+   "purpose": "取消配对"
+  },
+  {
+   "path": "/issue/oss/policy",
+   "method": "GET",
+   "domain": "feedback",
+   "purpose": "OSS 直传策略 (?bucket=diagnose)"
+  },
+  {
+   "path": "/issue/image/upload",
+   "method": "POST",
+   "domain": "feedback",
+   "purpose": "反馈截图上传"
+  },
+  {
+   "path": "/issue/file/diagnose/upload",
+   "method": "POST",
+   "domain": "feedback",
+   "purpose": "诊断文件上传"
+  },
+  {
+   "path": "/api/v1/remote/sessions/…/generate-title-and-branch",
+   "method": "POST",
+   "domain": "sessions",
+   "purpose": "GenerateTitleAndBranchRequest→Response (会话标题+分支名 AI 生成)"
+  },
+  {
+   "path": "/api/crashsdk/validate",
+   "method": "POST",
+   "domain": "telemetry",
+   "purpose": "UC crashsdk 校验"
+  },
+  {
+   "path": "/api/v1/crashtrack/upload",
+   "method": "POST",
+   "domain": "telemetry",
+   "purpose": "崩溃追踪"
+  }
+ ],
+ "control_plane": {
+  "channel": "POST /api/v1/remote/sessions/{id}/events, body {events:[{event_type:'control_response'|'control_request', payload:{...}}]}",
+  "subtypes": {
+   "interrupt": "打断当前回合 request:{subtype:'interrupt'}",
+   "end_session": "结束会话 request:{subtype:'end_session', reason:'user_requested'}",
+   "set_model": "切换模型 request:{subtype:'set_model', model:<id>}",
+   "set_permission_mode": "切换权限模式 request:{subtype:'set_permission_mode', mode:<default|acceptEdits|plan|bypassPermissions>}",
+   "session_title_changed": "改名 request:{subtype:'session_title_changed', title:<=255chars, source:'custom'}",
+   "prepare_artifact": "准备产物 request:{subtype:'prepare_artifact', path:<路径>}",
+   "control_cancel_request": "撤销未决请求 {request_id, uuid:'control-cancel-request:<id>'}",
+   "control_response": "应答审批 {response:{subtype:'success', request_id, response:{outcome|approved|answers...}}}"
+  },
+  "approval_answer_bodies": {
+   "tool_approval": "{outcome:<proceed_once|proceed_always|cancel|reject>, allowed:<bool>, payload:{feedback:<拒绝理由可空>}}",
+   "plan_review": "{approved:<bool>, permissionMode:'default', feedback:<text>}",
+   "ask_user": "{outcome:'proceed_once', allowed:true, payload:{answers:{<问题ID>:<答案>}}}"
+  }
+ },
+ "event_model": {
+  "session_event_envelope": [
+   "event_id",
+   "session_id",
+   "sequence_num",
+   "source",
+   "event_type",
+   "payload",
+   "created_at",
+   "ephemeral"
+  ],
+  "event_types": [
+   "message",
+   "tool_use",
+   "tool_result",
+   "control_request",
+   "control_response",
+   "control_cancel",
+   "control_cancel_request"
+  ],
+  "system_event_types": [
+   "session.created",
+   "session.updated",
+   "environment.created",
+   "environment.updated",
+   "task.live_activity",
+   "notification"
+  ],
+  "payload_keys": {
+   "message": [
+    "content",
+    "text",
+    "delta",
+    "response.text",
+    "output.text",
+    "chunk",
+    "role",
+    "stopReason:end_turn|tool_use",
+    "system.interrupt",
+    "thinking_placeholder",
+    "optimistic_user"
+   ],
+   "tool_use": [
+    "name",
+    "tool_name",
+    "function_name",
+    "input",
+    "arguments",
+    "args",
+    "id",
+    "tool_use_id",
+    "parent_tool_use_id",
+    "summary",
+    "title",
+    "input.todos[]"
+   ],
+   "tool_result": [
+    "tool_use_id",
+    "is_error",
+    "content",
+    "status:running|pending|completed|failed"
+   ],
+   "approval_card": [
+    "request_id",
+    "request.tool_name",
+    "request.details.type",
+    "kind:GENERIC|EXECUTION|PLAN_REVIEW",
+    "command",
+    "planContent",
+    "planPath",
+    "options:proceed_once|proceed_always|cancel|reject"
+   ],
+   "subagent": [
+    "subagent_type",
+    "role",
+    "name",
+    "parent_tool_use_id"
+   ]
+  },
+  "sync_strategy": "Y6.W1 六源: CACHE_RESTORE(Room缓存)→REST_FULL/REST_INCREMENTAL/OLDER_BACKFILL(分页回填)→SSE_INCREMENTAL(实时)→DERIVED_STATE(本地派生), 统一经 display_key 去重渲染",
+  "live_activity_schema": "task_aggregate_v1: activity_kind, generation_id, operation(START|UPDATE|END), sequence, content{tasks[<=3]{session_id,display_title,state,progress{current,total}}, secondary_actions[REJECT|ALLOW], overall_state, total_count, active_count, hidden_count, compact_text, icon_key, primary_action}, attention{request_id, actions, expires_at}, completion_stats{files_changed,added,deleted}, machine_name, directory, fallback"
+ },
+ "enums": {
+  "session_status": "queued|running|waiting_for_approval|completed|failed|cancelled (UI 枚举 IDLE/QUEUED/RUNNING/WAITING_FOR_APPROVAL/COMPLETED/FAILED)",
+  "worker_status": "working|idle|…",
+  "connection_status": "connected|disconnected (J0)",
+  "approval_status": "PENDING|APPROVED|REJECTED (S0)",
+  "approval_kind": "GENERIC|EXECUTION|PLAN_REVIEW (K0)",
+  "tool_risk_group": "WRITE|EDIT|READ|RAN (Y3)",
+  "tool_types": "FILE_EDIT|FILE_WRITE|FILE_READ|BASH|MCP|SEARCH|WEB_SEARCH|WEB_FETCH|UPDATE_TODOS|SUB_AGENT|IMAGE_GEN|SKILL|ENTER_PLAN_MODE|GENERIC",
+  "permission_modes": "default|acceptEdits|plan|bypassPermissions",
+  "ide_session_mode": "agent|experts (EnumC1457s3)",
+  "artifact_type": "FOLDER|CODE|HTML|MARKDOWN|IMAGE|AUDIO|VIDEO|TEXT|ARCHIVE|PDF|DOCUMENT|SPREADSHEET|PRESENTATION|FILE (F)",
+  "content_type": "TEXT|MARKDOWN|IMAGE|ANIMATED_IMAGE|PDF|AUDIO|VIDEO|HTML|EXTERNAL_DOCUMENT|UNSUPPORTED (G)",
+  "env_meta_visibility": "INTERNAL|EXTERNAL_OPEN|RESTRICTED|DISABLED (T)",
+  "nav_tabs": "WORKSPACE|CHATS|CLOUD (Q2)",
+  "list_sort": "DATE|STATUS|PROJECT (T3)",
+  "artifact_download": "CLOUD_PATH_PRESIGN|PREPARED (Y)",
+  "update_queue": "DISPLAYED|DUPLICATE|HOST_INACTIVE|QUEUED|QUEUE_FULL (j7.EnumC2560b)",
+  "region": "OFFICIAL_DEFAULT|VPC (D3)",
+  "login_error": "NETWORK_UNAVAILABLE|SERVICE_UNAVAILABLE|SESSION_EXPIRED|SIGN_IN_FAILED|SIGN_IN_TIMEOUT|GOOGLE_…|ACCOUNT_BANNED|CAPTCHA_FAILED|GENERIC (Y6.L)",
+  "sign_in_stage": "LOGIN_TYPE_CHECK→…→QODER_TOKEN_EXCHANGE→USER_INFO_FETCH→SESSION_PERSIST (g7.j)"
+ },
+ "security": {
+  "token_storage": "EncryptedSharedPreferences 'qoder_encrypted_prefs' (androidx security-crypto): keyset AES256_SIV / value AES256_GCM, 主密钥 AndroidKeyStore '_androidx_security_master_key_'; 会话 JSON key 'auth.session' (StoredSession)",
+  "transport_headers": [
+   "Authorization: Bearer <token>",
+   "X-GwRoute-Token",
+   "X-Gw-User-Id",
+   "X-Qoder-Mobile-Device-Id"
+  ],
+  "hmac_signature": "反馈子域: hex(SHA256('cosy'+':'+version)) 为 key, HmacSHA256(METHOD\\nPATH\\nBODY\\nversion\\nunix秒\\nhex(SHA256(contentLength))); 头 X-Client-Timestamp + Authorization: Signature <hex>",
+  "cosy_bearer": "ASR/语音: AES-CBC(info)+RSA(AES key)→Authorization: Bearer COSY.…"
+ },
+ "local_persistence": {
+  "room_tables": {
+   "conversation_threads": [
+    "id",
+    "title",
+    "conversationCode",
+    "deviceName",
+    "deviceModel",
+    "deviceSymbol",
+    "ownerName",
+    "summary",
+    "lastActivityAt",
+    "lastEndTurnAt",
+    "unreadCount",
+    "isPinned",
+    "relatedFilesCount",
+    "status",
+    "phase",
+    "tagsJson",
+    "cachedAt",
+    "lastAccessedAt",
+    "latestSequenceNumber",
+    "latestEventID",
+    "connectionStatus",
+    "isAiTitleGenerated",
+    "sessionStatus",
+    "environmentID",
+    "environmentName",
+    "origin",
+    "environmentType",
+    "projectName",
+    "workspaceType",
+    "workspacePath",
+    "createdAt",
+    "updatedAt",
+    "model"
+   ],
+   "conversation_events": [
+    "eventId",
+    "threadId",
+    "sequenceNumber",
+    "source",
+    "eventType",
+    "payloadJson",
+    "createdAt",
+    "sortOrder"
+   ],
+   "answered_requests": [
+    "requestId",
+    "threadId"
+   ],
+   "environment_list_cache": [
+    "id",
+    "payloadJson",
+    "updatedAt"
+   ]
+  },
+  "encrypted_keys": [
+   "auth.session",
+   "mobile_device_id",
+   "fcm_token",
+   "push_token_id",
+   "qoder_machine_token",
+   "live_activity_token_*",
+   "live_task_activity_state",
+   "account_deletion.pending_cleanup.v2"
+  ],
+  "datastore_files": [
+   "workspace_prefs",
+   "language_prefs",
+   "appearance_prefs",
+   "update_fatigue_prefs"
+  ]
+ },
+ "dto_wire_fields": {
+  "data/repositories/AliyunCallbackRequest": [
+   "code",
+   "state"
+  ],
+  "data/repositories/AliyunLoginInitRequest": [
+   "client_id",
+   "redirect_uri"
+  ],
+  "data/repositories/AliyunLoginInitResponse": [
+   "state",
+   "nonce",
+   "expires_in",
+   "expire_time"
+  ],
+  "data/repositories/AliyunLoginUrlRequest": [
+   "client_id",
+   "redirect_uri"
+  ],
+  "data/repositories/AliyunLoginUrlResponse": [
+   "login_url",
+   "state",
+   "expires_in"
+  ],
+  "data/repositories/AliyunRAMCallbackRequest": [
+   "code",
+   "state",
+   "code_verifier"
+  ],
+  "data/repositories/AliyunRAMLoginInitRequest": [
+   "client_id",
+   "redirect_uri",
+   "code_challenge",
+   "code_challenge_method"
+  ],
+  "data/repositories/AndroidCapabilityRequestDTO": [
+   "package_variant",
+   "sdk_int",
+   "schema_versions",
+   "locale",
+   "notifications_enabled",
+   "vendor_local_ready",
+   "vendor_protocol"
+  ],
+  "data/repositories/ArtifactDownloadURLRequest": [
+   "path"
+  ],
+  "data/repositories/ArtifactDownloadURLResponse": [
+   "download_url",
+   "presigned_url",
+   "presign_url",
+   "download_expires_at"
+  ],
+  "data/repositories/ArtifactListResponse": [
+   "data",
+   "has_more"
+  ],
+  "data/repositories/AsrBusinessPayload": [
+   "product",
+   "type",
+   "id",
+   "begin_at"
+  ],
+  "data/repositories/AsrClientControlMessage": [
+   "type",
+   "message"
+  ],
+  "data/repositories/AsrWebSocketMessage": [
+   "asr_session_id",
+   "message",
+   "status",
+   "type",
+   "code"
+  ],
+  "data/repositories/AuthorizationCodeExchangeRequest": [
+   "grant_type",
+   "code",
+   "redirect_uri",
+   "code_verifier",
+   "client_id"
+  ],
+  "data/repositories/AvailableModelDTO": [
+   "modelId",
+   "displayName",
+   "description",
+   "priceFactor",
+   "isDefault",
+   "isNew",
+   "source",
+   "promotion"
+  ],
+  "data/repositories/AvailableModelPromotionDTO": [
+   "badge",
+   "active",
+   "rule_id",
+   "ruleId",
+   "window_start",
+   "windowStart",
+   "window_end",
+   "windowEnd",
+   "description",
+   "discount_factor",
+   "discountFactor",
+   "before_promotion_price_factor",
+   "beforePromotionPriceFactor"
+  ],
+  "data/repositories/AvailableModelPromotionTextDTO": [
+   "en",
+   "zh"
+  ],
+  "data/repositories/BridgeInfoDTO": [
+   "machine_name",
+   "directory"
+  ],
+  "data/repositories/CMAFileUploadResponse": [
+   "file_id",
+   "filename",
+   "size_bytes",
+   "mime_type"
+  ],
+  "data/repositories/CheckLoginTypeRequest": [
+   "email",
+   "oauth_callback"
+  ],
+  "data/repositories/CheckLoginTypeResponse": [
+   "login_type",
+   "organization_id",
+   "organization_name",
+   "sso_url",
+   "require_sso"
+  ],
+  "data/repositories/ClientActivityReportDTO": [
+   "state",
+   "last_sequence",
+   "reason"
+  ],
+  "data/repositories/ControlLogicalProjectGroupDTO": [
+   "key",
+   "kind",
+   "disambiguator",
+   "session_count",
+   "last_session_at",
+   "has_more"
+  ],
+  "data/repositories/ControlLogicalProjectGroupsResponse": [
+   "group_by",
+   "groups",
+   "has_more"
+  ],
+  "data/repositories/ControlProjectSummaryDTO": [
+   "project_name",
+   "session_count",
+   "last_session_at"
+  ],
+  "data/repositories/ControlProjectsResponse": [
+   "data",
+   "has_more"
+  ],
+  "data/repositories/ControlSessionDTO": [
+   "session_id",
+   "title",
+   "machine_name",
+   "runner_type",
+   "origin",
+   "connection_status",
+   "session_status",
+   "worker_status",
+   "current_worker_epoch",
+   "last_heartbeat_at",
+   "last_end_turn_at",
+   "environment_id",
+   "environment_type",
+   "environment_name",
+   "created_at",
+   "updated_at",
+   "unread",
+   "pinned",
+   "external_metadata",
+   "session_context"
+  ],
+  "data/repositories/ControlSessionGroupDTO": [
+   "key",
+   "has_more"
+  ],
+  "data/repositories/ControlSessionGroupsResponse": [
+   "group_by",
+   "groups"
+  ],
+  "data/repositories/ControlSessionsResponse": [
+   "data",
+   "has_more"
+  ],
+  "data/repositories/ControllerEventsResult": [
+   "event_id",
+   "sequence_num"
+  ],
+  "data/repositories/ControllerEventsResultResponse": [
+   "results"
+  ],
+  "data/repositories/CreateSessionEvent": [
+   "payload"
+  ],
+  "data/repositories/CreateSessionRequest": [
+   "title",
+   "environment_id",
+   "origin",
+   "origin_ref_id",
+   "session_context",
+   "resources",
+   "device_context"
+  ],
+  "data/repositories/CreateSessionResource": [
+   "type",
+   "file_id",
+   "mount_path"
+  ],
+  "data/repositories/DeviceContextDTO": [
+   "local_time",
+   "locale",
+   "device"
+  ],
+  "data/repositories/EnvironmentAvailableModelDTO": [
+   "modelId",
+   "model_id",
+   "value",
+   "displayName",
+   "description",
+   "priceFactor",
+   "price_factor",
+   "isDefault",
+   "is_default",
+   "isNew",
+   "is_new",
+   "source",
+   "promotion"
+  ],
+  "data/repositories/EnvironmentDTO": [
+   "id",
+   "type",
+   "bridge_info",
+   "metadata",
+   "connection_status",
+   "disabled",
+   "max_sessions",
+   "session_count",
+   "created_at"
+  ],
+  "data/repositories/EnvironmentMetadataDTO": [
+   "project_name",
+   "machine_name",
+   "machineName",
+   "available_models",
+   "available_models_agent",
+   "available_models_experts",
+   "available_permission_modes",
+   "ide_available_session_mode",
+   "projects",
+   "supports_no_workspace_session",
+   "supportsNoWorkspaceSession",
+   "connectors",
+   "skills",
+   "plugins",
+   "plugin_suites",
+   "pluginSuites",
+   "suites",
+   "installed_plugins",
+   "installedPlugins",
+   "available_plugins",
+   "availablePlugins",
+   "resource_packages",
+   "resourcePackages"
+  ],
+  "data/repositories/EnvironmentsResponseDTO": [
+   "data",
+   "has_more"
+  ],
+  "data/repositories/ExternalMetadataDTO": [
+   "permission_mode",
+   "available_models",
+   "current_model_info",
+   "available_permission_modes",
+   "is_ai_title_generated"
+  ],
+  "data/repositories/GatewayErrorEnvelope": [
+   "code",
+   "message",
+   "request_id",
+   "fallback_url"
+  ],
+  "data/repositories/GenerateTitleAndBranchRequest": [
+   "first_session_message",
+   "title_style"
+  ],
+  "data/repositories/GenerateTitleAndBranchResponse": [
+   "title",
+   "branch_name"
+  ],
+  "data/repositories/GitHubAuthorizationURLResponseDTO": [
+   "authorization_url",
+   "state"
+  ],
+  "data/repositories/GitHubBranchDTO": [
+   "commit_sha",
+   "is_default"
+  ],
+  "data/repositories/GitHubBranchesResponseDTO": [
+   "data",
+   "has_more",
+   "default_branch"
+  ],
+  "data/repositories/GitHubConnectedRequestDTO": [
+   "code",
+   "state"
+  ],
+  "data/repositories/GitHubInstallURLResponseDTO": [
+   "install_url",
+   "state"
+  ],
+  "data/repositories/GitHubRepositoriesResponseDTO": [
+   "repos",
+   "has_more"
+  ],
+  "data/repositories/GitHubRepositoryDTO": [
+   "owner",
+   "default_branch",
+   "archived",
+   "disabled",
+   "fork",
+   "permissions",
+   "size",
+   "description",
+   "pushed_at",
+   "topics"
+  ],
+  "data/repositories/GitHubRepositoryItemDTO": [
+   "repo"
+  ],
+  "data/repositories/GitHubRepositoryOwnerDTO": [
+   "login",
+   "type",
+   "id"
+  ],
+  "data/repositories/GitHubRepositoryPermissionsDTO": [
+   "admin",
+   "maintain",
+   "push",
+   "triage",
+   "pull"
+  ],
+  "data/repositories/GitHubUserAccessTokenResponseDTO": [
+   "token",
+   "expires_at"
+  ],
+  "data/repositories/GlassesPairingDeviceDTO": [
+   "id"
+  ],
+  "data/repositories/GlassesPairingResponseDTO": [
+   "pairing_id",
+   "ticket",
+   "expires_at",
+   "status",
+   "device"
+  ],
+  "data/repositories/GoogleTokenRequest": [
+   "id_token",
+   "client_id"
+  ],
+  "data/repositories/IdeProjectDTO": [
+   "path",
+   "workspace_id"
+  ],
+  "data/repositories/LiveActivityTokenBinding": [
+   "owner_user_id",
+   "device_id",
+   "token_id"
+  ],
+  "data/repositories/LiveActivityTokenRequestDTO": [
+   "token",
+   "locale"
+  ],
+  "data/repositories/LiveActivityTokenResponseDTO": [
+   "id"
+  ],
+  "data/repositories/MarkSessionReadRequest": [
+   "last_seq"
+  ],
+  "data/repositories/NativePasswordLoginErrorResponse": [
+   "error_code",
+   "raw_message"
+  ],
+  "data/repositories/NativePasswordLoginRequest": [
+   "email",
+   "password",
+   "client_id"
+  ],
+  "data/repositories/NativePasswordLoginResponse": [
+   "refresh_token",
+   "token_type",
+   "expires_at",
+   "refresh_token_expires_at",
+   "created_at",
+   "expires_in",
+   "is_new_user"
+  ],
+  "data/repositories/NotificationConfigDTO": [
+   "task_completed",
+   "qa",
+   "ask_permission",
+   "plan_review"
+  ],
+  "data/repositories/PushTokenRequestDTO": [
+   "token",
+   "locale"
+  ],
+  "data/repositories/PushTokenResponseDTO": [
+   "id",
+   "user_id",
+   "mobile_device_id",
+   "token"
+  ],
+  "data/repositories/RefreshRequest": [
+   "refresh_token"
+  ],
+  "data/repositories/RegisterDeviceRequestDTO": [
+   "mobile_device_id"
+  ],
+  "data/repositories/RegisterDeviceResponseDTO": [
+   "user_id",
+   "mobile_device_id"
+  ],
+  "data/repositories/SSODeviceTokenResponse": [
+   "refresh_token",
+   "token_type",
+   "expires_at",
+   "refresh_token_expires_at",
+   "created_at",
+   "expires_in",
+   "is_new_user"
+  ],
+  "data/repositories/SSOErrorResponse": [
+   "error_code"
+  ],
+  "data/repositories/SandboxPreviewGrantRequest": [
+   "session_id",
+   "port"
+  ],
+  "data/repositories/SandboxPreviewGrantResponse": [
+   "url",
+   "grant",
+   "expires_at"
+  ],
+  "data/repositories/SendVerificationCodeRequestDTO": [
+   "channel"
+  ],
+  "data/repositories/SessionContextDTO": [
+   "cwd",
+   "workspace_type",
+   "workspace_id",
+   "project_name",
+   "machine_name",
+   "local_session_id",
+   "client_type",
+   "permission_mode",
+   "ide_session_mode",
+   "sources",
+   "outcomes",
+   "model"
+  ],
+  "data/repositories/SessionEventDTO": [
+   "event_id",
+   "session_id",
+   "sequence_num",
+   "source",
+   "event_type",
+   "payload",
+   "created_at",
+   "ephemeral"
+  ],
+  "data/repositories/SessionEventsResponse": [
+   "data",
+   "has_more",
+   "next_after_sequence_num"
+  ],
+  "data/repositories/SessionOutcomeDTO": [
+   "type",
+   "git_info"
+  ],
+  "data/repositories/SessionOutcomeGitInfoDTO": [
+   "type",
+   "repo",
+   "branches"
+  ],
+  "data/repositories/SessionSourceDTO": [
+   "type",
+   "url",
+   "revision"
+  ],
+  "data/repositories/SetSessionPinnedRequest": [
+   "pinned"
+  ],
+  "data/repositories/StoredServiceAccess": [
+   "kind",
+   "baseURL",
+   "webBaseURL",
+   "apiBaseURL",
+   "brokerBaseURL",
+   "inferenceBaseURL",
+   "feedbackBaseURL",
+   "dynamicContentBaseURL",
+   "telemetryBaseURL",
+   "remoteAPIVersion"
+  ],
+  "data/repositories/StoredSession": [
+   "userId",
+   "userName",
+   "userUsername",
+   "userAvatarUrl",
+   "userEmail",
+   "userOrganizationId",
+   "userOrganizationName",
+   "userStaffId",
+   "accessToken",
+   "refreshToken",
+   "expiresAt",
+   "refreshTokenExpiresAt",
+   "serviceAccess"
+  ],
+  "data/repositories/TokenRefreshResponse": [
+   "refresh_token",
+   "expires_at",
+   "refresh_token_expires_at"
+  ],
+  "data/repositories/UpdateSessionTitleRequest": [
+   "title"
+  ],
+  "data/repositories/UserInfoResponse": [
+   "id",
+   "avatar",
+   "email",
+   "organization_id",
+   "organization_name",
+   "is_privacy_policy_modifiable",
+   "nick_name",
+   "last_organization",
+   "phone_number",
+   "is_admin",
+   "staff_id",
+   "created_at"
+  ],
+  "data/repositories/UserIntegrationsResponseDTO": [
+   "github",
+   "githubUsername",
+   "githubEmail"
+  ],
+  "data/repositories/VoicePolishMessageDTO": [
+   "role",
+   "content"
+  ],
+  "data/repositories/VoicePolishRequestDTO": [
+   "session_id",
+   "request_id",
+   "client_type",
+   "messages"
+  ],
+  "data/repositories/VoicePolishResponseDTO": [
+   "result",
+   "traceId"
+  ],
+  "data/repositories/VoicePolishResultDTO": [
+   "content"
+  ],
+  "data/local/ArtifactEntry": [
+   "sourcePath",
+   "filename",
+   "mimeType",
+   "fileName",
+   "updatedAt",
+   "capturedMtime"
+  ],
+  "data/local/ArtifactManifest": [
+   "artifacts",
+   "thumbnails"
+  ],
+  "data/local/ScopedArtifactEntry": [
+   "sessionID",
+   "sourcePath",
+   "filename",
+   "mimeType",
+   "fileName",
+   "sizeBytes",
+   "contentDigest",
+   "versionKind",
+   "versionPrimaryValue",
+   "versionSecondaryValue",
+   "validatedAtMillis",
+   "lastAccessedAtMillis"
+  ],
+  "data/local/ScopedArtifactManifest": [
+   "entries"
+  ],
+  "data/local/SessionEntry": [
+   "sessionID",
+   "lastAccessedAt",
+   "updatedAt"
+  ],
+  "data/local/ThumbnailEntry": [
+   "sourcePath",
+   "pixelSize",
+   "capturedMtime",
+   "fileName",
+   "updatedAt"
+  ],
+  "app/PendingAccountDeletionCleanupRecord": [
+   "version",
+   "userId",
+   "failedStages",
+   "cutoffTimeMillis",
+   "diagnosticLogPaths",
+   "fileScopeHash",
+   "missingScopeDiagnosticLogged"
+  ],
+  "domain/entities/GitHubErrorResponseDTO": [
+   "error_code"
+  ]
+ },
+ "dto_wire_schema": {
+  "data/repositories/AliyunCallbackRequest": [
+   {
+    "json": "code",
+    "type": "String"
+   },
+   {
+    "json": "state",
+    "type": "String"
+   }
+  ],
+  "data/repositories/AliyunLoginInitRequest": [
+   {
+    "json": "client_id",
+    "type": "String"
+   },
+   {
+    "json": "redirect_uri",
+    "type": "String"
+   }
+  ],
+  "data/repositories/AliyunLoginInitResponse": [
+   {
+    "json": "state",
+    "type": "String"
+   },
+   {
+    "json": "nonce",
+    "type": "String"
+   },
+   {
+    "json": "expires_in",
+    "type": "long"
+   },
+   {
+    "json": "expire_time",
+    "type": "long"
+   }
+  ],
+  "data/repositories/AliyunLoginUrlRequest": [
+   {
+    "json": "client_id",
+    "type": "String"
+   },
+   {
+    "json": "redirect_uri",
+    "type": "String"
+   }
+  ],
+  "data/repositories/AliyunLoginUrlResponse": [
+   {
+    "json": "login_url",
+    "type": "String"
+   },
+   {
+    "json": "state",
+    "type": "String"
+   },
+   {
+    "json": "expires_in",
+    "type": "long"
+   }
+  ],
+  "data/repositories/AliyunRAMCallbackRequest": [
+   {
+    "json": "code",
+    "type": "String"
+   },
+   {
+    "json": "state",
+    "type": "String"
+   },
+   {
+    "json": "code_verifier",
+    "type": "String"
+   }
+  ],
+  "data/repositories/AliyunRAMLoginInitRequest": [
+   {
+    "json": "client_id",
+    "type": "String"
+   },
+   {
+    "json": "redirect_uri",
+    "type": "String"
+   },
+   {
+    "json": "code_challenge",
+    "type": "String"
+   },
+   {
+    "json": "code_challenge_method",
+    "type": "String"
+   }
+  ],
+  "data/repositories/AndroidCapabilityRequestDTO": [
+   {
+    "json": "package_variant",
+    "type": "String"
+   },
+   {
+    "json": "sdk_int",
+    "type": "String"
+   },
+   {
+    "json": "schema_versions",
+    "type": "int"
+   },
+   {
+    "json": "locale",
+    "type": "String"
+   },
+   {
+    "json": "notifications_enabled",
+    "type": "String"
+   },
+   {
+    "json": "vendor_local_ready",
+    "type": "List<Integer>"
+   },
+   {
+    "json": "vendor_protocol",
+    "type": "String"
+   }
+  ],
+  "data/repositories/ArtifactDownloadURLRequest": [
+   {
+    "json": "path",
+    "type": "String"
+   }
+  ],
+  "data/repositories/ArtifactDownloadURLResponse": [
+   {
+    "json": "download_url",
+    "type": "String"
+   },
+   {
+    "json": "presigned_url",
+    "type": "String"
+   },
+   {
+    "json": "presign_url",
+    "type": "String"
+   },
+   {
+    "json": "download_expires_at",
+    "type": "String"
+   }
+  ],
+  "data/repositories/ArtifactListResponse": [
+   {
+    "json": "data",
+    "type": "List<Entry>"
+   },
+   {
+    "json": "has_more",
+    "type": "boolean"
+   }
+  ],
+  "data/repositories/AsrBusinessPayload": [
+   {
+    "json": "product",
+    "type": "String"
+   },
+   {
+    "json": "type",
+    "type": "String"
+   },
+   {
+    "json": "id",
+    "type": "String"
+   },
+   {
+    "json": "begin_at",
+    "type": "long"
+   }
+  ],
+  "data/repositories/AsrClientControlMessage": [
+   {
+    "json": "type",
+    "type": "String"
+   },
+   {
+    "json": "message",
+    "type": "String"
+   }
+  ],
+  "data/repositories/AsrWebSocketMessage": [
+   {
+    "json": "asr_session_id",
+    "type": "String"
+   },
+   {
+    "json": "message",
+    "type": "String"
+   },
+   {
+    "json": "status",
+    "type": "Integer"
+   },
+   {
+    "json": "type",
+    "type": "String"
+   },
+   {
+    "json": "code",
+    "type": "Integer"
+   }
+  ],
+  "data/repositories/AuthorizationCodeExchangeRequest": [
+   {
+    "json": "grant_type",
+    "type": "String"
+   },
+   {
+    "json": "code",
+    "type": "String"
+   },
+   {
+    "json": "redirect_uri",
+    "type": "String"
+   },
+   {
+    "json": "code_verifier",
+    "type": "String"
+   },
+   {
+    "json": "client_id",
+    "type": "String"
+   }
+  ],
+  "data/repositories/AvailableModelDTO": [
+   {
+    "json": "modelId",
+    "type": "String"
+   },
+   {
+    "json": "displayName",
+    "type": "String"
+   },
+   {
+    "json": "description",
+    "type": "String"
+   },
+   {
+    "json": "priceFactor",
+    "type": "Double"
+   },
+   {
+    "json": "isDefault",
+    "type": "Boolean"
+   },
+   {
+    "json": "isNew",
+    "type": "Boolean"
+   },
+   {
+    "json": "source",
+    "type": "String"
+   },
+   {
+    "json": "promotion",
+    "type": "AvailableModelPromotionDTO"
+   }
+  ],
+  "data/repositories/AvailableModelPromotionDTO": [
+   {
+    "json": "badge",
+    "type": "AvailableModelPromotionTextDTO"
+   },
+   {
+    "json": "active",
+    "type": "Boolean"
+   },
+   {
+    "json": "rule_id",
+    "type": "String"
+   },
+   {
+    "json": "ruleId",
+    "type": "String"
+   },
+   {
+    "json": "window_start",
+    "type": "String"
+   },
+   {
+    "json": "windowStart",
+    "type": "String"
+   },
+   {
+    "json": "window_end",
+    "type": "String"
+   },
+   {
+    "json": "windowEnd",
+    "type": "String"
+   },
+   {
+    "json": "description",
+    "type": "String"
+   },
+   {
+    "json": "discount_factor",
+    "type": "AvailableModelPromotionTextDTO"
+   },
+   {
+    "json": "discountFactor",
+    "type": "Double"
+   },
+   {
+    "json": "before_promotion_price_factor",
+    "type": "Double"
+   },
+   {
+    "json": "beforePromotionPriceFactor",
+    "type": "Double"
+   }
+  ],
+  "data/repositories/AvailableModelPromotionTextDTO": [
+   {
+    "json": "en",
+    "type": "String"
+   },
+   {
+    "json": "zh",
+    "type": "String"
+   }
+  ],
+  "data/repositories/BridgeInfoDTO": [
+   {
+    "json": "machine_name",
+    "type": "String"
+   },
+   {
+    "json": "directory",
+    "type": "String"
+   }
+  ],
+  "data/repositories/CMAFileUploadResponse": [
+   {
+    "json": "file_id",
+    "type": "String"
+   },
+   {
+    "json": "filename",
+    "type": "String"
+   },
+   {
+    "json": "size_bytes",
+    "type": "Long"
+   },
+   {
+    "json": "mime_type",
+    "type": "String"
+   }
+  ],
+  "data/repositories/CheckLoginTypeRequest": [
+   {
+    "json": "email",
+    "type": "String"
+   },
+   {
+    "json": "oauth_callback",
+    "type": "String"
+   }
+  ],
+  "data/repositories/CheckLoginTypeResponse": [
+   {
+    "json": "login_type",
+    "type": "String"
+   },
+   {
+    "json": "organization_id",
+    "type": "String"
+   },
+   {
+    "json": "organization_name",
+    "type": "String"
+   },
+   {
+    "json": "sso_url",
+    "type": "String"
+   },
+   {
+    "json": "require_sso",
+    "type": "Boolean"
+   }
+  ],
+  "data/repositories/ClientActivityReportDTO": [
+   {
+    "json": "state",
+    "type": "String"
+   },
+   {
+    "json": "last_sequence",
+    "type": "long"
+   },
+   {
+    "json": "reason",
+    "type": "String"
+   }
+  ],
+  "data/repositories/ControlLogicalProjectGroupDTO": [
+   {
+    "json": "key",
+    "type": "String"
+   },
+   {
+    "json": "kind",
+    "type": "String"
+   },
+   {
+    "json": "disambiguator",
+    "type": "String"
+   },
+   {
+    "json": "session_count",
+    "type": "String"
+   },
+   {
+    "json": "last_session_at",
+    "type": "int"
+   },
+   {
+    "json": "has_more",
+    "type": "String"
+   }
+  ],
+  "data/repositories/ControlLogicalProjectGroupsResponse": [
+   {
+    "json": "group_by",
+    "type": "String"
+   },
+   {
+    "json": "groups",
+    "type": "List<ControlLogicalProjectGroupDTO>"
+   },
+   {
+    "json": "has_more",
+    "type": "boolean"
+   }
+  ],
+  "data/repositories/ControlProjectSummaryDTO": [
+   {
+    "json": "project_name",
+    "type": "String"
+   },
+   {
+    "json": "session_count",
+    "type": "int"
+   },
+   {
+    "json": "last_session_at",
+    "type": "String"
+   }
+  ],
+  "data/repositories/ControlProjectsResponse": [
+   {
+    "json": "data",
+    "type": "List<ControlProjectSummaryDTO>"
+   },
+   {
+    "json": "has_more",
+    "type": "boolean"
+   }
+  ],
+  "data/repositories/ControlSessionDTO": [
+   {
+    "json": "session_id",
+    "type": "String"
+   },
+   {
+    "json": "title",
+    "type": "String"
+   },
+   {
+    "json": "machine_name",
+    "type": "String"
+   },
+   {
+    "json": "runner_type",
+    "type": "String"
+   },
+   {
+    "json": "origin",
+    "type": "String"
+   },
+   {
+    "json": "connection_status",
+    "type": "String"
+   },
+   {
+    "json": "session_status",
+    "type": "String"
+   },
+   {
+    "json": "worker_status",
+    "type": "String"
+   },
+   {
+    "json": "current_worker_epoch",
+    "type": "Integer"
+   },
+   {
+    "json": "last_heartbeat_at",
+    "type": "String"
+   },
+   {
+    "json": "last_end_turn_at",
+    "type": "String"
+   },
+   {
+    "json": "environment_id",
+    "type": "String"
+   },
+   {
+    "json": "environment_type",
+    "type": "String"
+   },
+   {
+    "json": "environment_name",
+    "type": "String"
+   },
+   {
+    "json": "created_at",
+    "type": "String"
+   },
+   {
+    "json": "updated_at",
+    "type": "String"
+   },
+   {
+    "json": "unread",
+    "type": "Boolean"
+   },
+   {
+    "json": "pinned",
+    "type": "boolean"
+   },
+   {
+    "json": "external_metadata",
+    "type": "ExternalMetadataDTO"
+   },
+   {
+    "json": "session_context",
+    "type": "SessionContextDTO"
+   }
+  ],
+  "data/repositories/ControlSessionGroupDTO": [
+   {
+    "json": "key",
+    "type": "String"
+   },
+   {
+    "json": "has_more",
+    "type": "List<ControlSessionDTO>"
+   }
+  ],
+  "data/repositories/ControlSessionGroupsResponse": [
+   {
+    "json": "group_by",
+    "type": "String"
+   },
+   {
+    "json": "groups",
+    "type": "List<ControlSessionGroupDTO>"
+   }
+  ],
+  "data/repositories/ControlSessionsResponse": [
+   {
+    "json": "data",
+    "type": "List<ControlSessionDTO>"
+   },
+   {
+    "json": "has_more",
+    "type": "Boolean"
+   }
+  ],
+  "data/repositories/ControllerEventsResult": [
+   {
+    "json": "event_id",
+    "type": "String"
+   },
+   {
+    "json": "sequence_num",
+    "type": "int"
+   }
+  ],
+  "data/repositories/ControllerEventsResultResponse": [
+   {
+    "json": "results",
+    "type": "List"
+   }
+  ],
+  "data/repositories/CreateSessionEvent": [
+   {
+    "json": "payload",
+    "type": "Map"
+   }
+  ],
+  "data/repositories/CreateSessionRequest": [
+   {
+    "json": "title",
+    "type": "String"
+   },
+   {
+    "json": "environment_id",
+    "type": "String"
+   },
+   {
+    "json": "origin",
+    "type": "String"
+   },
+   {
+    "json": "origin_ref_id",
+    "type": "String"
+   },
+   {
+    "json": "session_context",
+    "type": "SessionContextDTO"
+   },
+   {
+    "json": "resources",
+    "type": "List<CreateSessionResource>"
+   },
+   {
+    "json": "device_context",
+    "type": "List<CreateSessionEvent>"
+   }
+  ],
+  "data/repositories/CreateSessionResource": [
+   {
+    "json": "type",
+    "type": "String"
+   },
+   {
+    "json": "file_id",
+    "type": "String"
+   },
+   {
+    "json": "mount_path",
+    "type": "String"
+   }
+  ],
+  "data/repositories/DeviceContextDTO": [
+   {
+    "json": "local_time",
+    "type": "String"
+   },
+   {
+    "json": "locale",
+    "type": "String"
+   },
+   {
+    "json": "device",
+    "type": "String"
+   }
+  ],
+  "data/repositories/EnvironmentAvailableModelDTO": [
+   {
+    "json": "modelId",
+    "type": "String"
+   },
+   {
+    "json": "model_id",
+    "type": "String"
+   },
+   {
+    "json": "value",
+    "type": "String"
+   },
+   {
+    "json": "displayName",
+    "type": "String"
+   },
+   {
+    "json": "description",
+    "type": "String"
+   },
+   {
+    "json": "priceFactor",
+    "type": "String"
+   },
+   {
+    "json": "price_factor",
+    "type": "String"
+   },
+   {
+    "json": "isDefault",
+    "type": "Double"
+   },
+   {
+    "json": "is_default",
+    "type": "Double"
+   },
+   {
+    "json": "isNew",
+    "type": "Boolean"
+   },
+   {
+    "json": "is_new",
+    "type": "Boolean"
+   },
+   {
+    "json": "source",
+    "type": "Boolean"
+   },
+   {
+    "json": "promotion",
+    "type": "Boolean"
+   }
+  ],
+  "data/repositories/EnvironmentDTO": [
+   {
+    "json": "id",
+    "type": "String"
+   },
+   {
+    "json": "type",
+    "type": "String"
+   },
+   {
+    "json": "bridge_info",
+    "type": "String"
+   },
+   {
+    "json": "metadata",
+    "type": "BridgeInfoDTO"
+   },
+   {
+    "json": "connection_status",
+    "type": "EnvironmentMetadataDTO"
+   },
+   {
+    "json": "disabled",
+    "type": "String"
+   },
+   {
+    "json": "max_sessions",
+    "type": "Boolean"
+   },
+   {
+    "json": "session_count",
+    "type": "Integer"
+   },
+   {
+    "json": "created_at",
+    "type": "Integer"
+   }
+  ],
+  "data/repositories/EnvironmentMetadataDTO": [
+   {
+    "json": "project_name",
+    "type": "String"
+   },
+   {
+    "json": "machine_name",
+    "type": "String"
+   },
+   {
+    "json": "machineName",
+    "type": "String"
+   },
+   {
+    "json": "available_models",
+    "type": "List<EnvironmentAvailableModelDTO>"
+   },
+   {
+    "json": "available_models_agent",
+    "type": "List<EnvironmentAvailableModelDTO>"
+   },
+   {
+    "json": "available_models_experts",
+    "type": "List<EnvironmentAvailableModelDTO>"
+   },
+   {
+    "json": "available_permission_modes",
+    "type": "List<? extends Object>"
+   },
+   {
+    "json": "ide_available_session_mode",
+    "type": "List<String>"
+   },
+   {
+    "json": "projects",
+    "type": "List<IdeProjectDTO>"
+   },
+   {
+    "json": "supports_no_workspace_session",
+    "type": "Boolean"
+   },
+   {
+    "json": "supportsNoWorkspaceSession",
+    "type": "Boolean"
+   },
+   {
+    "json": "connectors",
+    "type": "Object"
+   },
+   {
+    "json": "skills",
+    "type": "Object"
+   },
+   {
+    "json": "plugins",
+    "type": "Object"
+   },
+   {
+    "json": "plugin_suites",
+    "type": "Object"
+   },
+   {
+    "json": "pluginSuites",
+    "type": "Object"
+   },
+   {
+    "json": "suites",
+    "type": "Object"
+   },
+   {
+    "json": "installed_plugins",
+    "type": "Object"
+   },
+   {
+    "json": "installedPlugins",
+    "type": "Object"
+   },
+   {
+    "json": "available_plugins",
+    "type": "Object"
+   },
+   {
+    "json": "availablePlugins",
+    "type": "Object"
+   },
+   {
+    "json": "resource_packages",
+    "type": "Object"
+   },
+   {
+    "json": "resourcePackages",
+    "type": "Object"
+   }
+  ],
+  "data/repositories/EnvironmentsResponseDTO": [
+   {
+    "json": "data",
+    "type": "List<EnvironmentDTO>"
+   },
+   {
+    "json": "has_more",
+    "type": "boolean"
+   }
+  ],
+  "data/repositories/ExternalMetadataDTO": [
+   {
+    "json": "permission_mode",
+    "type": "String"
+   },
+   {
+    "json": "available_models",
+    "type": "String"
+   },
+   {
+    "json": "current_model_info",
+    "type": "List<AvailableModelDTO>"
+   },
+   {
+    "json": "available_permission_modes",
+    "type": "AvailableModelDTO"
+   },
+   {
+    "json": "is_ai_title_generated",
+    "type": "List<String>"
+   }
+  ],
+  "data/repositories/GatewayErrorEnvelope": [
+   {
+    "json": "code",
+    "type": "String"
+   },
+   {
+    "json": "message",
+    "type": "String"
+   },
+   {
+    "json": "request_id",
+    "type": "String"
+   },
+   {
+    "json": "fallback_url",
+    "type": "String"
+   }
+  ],
+  "data/repositories/GenerateTitleAndBranchRequest": [
+   {
+    "json": "first_session_message",
+    "type": "String"
+   },
+   {
+    "json": "title_style",
+    "type": "String"
+   }
+  ],
+  "data/repositories/GenerateTitleAndBranchResponse": [
+   {
+    "json": "title",
+    "type": "String"
+   },
+   {
+    "json": "branch_name",
+    "type": "String"
+   }
+  ],
+  "data/repositories/GitHubAuthorizationURLResponseDTO": [
+   {
+    "json": "authorization_url",
+    "type": "String"
+   },
+   {
+    "json": "state",
+    "type": "String"
+   }
+  ],
+  "data/repositories/GitHubBranchDTO": [
+   {
+    "json": "commit_sha",
+    "type": "String"
+   },
+   {
+    "json": "is_default",
+    "type": "String"
+   }
+  ],
+  "data/repositories/GitHubBranchesResponseDTO": [
+   {
+    "json": "data",
+    "type": "List<GitHubBranchDTO>"
+   },
+   {
+    "json": "has_more",
+    "type": "boolean"
+   },
+   {
+    "json": "default_branch",
+    "type": "String"
+   }
+  ],
+  "data/repositories/GitHubConnectedRequestDTO": [
+   {
+    "json": "code",
+    "type": "String"
+   },
+   {
+    "json": "state",
+    "type": "String"
+   }
+  ],
+  "data/repositories/GitHubInstallURLResponseDTO": [
+   {
+    "json": "install_url",
+    "type": "String"
+   },
+   {
+    "json": "state",
+    "type": "String"
+   }
+  ],
+  "data/repositories/GitHubRepositoriesResponseDTO": [
+   {
+    "json": "repos",
+    "type": "List<GitHubRepositoryItemDTO>"
+   },
+   {
+    "json": "has_more",
+    "type": "boolean"
+   }
+  ],
+  "data/repositories/GitHubRepositoryDTO": [
+   {
+    "json": "owner",
+    "type": "String"
+   },
+   {
+    "json": "default_branch",
+    "type": "GitHubRepositoryOwnerDTO"
+   },
+   {
+    "json": "archived",
+    "type": "String"
+   },
+   {
+    "json": "disabled",
+    "type": "String"
+   },
+   {
+    "json": "fork",
+    "type": "Boolean"
+   },
+   {
+    "json": "permissions",
+    "type": "Boolean"
+   },
+   {
+    "json": "size",
+    "type": "Boolean"
+   },
+   {
+    "json": "description",
+    "type": "GitHubRepositoryPermissionsDTO"
+   },
+   {
+    "json": "pushed_at",
+    "type": "Integer"
+   },
+   {
+    "json": "topics",
+    "type": "String"
+   }
+  ],
+  "data/repositories/GitHubRepositoryItemDTO": [
+   {
+    "json": "repo",
+    "type": "GitHubRepositoryDTO"
+   }
+  ],
+  "data/repositories/GitHubRepositoryOwnerDTO": [
+   {
+    "json": "login",
+    "type": "String"
+   },
+   {
+    "json": "type",
+    "type": "String"
+   },
+   {
+    "json": "id",
+    "type": "Long"
+   }
+  ],
+  "data/repositories/GitHubRepositoryPermissionsDTO": [
+   {
+    "json": "admin",
+    "type": "Boolean"
+   },
+   {
+    "json": "maintain",
+    "type": "Boolean"
+   },
+   {
+    "json": "push",
+    "type": "Boolean"
+   },
+   {
+    "json": "triage",
+    "type": "Boolean"
+   },
+   {
+    "json": "pull",
+    "type": "Boolean"
+   }
+  ],
+  "data/repositories/GitHubUserAccessTokenResponseDTO": [
+   {
+    "json": "token",
+    "type": "String"
+   },
+   {
+    "json": "expires_at",
+    "type": "String"
+   }
+  ],
+  "data/repositories/GlassesPairingDeviceDTO": [
+   {
+    "json": "id",
+    "type": "String"
+   }
+  ],
+  "data/repositories/GlassesPairingResponseDTO": [
+   {
+    "json": "pairing_id",
+    "type": "String"
+   },
+   {
+    "json": "ticket",
+    "type": "String"
+   },
+   {
+    "json": "expires_at",
+    "type": "String"
+   },
+   {
+    "json": "status",
+    "type": "String"
+   },
+   {
+    "json": "device",
+    "type": "GlassesPairingDeviceDTO"
+   }
+  ],
+  "data/repositories/GoogleTokenRequest": [
+   {
+    "json": "id_token",
+    "type": "String"
+   },
+   {
+    "json": "client_id",
+    "type": "String"
+   }
+  ],
+  "data/repositories/IdeProjectDTO": [
+   {
+    "json": "path",
+    "type": "String"
+   },
+   {
+    "json": "workspace_id",
+    "type": "String"
+   }
+  ],
+  "data/repositories/LiveActivityTokenBinding": [
+   {
+    "json": "owner_user_id",
+    "type": "String"
+   },
+   {
+    "json": "device_id",
+    "type": "String"
+   },
+   {
+    "json": "token_id",
+    "type": "String"
+   }
+  ],
+  "data/repositories/LiveActivityTokenRequestDTO": [
+   {
+    "json": "token",
+    "type": "String"
+   },
+   {
+    "json": "locale",
+    "type": "String"
+   }
+  ],
+  "data/repositories/LiveActivityTokenResponseDTO": [
+   {
+    "json": "id",
+    "type": "String"
+   }
+  ],
+  "data/repositories/MarkSessionReadRequest": [
+   {
+    "json": "last_seq",
+    "type": "int"
+   }
+  ],
+  "data/repositories/NativePasswordLoginErrorResponse": [
+   {
+    "json": "error_code",
+    "type": "String"
+   },
+   {
+    "json": "raw_message",
+    "type": "String"
+   }
+  ],
+  "data/repositories/NativePasswordLoginRequest": [
+   {
+    "json": "email",
+    "type": "String"
+   },
+   {
+    "json": "password",
+    "type": "String"
+   },
+   {
+    "json": "client_id",
+    "type": "String"
+   }
+  ],
+  "data/repositories/NativePasswordLoginResponse": [
+   {
+    "json": "refresh_token",
+    "type": "String"
+   },
+   {
+    "json": "token_type",
+    "type": "String"
+   },
+   {
+    "json": "expires_at",
+    "type": "String"
+   },
+   {
+    "json": "refresh_token_expires_at",
+    "type": "String"
+   },
+   {
+    "json": "created_at",
+    "type": "String"
+   },
+   {
+    "json": "expires_in",
+    "type": "String"
+   },
+   {
+    "json": "is_new_user",
+    "type": "long"
+   }
+  ],
+  "data/repositories/NotificationConfigDTO": [
+   {
+    "json": "task_completed",
+    "type": "boolean"
+   },
+   {
+    "json": "qa",
+    "type": "boolean"
+   },
+   {
+    "json": "ask_permission",
+    "type": "boolean"
+   },
+   {
+    "json": "plan_review",
+    "type": "boolean"
+   }
+  ],
+  "data/repositories/PushTokenRequestDTO": [
+   {
+    "json": "token",
+    "type": "String"
+   },
+   {
+    "json": "locale",
+    "type": "String"
+   }
+  ],
+  "data/repositories/PushTokenResponseDTO": [
+   {
+    "json": "id",
+    "type": "String"
+   },
+   {
+    "json": "user_id",
+    "type": "String"
+   },
+   {
+    "json": "mobile_device_id",
+    "type": "String"
+   },
+   {
+    "json": "token",
+    "type": "String"
+   }
+  ],
+  "data/repositories/RefreshRequest": [
+   {
+    "json": "refresh_token",
+    "type": "String"
+   }
+  ],
+  "data/repositories/RegisterDeviceRequestDTO": [
+   {
+    "json": "mobile_device_id",
+    "type": "String"
+   }
+  ],
+  "data/repositories/RegisterDeviceResponseDTO": [
+   {
+    "json": "user_id",
+    "type": "String"
+   },
+   {
+    "json": "mobile_device_id",
+    "type": "String"
+   }
+  ],
+  "data/repositories/SSODeviceTokenResponse": [
+   {
+    "json": "refresh_token",
+    "type": "String"
+   },
+   {
+    "json": "token_type",
+    "type": "String"
+   },
+   {
+    "json": "expires_at",
+    "type": "String"
+   },
+   {
+    "json": "refresh_token_expires_at",
+    "type": "String"
+   },
+   {
+    "json": "created_at",
+    "type": "String"
+   },
+   {
+    "json": "expires_in",
+    "type": "String"
+   },
+   {
+    "json": "is_new_user",
+    "type": "long"
+   }
+  ],
+  "data/repositories/SSOErrorResponse": [
+   {
+    "json": "error_code",
+    "type": "String"
+   }
+  ],
+  "data/repositories/SandboxPreviewGrantRequest": [
+   {
+    "json": "session_id",
+    "type": "String"
+   },
+   {
+    "json": "port",
+    "type": "int"
+   }
+  ],
+  "data/repositories/SandboxPreviewGrantResponse": [
+   {
+    "json": "url",
+    "type": "String"
+   },
+   {
+    "json": "grant",
+    "type": "String"
+   },
+   {
+    "json": "expires_at",
+    "type": "String"
+   }
+  ],
+  "data/repositories/SendVerificationCodeRequestDTO": [
+   {
+    "json": "channel",
+    "type": "String"
+   }
+  ],
+  "data/repositories/SessionContextDTO": [
+   {
+    "json": "cwd",
+    "type": "String"
+   },
+   {
+    "json": "workspace_type",
+    "type": "String"
+   },
+   {
+    "json": "workspace_id",
+    "type": "String"
+   },
+   {
+    "json": "project_name",
+    "type": "String"
+   },
+   {
+    "json": "machine_name",
+    "type": "String"
+   },
+   {
+    "json": "local_session_id",
+    "type": "String"
+   },
+   {
+    "json": "client_type",
+    "type": "String"
+   },
+   {
+    "json": "permission_mode",
+    "type": "String"
+   },
+   {
+    "json": "ide_session_mode",
+    "type": "String"
+   },
+   {
+    "json": "sources",
+    "type": "String"
+   },
+   {
+    "json": "outcomes",
+    "type": "List<SessionSourceDTO>"
+   },
+   {
+    "json": "model",
+    "type": "String"
+   }
+  ],
+  "data/repositories/SessionEventDTO": [
+   {
+    "json": "event_id",
+    "type": "String"
+   },
+   {
+    "json": "session_id",
+    "type": "String"
+   },
+   {
+    "json": "sequence_num",
+    "type": "int"
+   },
+   {
+    "json": "source",
+    "type": "String"
+   },
+   {
+    "json": "event_type",
+    "type": "String"
+   },
+   {
+    "json": "payload",
+    "type": "Map<String"
+   },
+   {
+    "json": "created_at",
+    "type": "? extends Object>"
+   },
+   {
+    "json": "ephemeral",
+    "type": "String"
+   }
+  ],
+  "data/repositories/SessionEventsResponse": [
+   {
+    "json": "data",
+    "type": "List<SessionEventDTO>"
+   },
+   {
+    "json": "has_more",
+    "type": "boolean"
+   },
+   {
+    "json": "next_after_sequence_num",
+    "type": "Integer"
+   }
+  ],
+  "data/repositories/SessionOutcomeDTO": [
+   {
+    "json": "type",
+    "type": "String"
+   },
+   {
+    "json": "git_info",
+    "type": "SessionOutcomeGitInfoDTO"
+   }
+  ],
+  "data/repositories/SessionOutcomeGitInfoDTO": [
+   {
+    "json": "type",
+    "type": "String"
+   },
+   {
+    "json": "repo",
+    "type": "String"
+   },
+   {
+    "json": "branches",
+    "type": "List"
+   }
+  ],
+  "data/repositories/SessionSourceDTO": [
+   {
+    "json": "type",
+    "type": "String"
+   },
+   {
+    "json": "url",
+    "type": "String"
+   },
+   {
+    "json": "revision",
+    "type": "String"
+   }
+  ],
+  "data/repositories/SetSessionPinnedRequest": [
+   {
+    "json": "pinned",
+    "type": "boolean"
+   }
+  ],
+  "data/repositories/StoredServiceAccess": [
+   {
+    "json": "kind",
+    "type": "String"
+   },
+   {
+    "json": "baseURL",
+    "type": "String"
+   },
+   {
+    "json": "webBaseURL",
+    "type": "String"
+   },
+   {
+    "json": "apiBaseURL",
+    "type": "String"
+   },
+   {
+    "json": "brokerBaseURL",
+    "type": "String"
+   },
+   {
+    "json": "inferenceBaseURL",
+    "type": "String"
+   },
+   {
+    "json": "feedbackBaseURL",
+    "type": "String"
+   },
+   {
+    "json": "dynamicContentBaseURL",
+    "type": "String"
+   },
+   {
+    "json": "telemetryBaseURL",
+    "type": "String"
+   },
+   {
+    "json": "remoteAPIVersion",
+    "type": "int"
+   }
+  ],
+  "data/repositories/StoredSession": [
+   {
+    "json": "userId",
+    "type": "String"
+   },
+   {
+    "json": "userName",
+    "type": "String"
+   },
+   {
+    "json": "userUsername",
+    "type": "String"
+   },
+   {
+    "json": "userAvatarUrl",
+    "type": "String"
+   },
+   {
+    "json": "userEmail",
+    "type": "String"
+   },
+   {
+    "json": "userOrganizationId",
+    "type": "String"
+   },
+   {
+    "json": "userOrganizationName",
+    "type": "String"
+   },
+   {
+    "json": "userStaffId",
+    "type": "String"
+   },
+   {
+    "json": "accessToken",
+    "type": "String"
+   },
+   {
+    "json": "refreshToken",
+    "type": "String"
+   },
+   {
+    "json": "expiresAt",
+    "type": "String"
+   },
+   {
+    "json": "refreshTokenExpiresAt",
+    "type": "String"
+   },
+   {
+    "json": "serviceAccess",
+    "type": "StoredServiceAccess"
+   }
+  ],
+  "data/repositories/TokenRefreshResponse": [
+   {
+    "json": "refresh_token",
+    "type": "String"
+   },
+   {
+    "json": "expires_at",
+    "type": "String"
+   },
+   {
+    "json": "refresh_token_expires_at",
+    "type": "String"
+   }
+  ],
+  "data/repositories/UpdateSessionTitleRequest": [
+   {
+    "json": "title",
+    "type": "String"
+   }
+  ],
+  "data/repositories/UserInfoResponse": [
+   {
+    "json": "id",
+    "type": "String"
+   },
+   {
+    "json": "avatar",
+    "type": "String"
+   },
+   {
+    "json": "email",
+    "type": "String"
+   },
+   {
+    "json": "organization_id",
+    "type": "String"
+   },
+   {
+    "json": "organization_name",
+    "type": "String"
+   },
+   {
+    "json": "is_privacy_policy_modifiable",
+    "type": "String"
+   },
+   {
+    "json": "nick_name",
+    "type": "String"
+   },
+   {
+    "json": "last_organization",
+    "type": "Boolean"
+   },
+   {
+    "json": "phone_number",
+    "type": "String"
+   },
+   {
+    "json": "is_admin",
+    "type": "String"
+   },
+   {
+    "json": "staff_id",
+    "type": "String"
+   },
+   {
+    "json": "created_at",
+    "type": "Boolean"
+   }
+  ],
+  "data/repositories/UserIntegrationsResponseDTO": [
+   {
+    "json": "github",
+    "type": "String"
+   },
+   {
+    "json": "githubUsername",
+    "type": "String"
+   },
+   {
+    "json": "githubEmail",
+    "type": "String"
+   }
+  ],
+  "data/repositories/VoicePolishMessageDTO": [
+   {
+    "json": "role",
+    "type": "String"
+   },
+   {
+    "json": "content",
+    "type": "String"
+   }
+  ],
+  "data/repositories/VoicePolishRequestDTO": [
+   {
+    "json": "session_id",
+    "type": "String"
+   },
+   {
+    "json": "request_id",
+    "type": "String"
+   },
+   {
+    "json": "client_type",
+    "type": "int"
+   },
+   {
+    "json": "messages",
+    "type": "List<VoicePolishMessageDTO>"
+   }
+  ],
+  "data/repositories/VoicePolishResponseDTO": [
+   {
+    "json": "result",
+    "type": "Boolean"
+   },
+   {
+    "json": "traceId",
+    "type": "VoicePolishResultDTO"
+   }
+  ],
+  "data/repositories/VoicePolishResultDTO": [
+   {
+    "json": "content",
+    "type": "String"
+   }
+  ],
+  "data/local/ArtifactEntry": [
+   {
+    "json": "sourcePath",
+    "type": "String"
+   },
+   {
+    "json": "filename",
+    "type": "String"
+   },
+   {
+    "json": "mimeType",
+    "type": "String"
+   },
+   {
+    "json": "fileName",
+    "type": "String"
+   },
+   {
+    "json": "updatedAt",
+    "type": "long"
+   },
+   {
+    "json": "capturedMtime",
+    "type": "Long"
+   }
+  ],
+  "data/local/ArtifactManifest": [
+   {
+    "json": "artifacts",
+    "type": "List"
+   },
+   {
+    "json": "thumbnails",
+    "type": "List"
+   }
+  ],
+  "data/local/ScopedArtifactEntry": [
+   {
+    "json": "sessionID",
+    "type": "String"
+   },
+   {
+    "json": "sourcePath",
+    "type": "String"
+   },
+   {
+    "json": "filename",
+    "type": "String"
+   },
+   {
+    "json": "mimeType",
+    "type": "String"
+   },
+   {
+    "json": "fileName",
+    "type": "String"
+   },
+   {
+    "json": "sizeBytes",
+    "type": "long"
+   },
+   {
+    "json": "contentDigest",
+    "type": "String"
+   },
+   {
+    "json": "versionKind",
+    "type": "String"
+   },
+   {
+    "json": "versionPrimaryValue",
+    "type": "String"
+   },
+   {
+    "json": "versionSecondaryValue",
+    "type": "String"
+   },
+   {
+    "json": "validatedAtMillis",
+    "type": "long"
+   },
+   {
+    "json": "lastAccessedAtMillis",
+    "type": "long"
+   }
+  ],
+  "data/local/ScopedArtifactManifest": [
+   {
+    "json": "entries",
+    "type": "List"
+   }
+  ],
+  "data/local/SessionEntry": [
+   {
+    "json": "sessionID",
+    "type": "long"
+   },
+   {
+    "json": "lastAccessedAt",
+    "type": "long"
+   },
+   {
+    "json": "updatedAt",
+    "type": "String"
+   }
+  ],
+  "data/local/ThumbnailEntry": [
+   {
+    "json": "sourcePath",
+    "type": "String"
+   },
+   {
+    "json": "pixelSize",
+    "type": "int"
+   },
+   {
+    "json": "capturedMtime",
+    "type": "Long"
+   },
+   {
+    "json": "fileName",
+    "type": "String"
+   },
+   {
+    "json": "updatedAt",
+    "type": "long"
+   }
+  ],
+  "app/PendingAccountDeletionCleanupRecord": [
+   {
+    "json": "version",
+    "type": "int"
+   },
+   {
+    "json": "userId",
+    "type": "String"
+   },
+   {
+    "json": "failedStages",
+    "type": "List"
+   },
+   {
+    "json": "cutoffTimeMillis",
+    "type": "long"
+   },
+   {
+    "json": "diagnosticLogPaths",
+    "type": "List"
+   },
+   {
+    "json": "fileScopeHash",
+    "type": "String"
+   },
+   {
+    "json": "missingScopeDiagnosticLogged",
+    "type": "boolean"
+   }
+  ],
+  "domain/entities/GitHubErrorResponseDTO": [
+   {
+    "json": "error_code",
+    "type": "String"
+   }
+  ]
+ }
+}
