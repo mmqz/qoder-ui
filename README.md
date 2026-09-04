@@ -692,3 +692,35 @@ qoder-ui/
 - 导出面 29 → **30**（新增 `markdown`），ESM/CJS 双格式键值断言通过
 - 测试套件 69 → **86 用例**（markdown ×12 / 历史持久化 ×5）
 - 浏览器端到端：markdown 全语法渲染 + XSS 注入拦截 + 刷新恢复（含 md 结构）+ mock 流式实时渲染 + REST 往返，零 JS 错误
+
+## v3.5.0 移动端复现组件族（2026-09-04）
+
+> 移动端专项落地：反编译 Qoder 官方 Android 包 → 逆向分析报告 → 依实证复现移动端 UI 为 Web Components。
+
+### 移动端专项流程
+1. **反编译反混淆**：下载官方 APK（com.qoder.mobile.cn v0.2.8, versionCode 46）→ apktool 2.10.0 解资源 + jadx 1.5.1 反编译 9,761 类；R8 单字母混淆，经主包原名 / Kotlin Metadata / 第三方库原名三支点完成语义还原
+2. **分析报告**：《Qoder Mobile 移动端逆向分析报告》九章 —— 技术栈判定（原生 Kotlin + Jetpack Compose，非 RN/Flutter）、功能面（i18n 1,372 键全景测绘）、业务流（云端任务四阶段 / Spec 审批 / 四级操作审批）、设计体系（la_accent_* 与 Tailwind 同源）、深链/权限/后端接口（gateway.qoder.com.cn + WebSocket）
+3. **前端复现**：`src/qoder-mobile.js` 组件族 + `examples/mobile.html` 演示页
+
+### qm-* 组件（10 个）
+| 组件 | 复现对象 | 实证要点 |
+|------|---------|---------|
+| `<qm-app>` | 底部三 Tab 壳 | 任务/会话/我的，深链语义 qodercn://tasks\|sessions |
+| `<qm-task-list>` | 任务列表 | 活跃/已关闭统计、四状态点（实证色） |
+| `<qm-new-task>` | 新建任务 | hero 文案逐字（"想到就说，说干就干"/"我是小Q…"）、仓库/分支、Spec 模式 |
+| `<qm-conversation>` | 会话对话流 | 深度思考折叠、来源、N 个智能体/N名专家/待办 d/d、已复制 |
+| `<qm-composer>` | 输入区 | 图片/相机/文件/语音、模式与模型、沙箱锁定禁用态 |
+| `<qm-approval>` | 审批面板 | Spec 双按钮（生成 Spec/直接执行）+ 四级选项（允许[推荐]/仅本次/本会话内/拒绝+拒绝并发送） |
+| `<qm-sandbox-boot>` | 云沙箱启动 | 四阶段实证文案 + 失败态 |
+| `<qm-artifact>` | 产物页 | 预览/源码切换、最终交付/中间编辑分组 |
+| `<qm-session-detail>` | 会话详情 | 会话 ID/模型/运行环境/创建与更新时间 |
+| `<qm-settings>` | 设置页 | 外观三选项、账号安全（注销账号）、隐私协议/服务条款、AI 生成内容声明 |
+
+### 复现口径
+- **文案**：逐字取自安装包 `assets/dynamic-content/qoder-mobile.zh.json`（45 项断言测试逐字校验），zh/en 双语键集合一致
+- **色板**：`la_accent_running #2FBF71 / completed #3B82F6 / attention #F5A623 / error #EF4444`（res/values/colors.xml 实证），明暗双主题（对应 values-night）
+- **事件**：全部组件 `bubbles+composed` 标准事件（navigate/task-open/submit/send/approve/copy/item…）
+- **测试**：45 新用例（SSR 安全/注册/文案保真/色板/模板渲染/事件契约），全套 86 → **131 全绿**；浏览器 E2E 真机框渲染 + 深浅主题 + 交互冒烟零报错
+
+### 逆向合规声明
+分析仅用于学习研究；复现为基于可观察行为与资源事实的重新实现（clean-room），不含官方代码/图片/品牌资产，不得商用。

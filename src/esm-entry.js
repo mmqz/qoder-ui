@@ -11,11 +11,16 @@ import './qoder-features.js';
 import './qoder-markdown.js';
 import './qoder-diff.js';
 import './qoder-transport.js';
+import './qoder-mobile.js';
 
 const _g = typeof globalThis !== 'undefined' ? globalThis : {};
 const QoderUI = ((typeof window !== 'undefined' ? window : _g).QoderUI) || {};
 
 export default QoderUI;
+
+// 浏览器 IIFE：esbuild 的 var QoderUI=(...)() 会用导出命名空间覆盖
+// window.QoderUI，这里确保全局引用与导出对象一致（避免双对象分裂）
+if (typeof globalThis !== 'undefined') globalThis.QoderUI = QoderUI;
 
 // 按模块分组的命名导出
 export const {
@@ -47,5 +52,6 @@ export const {
   markdown,
   t,
   i18n,
-  setLocale
+  setLocale,
+  Mobile
 } = QoderUI;
