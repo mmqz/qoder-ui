@@ -762,3 +762,35 @@ qoder-ui/
 
 ### 逆向合规声明
 分析仅用于学习研究；复现为基于可观察行为与资源事实的重新实现（clean-room），不含官方代码/图片/品牌资产，不得商用。
+
+## v3.7.0 移动端面板补全与会话列表（2026-09-04）
+
+> 三块增量全部取自 `res/values*/strings.xml` 逐字实证：composer plus 扩展面板、工作区会话列表屏、mermaid 流程图卡（净室迷你渲染器）。组件 10 → **12**（新增 `qm-session-list` / `qm-mermaid`）。
+
+### 1. composer plus 扩展面板（`panel="options"`）
+点 **+** 打开输入选项 bottom sheet（`composer.options.open`），内含：
+- **入口行**：模式 / 模型 / Spec（`composer_plus_mode|model|spec`；模式/模型可下钻到既有选择面板）
+- **连接器 ×3**：电脑操作（Computer Use）/ QoderWork 连接器（QoderWork）/ 企业技能市场助手（Enterprise Skill Market Assistant）
+- **技能 ×3**：DOCX / PDF / XLSX + 副标题逐字（"当用户需要创建、读取、编辑或处理 Word 文件时使用此技能"等）
+- **插件 ×5**：咨询交付 / 股票研究 / 市场营销 / 私募股权 / 产品管理 + 五条副标题逐字
+- **文件 ×2**：`~/文档/AIproduct_analysis`、`~/图片/logo_design`
+- **四组空态**逐字（"暂无连接器。请在 QoderWork 桌面端 App 中添加。"等，宿主传空数组即触发）；条目可用 `connectors` / `skills` / `plugins` / `files` 属性（JSON 数组）覆盖内置项；事件 `plus-pick {group,id}`；sheet 限高 560px 内滚动（真机 bottom sheet 行为）
+
+### 2. 工作区会话列表（`<qm-session-list>`，第三 tab）
+- 顶栏 `workspace_title` 工作区 + `workspace_open_settings` 打开设置；**三指标卡**：活跃 / 已关闭 / 设备（`workspace_metric_*`）
+- **双分组**：`workspace_section_active` 活跃 / `workspace_section_closed` 已关闭；会话卡带阶段标签（复用 tasks_phase_*，attention→等待审批）与 `workspace_read_file(s)` 读取 N 个文件
+- **重命名闭环**：卡片 ⋯ → 对话框（`workspace_rename_title` 任务名称 / `workspace_rename_agree` 确定）→ `rename {id,title}` 事件；`loading` 态显示 `workspace_loading` 正在加载会话…
+- 事件：`session-open` / `rename-request` / `rename` / `settings-open`
+
+### 3. mermaid 流程图卡（`<qm-mermaid>` + 对话内嵌）
+- 实证文案四键：`markdown.mermaid.title` 流程图 / `cd_mermaid_render` 渲染图表 / `conversation_mermaid_rendering` 正在渲染图表… / `conversation_mermaid_source_unavailable` 该图已失效，请返回后重新打开。
+- **净室迷你渲染器**（零依赖，导出 `parseMermaid` / `renderMermaidSvg`）：支持 `graph|flowchart TD/TB/LR/RL/BT`、节点三形 `[]` 方 / `()` 圆角 / `{}` 菱形、四种边（`-->` `-.->` `==>` `---`）、两种边标签（`A -- 文本 --> B`、`A -->|文本| B`）、`%%` 注释；Kahn 分层防环；所有文本经 `escapeHtml` 后入 SVG，无原始 HTML 注入面
+- 四态：idle（源码 + 渲染图表按钮）→ done（SVG）/ rendering（宿主驱动）/ unavailable（解析失败自动进入）；消息对象带 `mermaid` 字段时 `qm-conversation` 自动内嵌本卡
+
+### 质量门
+- 测试 164 → **182 用例全绿**（plus 面板实证条目/空态/覆盖、会话列表分组与重命名、mermaid 解析/环安全/XSS 转义/布局、原始键名零泄漏不变量等 18 项）
+- E2E（真实 Chromium）**25 项断言零错误**：新增会话列表指标（3/2/2）/分组/重命名全闭环、plus 面板 13 条目点选事件、mermaid 5 节点 5 边点击渲染、panel=options 初始渲染
+- 版本一致性守卫（package.json = 运行时 = 构建横幅 = 3.7.0）；npm pack 36 文件；导出面不变
+
+### 逆向合规声明
+分析仅用于学习研究；复现为基于可观察行为与资源事实的重新实现（clean-room），不含官方代码/图片/品牌资产，不得商用。

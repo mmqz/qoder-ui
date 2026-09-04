@@ -1,7 +1,8 @@
 /**
- * v3.6.0 移动端复现组件族测试（真机对齐版）
- * 覆盖：SSR 安全 / 10 组件注册 / 实证文案逐字保真（对照 APK i18n 表）/
- *       真实色板（M6.b 主题类 96 槽解码 + la_accent_*）/ 模板渲染 / 事件契约
+ * 移动端复现组件族测试（v3.7.0 真机对齐版）
+ * 覆盖：SSR 安全 / 12 组件注册 / 实证文案逐字保真（对照 APK i18n 表）/
+ *       真实色板（M6.b 主题类 96 槽解码 + la_accent_*）/ 模板渲染 / 事件契约 /
+ *       v3.7.0 composer.plus 面板 + 工作区会话列表 + mermaid 净室渲染器
  */
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
@@ -31,24 +32,26 @@ function loadMobile() {
   return sandbox.QoderUI.Mobile;
 }
 
-describe('v3.6.0 移动端组件注册', () => {
+describe('v3.7.0 移动端组件注册', () => {
   const M = loadMobile();
 
-  test('导出公共 API（t/setLocale/STRINGS/statusColor/version）', () => {
+  test('导出公共 API（t/setLocale/STRINGS/statusColor/parseMermaid/renderMermaidSvg/version）', () => {
     assert.ok(M, 'QoderUI.Mobile 应存在');
     assert.equal(typeof M.t, 'function');
     assert.equal(typeof M.setLocale, 'function');
     assert.ok(M.STRINGS.zh && M.STRINGS.en);
     assert.equal(typeof M.statusColor, 'function');
-    assert.equal(M.version, '3.6.0');
+    assert.equal(typeof M.parseMermaid, 'function');
+    assert.equal(typeof M.renderMermaidSvg, 'function');
+    assert.equal(M.version, '3.7.0');
   });
 
-  test('10 个 qm-* 组件全部注册', () => {
+  test('12 个 qm-* 组件全部注册', () => {
     const names = ['qm-app', 'qm-task-list', 'qm-new-task', 'qm-conversation',
       'qm-composer', 'qm-approval', 'qm-sandbox-boot', 'qm-artifact',
-      'qm-session-detail', 'qm-settings'];
+      'qm-session-detail', 'qm-settings', 'qm-session-list', 'qm-mermaid'];
     for (const n of names) assert.ok(M.WC[n], '缺少组件 ' + n);
-    assert.equal(Object.keys(M.WC).length, 10);
+    assert.equal(Object.keys(M.WC).length, 12);
   });
 
   test('SSR 安全：源码无 document/window 顶层直接调用', () => {
@@ -358,5 +361,271 @@ describe('v3.6.0 组件模板渲染', () => {
     assert.ok(html.includes('注销账号'));
     assert.ok(html.includes('Version: 0.2.8'));
     assert.ok(html.includes('服务生成的所有内容均由人工智能生成'));
+  });
+});
+
+/* ==================== v3.7.0 新增 ==================== */
+describe('v3.7.0 实证文案保真（composer_plus_* / workspace_* / mermaid_*）', () => {
+  const M = loadMobile();
+
+  test('plus 面板四组标题与空态（zh 逐字，strings.xml composer_plus_*）', () => {
+    assert.equal(M.t('composer.plus.connectors'), '连接器');
+    assert.equal(M.t('composer.plus.skills'), '技能');
+    assert.equal(M.t('composer.plus.plugins'), '插件');
+    assert.equal(M.t('composer.plus.files'), '文件');
+    assert.equal(M.t('composer.plus.connectors_empty'), '暂无连接器。请在 QoderWork 桌面端 App 中添加。');
+    assert.equal(M.t('composer.plus.skills_empty'), '暂无技能。请在 QoderWork 桌面端 App 中添加。');
+    assert.equal(M.t('composer.plus.plugins_empty'), '暂无插件。请在 QoderWork 桌面端 App 中添加。');
+    assert.equal(M.t('composer.plus.files_empty'), '暂无文件。请在 QoderWork 桌面端 App 中添加。');
+    assert.equal(M.t('composer.plus.mode'), '模式');
+    assert.equal(M.t('composer.plus.model'), '模型');
+    assert.equal(M.t('composer.plus.spec'), 'Spec');
+  });
+
+  test('连接器/技能/插件/文件内置条目（zh 逐字）', () => {
+    assert.equal(M.t('composer.plus.connector.computer_use'), '电脑操作');
+    assert.equal(M.t('composer.plus.connector.qoderwork'), 'QoderWork 连接器');
+    assert.equal(M.t('composer.plus.connector.market'), '企业技能市场助手');
+    assert.equal(M.t('composer.plus.skill.docx'), 'DOCX');
+    assert.equal(M.t('composer.plus.skill.docx_subtitle'), '当用户需要创建、读取、编辑或处理 Word 文件时使用此技能');
+    assert.equal(M.t('composer.plus.skill.pdf_subtitle'), '当用户需要处理 PDF 时使用此技能');
+    assert.equal(M.t('composer.plus.skill.xlsx_subtitle'), '当电子表格文件是主要输入和输出时使用此技能');
+    assert.equal(M.t('composer.plus.plugin.consulting'), '咨询交付');
+    assert.equal(M.t('composer.plus.plugin.consulting_subtitle'), '覆盖七个核心场景的全流程管理咨询工具包');
+    assert.equal(M.t('composer.plus.plugin.equity'), '股票研究');
+    assert.equal(M.t('composer.plus.plugin.marketing'), '市场营销');
+    assert.equal(M.t('composer.plus.plugin.pe'), '私募股权');
+    assert.equal(M.t('composer.plus.plugin.pm'), '产品管理');
+    assert.equal(M.t('composer.plus.file.ai_analysis'), '~/文档/AIproduct_analysis');
+    assert.equal(M.t('composer.plus.file.logo_design'), '~/图片/logo_design');
+  });
+
+  test('工作区会话列表（workspace_* zh 逐字）', () => {
+    assert.equal(M.t('workspace.title'), '工作区');
+    assert.equal(M.t('workspace.section.active'), '活跃');
+    assert.equal(M.t('workspace.section.closed'), '已关闭');
+    assert.equal(M.t('workspace.metric.devices'), '设备');
+    assert.equal(M.t('workspace.loading'), '正在加载会话…');
+    assert.equal(M.t('workspace.preparing'), '正在准备工作区…');
+    assert.equal(M.t('workspace.rename_title'), '任务名称');
+    assert.equal(M.t('workspace.rename_agree'), '确定');
+    assert.equal(M.t('workspace.open_settings'), '打开设置');
+    assert.equal(M.t('workspace.read_files'), '读取 %d 个文件');
+  });
+
+  test('mermaid 卡四键（zh 逐字，conversation_mermaid_* / cd_mermaid_render）', () => {
+    assert.equal(M.t('markdown.mermaid.title'), '流程图');
+    assert.equal(M.t('mermaid.render'), '渲染图表');
+    assert.equal(M.t('mermaid.loading'), '正在渲染图表…');
+    assert.equal(M.t('mermaid.unavailable'), '该图已失效，请返回后重新打开。');
+  });
+
+  test('en 镜像逐字（strings.xml en）', () => {
+    M.setLocale('en');
+    assert.equal(M.t('composer.plus.connectors_empty'), 'No connectors yet. Add them in QoderWork Desktop App.');
+    assert.equal(M.t('composer.plus.skills_empty'), 'No skills yet. Add them in QoderWork Desktop App.');
+    assert.equal(M.t('composer.plus.plugins_empty'), 'No plugins yet. Add them in QoderWork Desktop App.');
+    assert.equal(M.t('composer.plus.files_empty'), 'No files yet. Add them in QoderWork Desktop App.');
+    assert.equal(M.t('composer.plus.connector.computer_use'), 'Computer Use');
+    assert.equal(M.t('composer.plus.connector.qoderwork'), 'QoderWork');
+    assert.equal(M.t('composer.plus.connector.market'), 'Enterprise Skill Market Assistant');
+    assert.equal(M.t('composer.plus.skill.docx_subtitle'), 'Use this skill whenever the user wants to create, read, edit, or manipulate word files');
+    assert.equal(M.t('composer.plus.plugin.pm'), 'Product Management');
+    assert.equal(M.t('composer.plus.file.ai_analysis'), '~/Documents/AIproduct_analysis');
+    assert.equal(M.t('workspace.title'), 'Workspace');
+    assert.equal(M.t('workspace.section.active'), 'Active');
+    assert.equal(M.t('workspace.loading'), 'Loading conversations…');
+    assert.equal(M.t('workspace.rename_title'), 'Task Name');
+    assert.equal(M.t('workspace.rename_agree'), 'Agree');
+    assert.equal(M.t('workspace.read_files'), 'Read %d files');
+    assert.equal(M.t('mermaid.render'), 'Render diagram');
+    assert.equal(M.t('mermaid.unavailable'), 'This diagram is no longer available. Go back and open it again.');
+    M.setLocale('zh');
+  });
+});
+
+describe('v3.7.0 组件模板渲染（plus 面板 / 会话列表 / mermaid 卡）', () => {
+  const M = loadMobile();
+
+  function fakeEl(Cls, attrs) {
+    const inst = Object.create(Cls.prototype);
+    inst.getAttribute = (k) => (k in attrs ? attrs[k] : null);
+    inst.hasAttribute = (k) => k in attrs;
+    inst.setAttribute = (k, v) => { attrs[k] = v; };
+    return inst;
+  }
+
+  test('qm-composer(panel=options): 入口行 + 连接器/技能/插件/文件四组内置条目', () => {
+    const El = M.WC['qm-composer'];
+    const html = El.prototype.template.call(fakeEl(El, { panel: 'options' }));
+    /* 入口行 */
+    assert.ok(html.includes('data-entry="mode"') && html.includes('data-entry="model"') && html.includes('data-entry="spec"'));
+    assert.ok(html.includes('打开输入选项'));
+    /* 四组标题 */
+    assert.ok(html.includes('连接器') && html.includes('技能') && html.includes('插件') && html.includes('文件'));
+    /* 内置条目（实证） */
+    assert.ok(html.includes('电脑操作') && html.includes('QoderWork 连接器') && html.includes('企业技能市场助手'));
+    assert.ok(html.includes('DOCX') && html.includes('PDF') && html.includes('XLSX'));
+    assert.ok(html.includes('当电子表格文件是主要输入和输出时使用此技能'));
+    assert.ok(html.includes('咨询交付') && html.includes('股票研究') && html.includes('市场营销'));
+    assert.ok(html.includes('私募股权') && html.includes('产品管理'));
+    assert.ok(html.includes('~/文档/AIproduct_analysis') && html.includes('~/图片/logo_design'));
+    /* 事件钩子存在 */
+    assert.ok(html.includes('data-plus="plugins" data-plus-id="pm"'));
+    /* 插件项带副标题；文件项不带副标题（plain） */
+    assert.ok(html.includes('覆盖八个核心工作流的端到端产品管理工具包'));
+    /* 不变量：任何缺失 i18n 键都不允许以原始键名泄漏进模板 */
+    assert.ok(!html.includes('composer.plus.'), '原始键名泄漏');
+  });
+
+  test('qm-composer(panel=options): 空数组 → 实证空态文案；自定义条目覆盖', () => {
+    const El = M.WC['qm-composer'];
+    const html = El.prototype.template.call(fakeEl(El, {
+      panel: 'options',
+      plugins: '[]',
+      connectors: JSON.stringify([{ name: '自研连接器', desc: '内网' }])
+    }));
+    assert.ok(html.includes('暂无插件。请在 QoderWork 桌面端 App 中添加。'));
+    assert.ok(html.includes('自研连接器') && html.includes('内网'));
+    assert.ok(!html.includes('data-plus-id="pm"'));
+  });
+
+  test('qm-composer: 点 + 不再无响应（options 为合法 panel）', () => {
+    const El = M.WC['qm-composer'];
+    assert.ok(El.observedAttributes.includes('panel'));
+  });
+
+  test('qm-session-list: 标题/三指标/活跃已关闭分组/阶段标签/读取文件数', () => {
+    const El = M.WC['qm-session-list'];
+    const el = fakeEl(El, {
+      devices: '2',
+      sessions: JSON.stringify([
+        { id: 's1', title: '竞品简报', status: 'running', updated: '2 分钟前', files: 3 },
+        { id: 's2', title: '舆情监控', status: 'waiting', updated: '今天 14:20' },
+        { id: 's3', title: '海报设计', status: 'closed', updated: '昨天 18:02', files: 2 }
+      ])
+    });
+    const html = El.prototype.template.call(el);
+    assert.ok(html.includes('工作区') && html.includes('打开设置'));
+    assert.ok(html.includes('活跃') && html.includes('已关闭') && html.includes('设备'));
+    assert.ok(html.includes('竞品简报') && html.includes('运行中'));
+    assert.ok(html.includes('舆情监控') && html.includes('等待审批'));
+    assert.ok(html.includes('海报设计') && html.includes('已关闭'));
+    assert.ok(html.includes('读取 3 个文件'));
+    /* 三个指标卡：活跃 2 / 已关闭 1 / 设备 2 */
+    const nums = html.match(/qm-ws__num">(\d+)</g) || [];
+    assert.deepEqual(nums.map((s) => s.replace(/\D/g, '')), ['2', '1', '2']);
+  });
+
+  test('qm-session-list: loading 态与重命名对话框（任务名称/确定）', () => {
+    const El = M.WC['qm-session-list'];
+    const loading = El.prototype.template.call(fakeEl(El, { loading: '' }));
+    assert.ok(loading.includes('正在加载会话…'));
+    assert.ok(!loading.includes('qm-card__title'));
+    const el = fakeEl(El, {
+      renaming: 's1',
+      sessions: JSON.stringify([{ id: 's1', title: '旧任务名', status: 'idle' }])
+    });
+    const html = El.prototype.template.call(el);
+    assert.ok(html.includes('任务名称'));
+    assert.ok(html.includes('value="旧任务名"'));
+    assert.ok(html.includes('确定'));
+    assert.ok(html.includes('data-rename-ok'));
+  });
+
+  test('qm-mermaid: idle 态（源码 + 渲染图表按钮）→ done 态（SVG）→ 失效态', () => {
+    const El = M.WC['qm-mermaid'];
+    const src = 'graph TD\nA[开始] --> B[结束]';
+    const idle = El.prototype.template.call(fakeEl(El, { source: src }));
+    assert.ok(idle.includes('流程图') && idle.includes('渲染图表'));
+    assert.ok(idle.includes('qm-mm__src') && idle.includes('data-render'));
+    const done = El.prototype.template.call(fakeEl(El, { source: src, state: 'done' }));
+    assert.ok(done.includes('<svg') && done.includes('开始') && done.includes('结束'));
+    assert.ok(!done.includes('data-render'));
+    const dead = El.prototype.template.call(fakeEl(El, { state: 'unavailable' }));
+    assert.ok(dead.includes('该图已失效，请返回后重新打开。'));
+    const busy = El.prototype.template.call(fakeEl(El, { state: 'rendering' }));
+    assert.ok(busy.includes('正在渲染图表…'));
+  });
+
+  test('qm-conversation: 消息带 mermaid 字段 → 内嵌 qm-mermaid 卡', () => {
+    const El = M.WC['qm-conversation'];
+    const el = fakeEl(El, {
+      theme: 'dark',
+      messages: JSON.stringify([
+        { role: 'assistant', text: '流程如下', mermaid: 'graph TD\nA[1] --> B[2]' }
+      ])
+    });
+    const html = El.prototype.template.call(el);
+    assert.ok(html.includes('<qm-mermaid source="graph TD&#10;A[1] --> B[2]"'));
+    assert.ok(html.includes('theme="dark"'));
+  });
+});
+
+describe('v3.7.0 mermaid 净室渲染器（parseMermaid / renderMermaidSvg）', () => {
+  const M = loadMobile();
+
+  test('解析：节点三形 / 四种边 / 边标签 / 注释与方向', () => {
+    const p = M.parseMermaid(
+      'graph TD\n' +
+      '  %% 注释行\n' +
+      '  A[开始] --> B{是否需要审批?}\n' +
+      '  B -->|是| C[等待授权]\n' +
+      '  B -->|否| D[直接执行]\n' +
+      '  C -.-> E(继续任务)\n' +
+      '  D ==> E\n' +
+      '  F --- A');
+    assert.equal(p.dir, 'TD');
+    assert.equal(p.nodes.length, 6);
+    const byId = Object.fromEntries(p.nodes.map((n) => [n.id, n]));
+    assert.equal(byId.A.label, '开始'); assert.equal(byId.A.shape, 'rect');
+    assert.equal(byId.B.shape, 'diamond');
+    assert.equal(byId.E.shape, 'round'); assert.equal(byId.E.label, '继续任务');
+    assert.equal(p.edges.length, 6);
+    assert.deepEqual(p.edges[1], { from: 'B', to: 'C', label: '是' });
+    assert.ok(p.edges.some((e) => e.from === 'D' && e.to === 'E' && e.label === ''));
+  });
+
+  test('A -- 文本 --> B 形式与 LR 方向', () => {
+    const p = M.parseMermaid('flowchart LR\n  A -- 通过 --> B\n  B --> C');
+    assert.equal(p.dir, 'LR');
+    assert.deepEqual(p.edges[0], { from: 'A', to: 'B', label: '通过' });
+  });
+
+  test('环安全：A→B→A 不死循环，节点全部落位', () => {
+    const svg = M.renderMermaidSvg('graph TD\n  A --> B\n  B --> A');
+    assert.ok(svg && svg.includes('<svg'));
+    assert.equal((svg.match(/<rect/g) || []).length, 2);
+  });
+
+  test('garbage 输入 → null（调用方进入失效态）', () => {
+    assert.equal(M.renderMermaidSvg('hello world'), null);
+    assert.equal(M.renderMermaidSvg(''), null);
+    assert.equal(M.renderMermaidSvg(null), null);
+  });
+
+  test('SVG 输出安全：文本经 esc（含 escapeHtml 的沙箱）', () => {
+    const sandbox = {};
+    const fn = new Function('globalThis', `
+      this.QoderCore = { escapeHtml: (s) => String(s == null ? '' : s)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') };
+      this.QoderUI = { ShadowElement: class {
+        constructor() {} static get observedAttributes() { return []; }
+        emit() {} $(sel) { return null; } $$(sel) { return []; }
+      } };
+      const g = this;
+      ${src}
+    `);
+    fn.call(sandbox, sandbox);
+    const svg = sandbox.QoderUI.Mobile.renderMermaidSvg('graph TD\nA[<b>x</b>&y] --> B[ok]');
+    assert.ok(svg.includes('&lt;b&gt;x&lt;/b&gt;&amp;y'), '节点文本被转义');
+    assert.ok(!svg.includes('<b>'), '无原始 HTML 注入');
+  });
+
+  test('TD 布局：层级深度决定 y 坐标（父在上子在下）', () => {
+    const svg = M.renderMermaidSvg('graph TD\nA[开始] --> B[结束]');
+    const yA = Number(svg.match(/<text x="([\d.]+)" y="([\d.]+)"[^>]*>开始/)[2]);
+    const yB = Number(svg.match(/<text x="([\d.]+)" y="([\d.]+)"[^>]*>结束/)[2]);
+    assert.ok(yB > yA, 'TD 子节点 y 应大于父节点');
   });
 });

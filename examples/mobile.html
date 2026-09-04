@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Qoder Mobile 组件演示 — qoder-ui v3.6.0</title>
+<title>Qoder Mobile 组件演示 — qoder-ui v3.7.0</title>
 <style>
   :root {
     --bg: #f2f1ee; --ink: #141414; --muted: #636261;
@@ -60,7 +60,7 @@
 <body>
 <header>
   <h1>Qoder Mobile — 前端复现演示</h1>
-  <span class="sub">依据官方 Android 包二次逆向复现 · com.qoder.mobile.cn v0.2.8 · qoder-ui v3.6.0</span>
+  <span class="sub">依据官方 Android 包二次逆向复现 · com.qoder.mobile.cn v0.2.8 · qoder-ui v3.7.0</span>
   <span class="sp"></span>
   <button class="ctl" id="langZh">中文</button>
   <button class="ctl" id="langEn">English</button>
@@ -98,7 +98,7 @@
 
   <!-- ③ 会话对话流 -->
   <section>
-    <p class="cap"><b>③ 会话对话流 · 工具卡片族</b><span class="tag">qm-conversation + qm-composer</span></p>
+    <p class="cap"><b>③ 会话对话流 · 工具卡片族 · 流程图卡</b><span class="tag">qm-conversation + qm-mermaid</span></p>
     <div class="phone"><div class="screen">
       <div class="notch"></div>
       <div class="statusbar"><span>9:41</span><span>5G · 100%</span></div>
@@ -155,14 +155,43 @@
       </div>
     </div></div>
   </section>
+
+  <!-- ⑦ 工作区会话列表（v3.7.0） -->
+  <section>
+    <p class="cap"><b>⑦ 工作区会话列表 · 重命名</b><span class="tag">qm-app + qm-session-list</span></p>
+    <div class="phone"><div class="screen">
+      <div class="notch"></div>
+      <div class="statusbar"><span>9:41</span><span>5G · 100%</span></div>
+      <div class="scroll">
+        <qm-app id="app2" page="sessions" theme="light">
+          <qm-session-list slot="page-sessions" id="sessions1" devices="2" theme="light"></qm-session-list>
+          <qm-settings slot="page-me" id="settings2" theme="light"></qm-settings>
+        </qm-app>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- ⑧ composer plus 扩展面板（v3.7.0） -->
+  <section>
+    <p class="cap"><b>⑧ 输入选项 · 连接器/技能/插件/文件</b><span class="tag">qm-composer panel=options</span></p>
+    <div class="phone"><div class="screen">
+      <div class="notch"></div>
+      <div class="statusbar"><span>9:41</span><span>5G · 100%</span></div>
+      <div class="scroll" style="bottom:190px"></div>
+      <div class="dock-abs">
+        <qm-composer id="comp2" panel="options" theme="light" mode="ask" model="auto"></qm-composer>
+      </div>
+    </div></div>
+  </section>
 </div>
 
 <footer>
-  复现依据：《Qoder Mobile 移动端逆向分析报告》+ v3.6.0 二次深挖。文案逐字取自安装包
+  复现依据：《Qoder Mobile 移动端逆向分析报告》+ v3.6.0/v3.7.0 二次深挖。文案逐字取自安装包
   <code>assets/dynamic-content/qoder-mobile.zh.json</code> 与 <code>res/values*/strings.xml</code>；
   色板解码自混淆主题类（浅色 primary #5CBD61 / 深色 #2ADB5C，暖灰文字阶 #141414/#636261/#838280，
   页面底 #FDFDFD/#161612，状态色 error #FF4D4F / warning #FAAD14 / info #0B83F1 / success #5BB98B）；
-  信息架构对应深链 <code>qodercn://home|tasks|sessions</code>。仅供学习研究，不含官方资产，不得商用。
+  信息架构对应深链 <code>qodercn://home|tasks|sessions</code>；plus 面板与流程图卡文案取自
+  <code>composer_plus_*</code> / <code>conversation_mermaid_*</code>。仅供学习研究，不含官方资产，不得商用。
 </footer>
 
 <script src="../dist/qoder-ui.min.js"></script>
@@ -199,10 +228,18 @@
       thinking: '先按关键词聚类，再对每类做情绪打标；低置信样本交给专家复核。', sources: 3, agents: 2, todoDone: 2, todoTotal: 4 },
     { role: 'assistant', text: '', groupFiles: 12 },
     { role: 'user', text: '把稳定性类单独整理成表格。' },
-    { role: 'assistant', text: '已整理 43 条稳定性反馈为表格，按影响面排序。', tools: [
+    { role: 'assistant', text: '已整理 43 条稳定性反馈为表格，按影响面排序。分类处理流程如下：', tools: [
       { kind: 'edit', status: 'completed', detail: '周报_第36周.xlsx' },
       { kind: 'subagent', status: 'completed' }
-    ], agents: 1, todoDone: 3, todoTotal: 4 }
+    ], agents: 1, todoDone: 3, todoTotal: 4,
+      mermaid: 'graph TD\n  A[拉取反馈] --> B{稳定性类?}\n  B -->|是| C[按影响面排序]\n  B -->|否| D[归入其他类]\n  C --> E[写入周报表格]\n  D --> E' }
+  ];
+  var sessions = [
+    { id: 's_01', title: '每周一推送竞品简报', status: 'running', updated: '2 分钟前', files: 3 },
+    { id: 's_02', title: '200条客户反馈按问题与情绪分类', status: 'waiting', updated: '今天 14:20', files: 12 },
+    { id: 's_03', title: '数据清洗脚本迁移', status: 'idle', updated: '今天 11:05' },
+    { id: 's_04', title: '设计产品发布会主视觉海报', status: 'closed', updated: '昨天 18:02', files: 2 },
+    { id: 's_05', title: '部署一个客服 Agent 自动回复咨询', status: 'closed', updated: '周一 09:40', files: 5 }
   ];
   var files = [
     { name: '周报_第36周.pdf', kind: 'pdf', section: 'presented', size: '842 KB' },
@@ -232,6 +269,27 @@
 
     /* 对话 */
     q('#conv1').messages = messages;
+
+    /* 工作区会话列表（v3.7.0） */
+    var sl = q('#sessions1');
+    if (sl) {
+      sl.sessions = sessions;
+      sl.addEventListener('session-open', function (e) { console.log('[qm] session-open', e.detail); });
+      sl.addEventListener('settings-open', function () { console.log('[qm] settings-open'); });
+      sl.addEventListener('rename', function (e) {
+        console.log('[qm] rename', e.detail);
+        sessions = sessions.map(function (s) {
+          return s.id === e.detail.id ? Object.assign({}, s, { title: e.detail.title || s.title }) : s;
+        });
+        sl.sessions = sessions;
+      });
+    }
+
+    /* plus 扩展面板联动：点 + 打开输入选项（v3.7.0） */
+    q('#comp1').addEventListener('act', function (e) {
+      if (e.detail.kind === 'options') q('#comp1').setAttribute('panel', 'options');
+    });
+    q('#comp1').addEventListener('plus-pick', function (e) { console.log('[qm] plus-pick', e.detail); });
 
     /* 产物 + 会话详情 */
     q('#art1').files = files;
@@ -277,7 +335,7 @@
       document.documentElement.style.setProperty('--muted', t === 'dark' ? '#95958F' : '#636261');
       document.documentElement.style.setProperty('--card', t === 'dark' ? '#171716' : '#fff');
       document.documentElement.style.setProperty('--line', t === 'dark' ? '#2A2926' : '#e5e5e5');
-      document.querySelectorAll('qm-app, qm-task-list, qm-new-task, qm-conversation, qm-composer, qm-approval, qm-sandbox-boot, qm-artifact, qm-session-detail, qm-settings')
+      document.querySelectorAll('qm-app, qm-task-list, qm-new-task, qm-conversation, qm-composer, qm-approval, qm-sandbox-boot, qm-artifact, qm-session-detail, qm-settings, qm-session-list, qm-mermaid')
         .forEach(function (c) { c.setAttribute('theme', t); });
       q('#thLight').classList.toggle('on', t === 'light');
       q('#thDark').classList.toggle('on', t === 'dark');
@@ -298,7 +356,7 @@
       M.setLocale('en');
       q('#langZh').classList.remove('on'); q('#langEn').classList.add('on');
       /* locale 晚于组件首次渲染 → 重设已观察属性触发整体重渲染 */
-      document.querySelectorAll('qm-app, qm-task-list, qm-new-task, qm-conversation, qm-composer, qm-approval, qm-sandbox-boot, qm-artifact, qm-session-detail, qm-settings')
+      document.querySelectorAll('qm-app, qm-task-list, qm-new-task, qm-conversation, qm-composer, qm-approval, qm-sandbox-boot, qm-artifact, qm-session-detail, qm-settings, qm-session-list, qm-mermaid')
         .forEach(function (c) { c.setAttribute('theme', currentTheme); });
     }
   }
