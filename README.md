@@ -671,3 +671,24 @@ qoder-ui/
 - 测试套件 57 → **69 用例**（新增 12 条：i18n ×3 / WS 心跳 ×4 / REST 超时 ×3 / scrollback ×2），并行模式全绿
 - 浏览器端到端：`setLocale('en')` 实时切换（终端 help 输出英文）→ 切回中文；scrollback 设 10 跑 20 条命令 DOM 稳定 10 行；REST 远程 pwd 往返正常；全程零 JS 错误
 - 导出面 26 → **29**（新增 `t` / `i18n` / `setLocale`），ESM/CJS 双格式键值断言通过
+
+## v3.4.0 内容渲染与验证闭环（2026-09-04）
+
+> 质量纵深 + 聊天内容增强：AI 消息支持 Markdown、聊天历史刷新恢复，并补齐两项验证闭环。
+
+### 新增能力
+| 项 | 说明 |
+|----|------|
+| **Markdown 渲染** | `QoderUI.markdown.render()` — 零依赖轻量解析器（约 250 行）。支持标题/粗体/斜体/删除线/行内码/围栏代码块（语言标注）/链接/任务列表/无序有序列表（一级嵌套）/表格（对齐）/引用/水平线。**安全模型：先整体 HTML 转义再白名单语法替换**，链接仅允许 http/https/mailto/#/相对路径（`javascript:` 等不产出 `<a>`）；AI 消息默认开启，`QoderUIConfig.chatMarkdown = false` 关闭；流式期间实时渲染（>100KB 防御性退化为纯文本） |
+| **聊天历史持久化** | 刷新页面自动恢复最近 200 条消息（单条 8000 字符上限，防 localStorage 膨胀）；损坏数据容错（坏 JSON → 空列表不崩溃）；`QoderUI.chat.clearHistory()` 清空；`QoderUIConfig.chatHistory = false` 关闭 |
+
+### 验证闭环
+| 项 | 结果 |
+|----|------|
+| **Rust 参考后端编译验证** | 本地安装 Rust 1.98 工具链，`cargo check` 通过 + 运行时冒烟（health/help/echo/cd 越界拦截/cd 目录切换/rm 白名单拦截）。**发现并修复 4 个真实缺陷**：`PathBuf` 与 `Arc<PathBuf>` 类型不匹配、`Output` 无 `Default`（`unwrap_or_default` 误用）、`cd` 特判被白名单顺序误拦（与 Node 版行为不一致）、help 文案与白名单不同步 |
+| **TypeScript 严格校验** | `npm run typecheck`（tsc --strict，357+ 行手写 d.ts 零错误），并作为独立步骤挂进 CI（Node 18/20/22 矩阵） |
+
+### 导出面与测试
+- 导出面 29 → **30**（新增 `markdown`），ESM/CJS 双格式键值断言通过
+- 测试套件 69 → **86 用例**（markdown ×12 / 历史持久化 ×5）
+- 浏览器端到端：markdown 全语法渲染 + XSS 注入拦截 + 刷新恢复（含 md 结构）+ mock 流式实时渲染 + REST 往返，零 JS 错误

@@ -933,3 +933,111 @@
   margin-right: 6px;
   accent-color: var(--accent);
 }
+
+/* ============================================================
+   v3.4 聊天消息 Markdown 渲染（.qoder-chat__msg-content 作用域）
+   基础段落/列表样式见 qoder-compat.css，此处补 md 特有元素
+   ============================================================ */
+.qoder-chat__msg-content .qoder-md-h {
+  margin: 14px 0 6px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--text-primary, #1a1b1c);
+}
+.qoder-chat__msg-content .qoder-md-h:first-child { margin-top: 0; }
+.qoder-chat__msg-content h2.qoder-md-h { font-size: 1.35em; }
+.qoder-chat__msg-content h3.qoder-md-h { font-size: 1.2em; }
+.qoder-chat__msg-content h4.qoder-md-h { font-size: 1.08em; }
+.qoder-chat__msg-content h5.qoder-md-h { font-size: 1em; }
+
+.qoder-chat__msg-content .qoder-md-code {
+  font-family: var(--qoder-font-mono, monospace);
+  font-size: 0.9em;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: var(--bg-tertiary, rgba(127, 127, 127, 0.12));
+  border: 1px solid var(--border-primary, rgba(127, 127, 127, 0.2));
+}
+
+.qoder-chat__msg-content .qoder-md-pre {
+  position: relative;
+  margin: 8px 0 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--bg-tertiary, rgba(127, 127, 127, 0.12));
+  border: 1px solid var(--border-primary, rgba(127, 127, 127, 0.2));
+  overflow-x: auto;
+}
+.qoder-chat__msg-content .qoder-md-pre code {
+  font-family: var(--qoder-font-mono, monospace);
+  font-size: 12.5px;
+  line-height: 1.6;
+  white-space: pre;
+  color: var(--text-primary, #1a1b1c);
+}
+.qoder-chat__msg-content .qoder-md-pre[data-lang]::before {
+  content: attr(data-lang);
+  position: absolute;
+  top: 4px;
+  right: 8px;
+  font-size: 10px;
+  font-family: var(--qoder-font-mono, monospace);
+  color: var(--text-tertiary, rgba(127, 127, 127, 0.7));
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  pointer-events: none;
+}
+
+.qoder-chat__msg-content .qoder-md-quote {
+  margin: 8px 0 12px;
+  padding: 6px 12px;
+  border-left: 3px solid var(--accent-primary, #10a37f);
+  background: var(--bg-secondary, rgba(127, 127, 127, 0.06));
+  border-radius: 0 6px 6px 0;
+  color: var(--text-secondary, rgba(26, 27, 28, 0.8));
+}
+.qoder-chat__msg-content .qoder-md-quote p:last-child { margin-bottom: 0; }
+
+.qoder-chat__msg-content .qoder-md-table {
+  margin: 8px 0 12px;
+  border-collapse: collapse;
+  font-size: 13px;
+  max-width: 100%;
+  display: block;
+  overflow-x: auto;
+}
+.qoder-chat__msg-content .qoder-md-table th,
+.qoder-chat__msg-content .qoder-md-table td {
+  padding: 6px 12px;
+  border: 1px solid var(--border-primary, rgba(127, 127, 127, 0.25));
+  text-align: left;
+}
+.qoder-chat__msg-content .qoder-md-table th {
+  font-weight: 600;
+  background: var(--bg-tertiary, rgba(127, 127, 127, 0.08));
+}
+
+.qoder-chat__msg-content .qoder-md-list--sub {
+  margin: 4px 0 0;
+  padding-left: 20px;
+}
+
+.qoder-chat__msg-content .qoder-md-task {
+  margin-right: 6px;
+  color: var(--accent-primary, #10a37f);
+}
+.qoder-chat__msg-content .qoder-md-task.is-done { color: var(--text-tertiary, rgba(127, 127, 127, 0.7)); }
+
+.qoder-chat__msg-content a {
+  color: var(--accent-primary, #10a37f);
+  text-decoration: none;
+}
+.qoder-chat__msg-content a:hover { text-decoration: underline; }
+
+.qoder-chat__msg-content del { color: var(--text-tertiary, rgba(127, 127, 127, 0.7)); }
+
+.qoder-chat__msg-content .qoder-md-hr {
+  border: none;
+  border-top: 1px solid var(--border-primary, rgba(127, 127, 127, 0.25));
+  margin: 14px 0;
+}

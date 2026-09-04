@@ -35,6 +35,7 @@
         this._bindCodeBlocks(container);
         this._bindMessageActions(container);
         this._bindThinking(container);
+        this._restoreHistory(container, id);
       });
     },
 
@@ -73,7 +74,62 @@
       if (sendBtn) sendBtn.addEventListener('click', send);
     },
 
-    _addMessage(container, id, role, content) {
+    /* ---------- v3.4 会话历史持久化（刷新恢复） ---------- */
+    // 上限：200 条 / 单条 8000 字符（防 localStorage 膨胀）；QoderUIConfig.chatHistory = false 关闭
+    _HISTORY_KEY: 'qoder_chat_history',
+    _HISTORY_MAX: 200,
+    _HISTORY_MSG_MAX: 8000,
+
+    _historyEnabled() {
+      const cfg = _g.QoderUIConfig || {};
+      return cfg.chatHistory !== false && typeof localStorage !== 'undefined';
+    },
+
+    _recordMsg(role, content) {
+      if (!this._historyEnabled() || !content) return;
+      try {
+        const hist = this.loadHistory();
+        hist.push({ role, content: String(content).slice(0, this._HISTORY_MSG_MAX), ts: Date.now() });
+        while (hist.length > this._HISTORY_MAX) hist.shift();
+        localStorage.setItem(this._HISTORY_KEY, JSON.stringify(hist));
+      } catch (e) { /* 存储满/不可用：静默降级 */ }
+    },
+
+    loadHistory() {
+      if (!this._historyEnabled()) return [];
+      try {
+        const raw = localStorage.getItem(this._HISTORY_KEY);
+        const arr = raw ? JSON.parse(raw) : [];
+        return Array.isArray(arr)
+          ? arr.filter((m) => m && (m.role === 'user' || m.role === 'ai') && typeof m.content === 'string')
+          : [];
+      } catch (e) { return []; }
+    },
+
+    clearHistory() {
+      if (typeof localStorage === 'undefined') return;
+      try { localStorage.removeItem(this._HISTORY_KEY); } catch (e) { /* 忽略 */ }
+    },
+
+    _restoreHistory(container, id) {
+      if (!this._historyEnabled()) return;
+      const hist = this.loadHistory();
+      if (!hist.length) return;
+      hist.forEach((m) => this._addMessage(container, id, m.role, m.content, { silent: true }));
+    },
+
+    // v3.4 markdown 渲染：AI 消息默认开启，QoderUIConfig.chatMarkdown = false 关闭
+    _mdEnabled() {
+      const cfg = _g.QoderUIConfig || {};
+      return cfg.chatMarkdown !== false && !!(_g.QoderUI && _g.QoderUI.markdown);
+    },
+
+    _renderContent(content, role) {
+      if (role === 'ai' && this._mdEnabled()) return _g.QoderUI.markdown.render(content);
+      return this._escapeHtml(content);
+    },
+
+    _addMessage(container, id, role, content, opts) {
       const messagesInner = container.querySelector('.qoder-chat__messages-inner');
       if (!messagesInner) return;
       // 移除欢迎页（如果存在）
@@ -81,12 +137,13 @@
       if (welcome) welcome.remove();
 
       const avatar = role === 'user' ? 'U' : 'AI';
+      const md = role === 'ai' && this._mdEnabled();
       const msgDiv = document.createElement('div');
       msgDiv.className = 'qoder-chat__msg qoder-chat__msg--' + role;
       msgDiv.innerHTML = `
         <div class="qoder-chat__msg-avatar">${avatar}</div>
         <div class="qoder-chat__msg-body">
-          <div class="qoder-chat__msg-content">${this._escapeHtml(content)}</div>
+          <div class="qoder-chat__msg-content${md ? ' qoder-chat__msg-content--md' : ''}">${this._renderContent(content, role)}</div>
           ${role === 'ai' ? `<div class="qoder-chat__msg-actions">
             <button class="qoder-chat__action" data-action="copy">复制</button>
             <button class="qoder-chat__action" data-action="regenerate">重新生成</button>
@@ -95,6 +152,8 @@
           </div>` : ''}
         </div>`;
       messagesInner.appendChild(msgDiv);
+      // v3.4：记录历史（恢复重放时 silent 防止重复写入；流式空串不记录）
+      if (content && !(opts && opts.silent)) this._recordMsg(role, content);
       this._bindMessageActions(msgDiv);
       // 滚动到底部
       const messagesEl = container.querySelector('.qoder-chat__messages');
@@ -111,7 +170,12 @@
       let buffer = '';
       const self = this;
       const paint = () => {
-        contentEl.textContent = buffer;
+        // v3.4：流式期间实时 markdown 渲染（超大 buffer 防御性退化为纯文本）
+        if (self._mdEnabled() && buffer.length < 100000) {
+          contentEl.innerHTML = _g.QoderUI.markdown.render(buffer);
+        } else {
+          contentEl.textContent = buffer;
+        }
         const messagesEl = container.querySelector('.qoder-chat__messages');
         if (messagesEl) messagesEl.scrollTop = messagesEl.scrollHeight;
       };
@@ -121,7 +185,8 @@
         onDone(full) {
           buffer = full != null ? full : buffer;
           contentEl.classList.remove('qoder-chat__msg-content--streaming');
-          contentEl.innerHTML = self._escapeHtml(buffer || t('（空回复）'));
+          contentEl.innerHTML = self._renderContent(buffer || t('（空回复）'), 'ai');
+          self._recordMsg('ai', buffer || '');
           const messagesEl = container.querySelector('.qoder-chat__messages');
           if (messagesEl) messagesEl.scrollTop = messagesEl.scrollHeight;
         },

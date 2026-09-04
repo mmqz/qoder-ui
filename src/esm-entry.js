@@ -8,6 +8,7 @@ import './qoder-ui.js';
 import './qoder-interactions.js';
 import './qoder-wc.js';
 import './qoder-features.js';
+import './qoder-markdown.js';
 import './qoder-diff.js';
 import './qoder-transport.js';
 
@@ -43,6 +44,7 @@ export const {
   mount,
   ShadowElement,
   core,
+  markdown,
   t,
   i18n,
   setLocale

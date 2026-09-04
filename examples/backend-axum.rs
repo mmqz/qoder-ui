@@ -161,7 +161,7 @@ struct TermResult {
     cwd: String,
 }
 
-const ALLOWED: &[&str] = &["help", "ls", "pwd", "echo", "date", "whoami", "cat", "head", "wc"];
+const ALLOWED: &[&str] = &["help", "ls", "pwd", "echo", "date", "whoami", "cat", "node", "npm", "git", "head", "wc"];
 
 async fn terminal(
     State(sandbox): State<Arc<PathBuf>>,
@@ -186,10 +186,28 @@ async fn terminal(
     let result = if bin == "help" {
         TermResult {
             tab_id,
-            stdout: "沙箱白名单命令：help ls pwd echo date whoami cat head wc\n另有 cd <dir>（目录切换）；clear / exit 由前端本地处理。".to_string(),
+            stdout: "沙箱白名单命令：help ls pwd echo date whoami cat node npm git head wc\n另有 cd <dir>（目录切换）；clear / exit 由前端本地处理。".to_string(),
             stderr: String::new(),
             exit_code: 0,
             cwd: p.cwd.clone(),
+        }
+    } else if bin == "cd" {
+        // 处理 cd：后端维护目录并回传新 cwd（先于白名单检查，与 Node 版行为一致）
+        let arg = parts.get(1).copied().unwrap_or("");
+        let target = if arg.is_empty() || arg == "~" {
+            sandbox.to_path_buf()
+        } else {
+            cwd_abs.join(arg)
+        };
+        if !target.starts_with(sandbox.as_path()) {
+            TermResult { tab_id, stdout: String::new(), stderr: "cd: 越界：沙箱限定内".into(), exit_code: 1, cwd: p.cwd.clone() }
+        } else if !arg.is_empty() && arg != "~" && !tokio::fs::metadata(&target).await.map(|m| m.is_dir()).unwrap_or(false) {
+            TermResult { tab_id, stdout: String::new(), stderr: format!("cd: no such directory: {arg}"), exit_code: 1, cwd: p.cwd.clone() }
+        } else {
+            let new_cwd = if target == *sandbox { "~".to_string() } else {
+                target.strip_prefix(sandbox.as_path()).map(|s| format!("/{}", s.to_string_lossy())).unwrap_or_else(|_| "~".into())
+            };
+            TermResult { tab_id, stdout: String::new(), stderr: String::new(), exit_code: 0, cwd: new_cwd }
         }
     } else if !ALLOWED.contains(&bin) {
         TermResult {
@@ -208,33 +226,31 @@ async fn terminal(
             cwd: p.cwd.clone(),
         }
     } else {
-        // 处理 cd：后端维护目录并回传新 cwd
-        if bin == "cd" {
-            let arg = parts.get(1).copied().unwrap_or("");
-            let target = if arg.is_empty() || arg == "~" {
-                sandbox.to_path_buf()
-            } else {
-                cwd_abs.join(arg)
-            };
-            let new_cwd = if target == sandbox { "~".to_string() } else {
-                target.strip_prefix(sandbox.as_path()).map(|s| format!("/{}", s.to_string_lossy())).unwrap_or_else(|_| "~".into())
-            };
-            TermResult { tab_id, stdout: String::new(), stderr: String::new(), exit_code: 0, cwd: new_cwd }
-        } else {
-            let out = tokio::process::Command::new(bin)
+        let out = match tokio::process::Command::new(bin)
                 .args(&parts[1..])
                 .current_dir(&cwd_abs)
                 .output()
                 .await
-                .unwrap_or_default();
+            {
+                Ok(o) => o,
+                Err(e) => {
+                    let r = TermResult {
+                        tab_id,
+                        stdout: String::new(),
+                        stderr: format!("exec failed: {e}"),
+                        exit_code: 127,
+                        cwd: p.cwd.clone(),
+                    };
+                    return Json(serde_json::to_value(r).unwrap());
+                }
+            };
             TermResult {
                 tab_id,
                 stdout: String::from_utf8_lossy(&out.stdout).into_owned(),
                 stderr: String::from_utf8_lossy(&out.stderr).into_owned(),
-                exit_code: out.status.code().unwrap_or(0),
+                exit_code: out.status.code().unwrap_or(-1),
                 cwd: p.cwd.clone(),
             }
-        }
     };
 
     Json(serde_json::to_value(result).unwrap())

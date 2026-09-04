@@ -82,7 +82,14 @@ export interface QoderShadowApi {
   resolveEntryCSS(): Promise<string>;
 }
 
-export interface QoderConfig { shadow: boolean; terminalScrollback?: number }
+export interface QoderConfig {
+  shadow: boolean;
+  terminalScrollback?: number;
+  /** v3.4：AI 消息 Markdown 渲染，默认开启 */
+  chatMarkdown?: boolean;
+  /** v3.4：聊天历史持久化（刷新恢复），默认开启 */
+  chatHistory?: boolean;
+}
 
 /** v3.3.3 i18n（gettext 风格：key 即中文源串） */
 export interface QoderI18n {
@@ -253,6 +260,18 @@ declare class RestTransport { constructor(opts: QoderRestTransportOptions); name
 declare class WSTransport { constructor(opts: QoderWSTransportOptions); name: 'ws'; }
 
 /* ============================================================
+   v3.4 markdown — 聊天消息轻量 Markdown 渲染
+   ============================================================ */
+export interface QoderMarkdownApi {
+  /** 渲染 markdown 源文本为 HTML 字符串（安全：先整体转义，再白名单语法替换） */
+  render(src: string | null | undefined): string;
+  /** 行内语法解析（链接仅 http/https/mailto/#/相对路径） */
+  inline(raw: string): string;
+  escapeHtml(s: unknown): string;
+  version: string;
+}
+
+/* ============================================================
    v3.3 mount — 一行接入任意项目
    ============================================================ */
 export interface QoderMountOptions {
@@ -311,6 +330,7 @@ export interface QoderUIApi {
   version: string;
   config: QoderConfig;
   core: QoderCoreApi;
+  markdown: QoderMarkdownApi;
   shadow: QoderShadowApi;
   ShadowElement: typeof HTMLElement;
   theme: QoderThemeApi;

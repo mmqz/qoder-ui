@@ -26,6 +26,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Type check (d.ts, strict)
+        run: npm run typecheck
+
       - name: Unit tests (57+)
         run: npm test
 
