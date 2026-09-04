@@ -1319,7 +1319,7 @@
      ============================================================ */
 
   QI.MobileApi = {
-    version: '3.10.0',
+    version: '3.11.0',
     ENDPOINTS: ENDPOINTS,
     DEFAULT_BASE_URLS: DEFAULT_BASE_URLS,
     REGION: REGION,

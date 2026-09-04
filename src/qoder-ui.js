@@ -639,7 +639,7 @@
     dialog: QoderDialog,
     toast: QoderToast,
     init,
-    version: '3.10.0',
+    version: '3.11.0',
     // v3.3.3 i18n 门面：QoderUI.t('已复制') / QoderUI.setLocale('en') / QoderUI.i18n.register(...)
     t,
     i18n: (_qc && _qc.i18n) || null,
