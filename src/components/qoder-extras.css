@@ -654,6 +654,24 @@
   word-break: break-all;
 }
 
+/* v3.3：transport stderr 输出 */
+.qoder-terminal__line--err {
+  color: var(--error, #f47067);
+}
+
+/* v3.3：chat 流式回复光标 */
+.qoder-chat__msg-content--streaming::after {
+  content: '▍';
+  display: inline-block;
+  margin-left: 2px;
+  color: var(--primary, #358e62);
+  animation: qoder-stream-cursor 0.9s steps(2) infinite;
+}
+@keyframes qoder-stream-cursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
 .qoder-terminal__prompt {
   color: #4ec9b0;
 }

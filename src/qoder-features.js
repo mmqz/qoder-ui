@@ -45,8 +45,13 @@
         this._addMessage(container, id, 'user', text);
         textarea.value = '';
         textarea.style.height = 'auto';
-        // 模拟AI回复
-        setTimeout(() => this._addMessage(container, id, 'ai', '收到你的消息："' + text + '"。这是一个模拟回复，实际使用时请接入你的AI后端。'), 600);
+        // v3.3：有 transport → 后端流式回复；否则本地 Mock（v3.2 行为）
+        const tp = QF.transport && QF.transport.get();
+        if (tp) {
+          this._streamReply(container, id, tp, text);
+        } else {
+          setTimeout(() => this._addMessage(container, id, 'ai', '收到你的消息："' + text + '"。这是一个模拟回复，实际使用时请接入你的AI后端。'), 600);
+        }
       };
 
       textarea.addEventListener('keydown', (e) => {
@@ -84,6 +89,37 @@
       // 滚动到底部
       const messagesEl = container.querySelector('.qoder-chat__messages');
       if (messagesEl) messagesEl.scrollTop = messagesEl.scrollHeight;
+      return msgDiv;
+    },
+
+    /* ---------- v3.3 流式回复（transport 接入） ---------- */
+    _streamReply(container, id, transport, text) {
+      const msgDiv = this._addMessage(container, id, 'ai', '');
+      if (!msgDiv) return;
+      const contentEl = msgDiv.querySelector('.qoder-chat__msg-content');
+      contentEl.classList.add('qoder-chat__msg-content--streaming');
+      let buffer = '';
+      const self = this;
+      const paint = () => {
+        contentEl.textContent = buffer;
+        const messagesEl = container.querySelector('.qoder-chat__messages');
+        if (messagesEl) messagesEl.scrollTop = messagesEl.scrollHeight;
+      };
+      transport.chat(text, {
+        onStart() { paint(); },
+        onDelta(delta, full) { buffer = full != null ? full : (buffer + delta); paint(); },
+        onDone(full) {
+          buffer = full != null ? full : buffer;
+          contentEl.classList.remove('qoder-chat__msg-content--streaming');
+          contentEl.innerHTML = self._escapeHtml(buffer || '（空回复）');
+          const messagesEl = container.querySelector('.qoder-chat__messages');
+          if (messagesEl) messagesEl.scrollTop = messagesEl.scrollHeight;
+        },
+        onError(err) {
+          contentEl.classList.remove('qoder-chat__msg-content--streaming');
+          contentEl.innerHTML = '<span style="color:var(--error);">⚠ 连接错误：' + self._escapeHtml((err && err.message) || '未知错误') + '</span>';
+        }
+      }, { sessionId: id });
     },
 
     _escapeHtml(text) {
@@ -736,8 +772,9 @@
     /* ---------- 焦点 ---------- */
     _focus(tab) {
       if (!tab || !tab.body) return;
-      const input = tab.body.querySelector('.qoder-terminal__input-text:last-of-type') ||
-                    tab.body.querySelector('.qoder-terminal__input-text');
+      // v3.3 修复：取最后一行输入（此前 :last-of-type 误中第一行）
+      const inputs = tab.body.querySelectorAll('.qoder-terminal__input-text');
+      const input = inputs[inputs.length - 1];
       if (input) input.focus();
     },
 
@@ -765,12 +802,19 @@
           if (state.split && tab.id !== state.activeId) {
             this.activateTab(state.el, tab.id);
           } else {
-            const activeInput = tab.body.querySelector('.qoder-terminal__input-line:last-of-type .qoder-terminal__input-text');
+            const inputs = tab.body.querySelectorAll('.qoder-terminal__input-text');
+            const activeInput = inputs[inputs.length - 1];
             if (activeInput) activeInput.focus();
           }
         });
       }
 
+      this._bindInput(inputEl, line, tab, state);
+    },
+
+    /* ---------- 输入行键盘逻辑（v3.3 提取为独立方法：
+       此前新输入行复用空函数，导致首条命令后 Enter 失效） ---------- */
+    _bindInput(inputEl, line, tab, state) {
       const submit = () => {
         const cmd = inputEl.textContent.trim();
         line.querySelector('.qoder-terminal__cursor')?.remove();
@@ -817,17 +861,37 @@
           this._attachInput(tab, state);
         }
       });
-
-      this._bindInput(inputEl, line, tab, state);
     },
 
-    _bindInput(inputEl, line, tab, state) {
-      // 绑定逻辑内联在 _attachInput（避免旧版重复绑定 bug）
+    /* ---------- v3.3 输出一行（transport 用，text 安全转义） ---------- */
+    _printOut(body, text, kind) {
+      const line = document.createElement('div');
+      line.className = 'qoder-terminal__line' + (kind === 'stderr' ? ' qoder-terminal__line--err' : '');
+      line.textContent = text;
+      body.appendChild(line);
+      body.scrollTop = body.scrollHeight;
     },
 
     /* ---------- 命令执行（按标签独立 cwd/输出） ---------- */
     _execute(tab, cmd) {
       const body = tab.body;
+
+      // v3.3：有 transport → 交给后端执行（clear/exit 仍为本地 UI 行为）
+      const tp = QF.transport && QF.transport.get();
+      if (tp && tp.supportsTerminal && cmd !== 'clear' && cmd !== 'exit') {
+        const self = this;
+        tp.exec(cmd, tab.cwd, {
+          onOutput(data, stream) { String(data).split('\n').forEach(l => self._printOut(body, l, stream)); },
+          onCwd(cwd) {
+            tab.cwd = cwd;
+            const lastPath = body.querySelector('.qoder-terminal__input-line:last-of-type .qoder-terminal__path');
+            if (lastPath) lastPath.textContent = cwd;
+          },
+          onError(err) { self._printOut(body, (err && err.message) || 'transport error', 'stderr'); }
+        }, { tabId: tab.id });
+        return;
+      }
+
       const output = document.createElement('div');
       output.className = 'qoder-terminal__line';
       let result = '';

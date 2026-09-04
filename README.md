@@ -440,3 +440,162 @@ qoder-ui/
 - **Web Components**：21 个，**21/21** 属性响应 + Shadow DOM 隔离
 - **测试**：31 用例全通过（零测试依赖）
 - **修复存量 bug**：7 个（语法错误/detached 节点/96 无样式类/draggable 崩溃/热键 shift 容错等）
+
+## v3.3 后端无关 Transport 层（2026-09-04）
+
+> **目标：把这套 Qoder 风格前端当作通用 UI 层，接到任何项目的后端上 —— Rust、TS、Node、Python 均可，前端零改动。**
+
+### 架构总览
+```
+┌─────────────────────────── 你的项目 ───────────────────────────┐
+│  前端（本库，框架无关）              后端（任选语言）              │
+│  ┌──────────────────────┐   Transport 协议 v1   ┌─────────────┐ │
+│  │ Chat / Terminal / …  │ ←──────────────────→  │ Rust (axum) │ │
+│  │ 50+ 组件 / 21 WC     │   REST+SSE / WS       │ TS (Hono)   │ │
+│  │ 8 主题 / Shadow DOM  │   ─── 三选一 ───      │ Node / …    │ │
+│  └──────────────────────┘                       └─────────────┘ │
+└────────────────────────────────────────────────────────────────┘
+```
+- UI 只依赖 `QoderUI.transport` 的高层接口，不关心后端是什么
+- 未配置 transport 时自动回落本地 Mock（v3.2 离线行为），渐进式接入
+- 协议是纯 JSON 信封，任何语言 30 分钟可实现对端
+
+### 协议 v1（信封 Envelope）
+```json
+{ "v": 1, "id": "e_1a2b3", "type": "chat.send", "channel": "chat", "payload": { }, "ts": 1788490000000 }
+```
+| 方向 | type | payload | 说明 |
+|------|------|---------|------|
+| C→S | `chat.send` | `{ id, text, sessionId? }` | 发消息（`payload.id` 必须在回复中原样回传） |
+| C→S | `chat.abort` | `{ id }` | 中止一次流式回复 |
+| C→S | `terminal.input` | `{ tabId, cmd, cwd }` | 执行终端命令 |
+| S→C | `chat.delta` | `{ id, delta }` | 流式增量 |
+| S→C | `chat.done` | `{ id, content?, finishReason? }` | 流结束 |
+| S→C | `chat.error` | `{ id, message }` | 出错 |
+| S→C | `terminal.output` | `{ tabId, data, stream? }` | 命令输出（stdout/stderr） |
+| S→C | `terminal.exit` | `{ tabId, code }` | 命令结束 |
+| S→C | `terminal.cwd` | `{ tabId, cwd }` | 目录变化（cd） |
+
+### 传输方式三选一
+| 类型 | 适用 | 说明 |
+|------|------|------|
+| `'rest'` | 最简单 | chat 走 `POST /api/chat`（SSE 流式或一次性 JSON），terminal 走 `POST /api/terminal` |
+| `'ws'` | 全双工 | 单一 WebSocket，双向信封，自动重连（终端长驻会话推荐） |
+| 自定义实例 | 任意 | 实现 `chat()/exec()/onStatus()` 三方法即可注入（gRPC、SSE-only、IPC…） |
+
+### 一行接入：QoderUI.mount()
+```js
+// 任意页面/框架中（也支持 <script src="qoder-ui.min.js"> 后直接调用）
+const app = QoderUI.mount('#app', {
+  cssUrl: '/vendor/qoder-ui.min.css',          // 省略则自动探测同目录
+  theme: 'dark',
+  transport: 'rest',                            // 'mock' | 'rest' | 'ws' | 自定义实例
+  transportOpts: { baseUrl: 'http://localhost:8787/api' },
+});
+await app.ready();       // transport 就绪
+app.setTheme('forest-dark');
+app.useTransport('ws', { url: 'ws://localhost:8787/ws' });  // 运行时切换
+app.destroy();
+```
+也可以只配 transport、不动其它：`await QoderUI.transport.use('rest', { baseUrl: '…/api' })`。
+
+### 接入方式 A：原生 `<script>`（最适合给其它项目挂壳）
+```html
+<link rel="stylesheet" href="qoder-ui.min.css">
+<script src="qoder-ui.min.js"></script>
+<script>
+  QoderUI.mount('#app', { transport: 'rest', transportOpts: { baseUrl: '/api' } });
+</script>
+```
+
+### 接入方式 B：npm + 打包器（React / Vue / Svelte 通用）
+```bash
+npm install qoder-ui
+```
+```js
+// main.ts —— 任何框架的入口都一样
+import QoderUI from 'qoder-ui';
+import 'qoder-ui/css';                       // 或自行 <link> 引入
+await QoderUI.transport.use('rest', { baseUrl: import.meta.env.VITE_API + '/api' });
+QoderUI.features.init();                     // 激活页面里所有 .qoder-* 组件
+```
+```jsx
+// React 例子（Vue 同理：onMounted 中调用即可）
+function AgentConsole() {
+  const ref = useRef(null);
+  useEffect(() => { QoderUI.chat.init('.qoder-chat'); }, []);
+  return <div ref={ref} className="qoder-chat">…模板照抄 examples/index.html…</div>;
+}
+```
+WC 事件与主题均为全局标准事件/属性，框架无需适配层。
+
+### 接入方式 C：TS 后端（Hono 示例，30 行实现协议）
+```ts
+import { Hono } from 'hono';
+import { streamSSE } from 'hono/streaming';
+const app = new Hono();
+
+app.post('/api/chat', (c) => streamSSE(c, async (sse) => {
+  const { payload } = await c.req.json();          // 协议信封
+  const reply = `收到: ${payload.text}`;            // TODO: 换成你的 LLM
+  for (let i = 0; i < reply.length; i += 3) {
+    await sse.writeSSE({ data: JSON.stringify({
+      v: 1, id: 'e' + i, type: 'chat.delta', channel: 'chat',
+      payload: { id: payload.id, delta: reply.slice(i, i + 3) }, ts: Date.now(),
+    })});
+    await new Promise(r => setTimeout(r, 20));
+  }
+  await sse.writeSSE({ data: JSON.stringify({
+    v: 1, id: 'done', type: 'chat.done', channel: 'chat',
+    payload: { id: payload.id }, ts: Date.now() }) });
+}));
+app.post('/api/terminal', async (c) => { /* 白名单 spawn，返回 {stdout, stderr, exitCode, cwd} */ });
+export default app;
+```
+完整可运行版本见 `examples/backend-demo.mjs`（零依赖 Node ≥18，`node examples/backend-demo.mjs` 直接跑）。
+
+### 接入方式 D：Rust 后端（axum 参考实现）
+完整可编译参考：`examples/backend-axum.rs` —— SSE 流式 chat + 沙箱 terminal，依赖仅 axum/tokio/serde/tower-http。
+```rust
+// 核心：一个 SSE handler 把你的 LLM 输出逐段包成协议信封
+Event::default().data(json!({
+    "v": 1, "id": "e1", "type": "chat.delta", "channel": "chat",
+    "payload": { "id": msg_id, "delta": chunk }, "ts": now_ms()
+}).to_string())
+```
+全双工终端用 axum 的 `WebSocketUpgrade`，把 `terminal.output/exit/cwd` 信封推给客户端即可（文件尾部有模板）。
+
+### 本地端到端验证（2 分钟）
+```bash
+node examples/backend-demo.mjs          # 启动演示后端 :8787
+# 打开 examples/index.html → 右下角「后端连接器」
+#   类型选 REST，地址 http://localhost:8787/api → 连接
+# 之后：聊天回复来自后端 SSE；终端执行的是后端白名单沙箱命令（ls/cat/node -v…）
+```
+浏览器事件 `qoder-transport-change` 可监听连接切换；连接信息持久化在 `localStorage('qoder-ui:transport')`，刷新自动恢复。
+
+### Transport API 速查
+```js
+QoderUI.transport.use(type, opts)    // 创建+激活+连接（Promise）
+QoderUI.transport.get()              // 当前实例或 null（null → UI 本地 Mock）
+QoderUI.transport.clear()            // 断开并清除
+QoderUI.transport.restore()          // 从 localStorage 恢复
+
+// 直接使用（UI 内部就是这么用的）
+const t = QoderUI.transport.get();
+t.chat(text, { onStart, onDelta(d, full), onDone(content), onError }, { sessionId });
+t.exec(cmd, cwd, { onOutput(d, stream), onExit(code), onCwd(cwd), onError }, { tabId });
+t.onStatus(s => {});                 // 'idle'|'connecting'|'open'|'closed'|'error'
+t.raw(cb) / t.sendRaw(env)           // 自定义协议逃生口
+```
+类型全部收录在 `types/index.d.ts`（`QoderTransportApi / QoderTransportInstance / QoderEnvelope / QoderMountHandle`…）。
+
+### v3.3 文件结构（新增部分）
+```
+qoder-ui/
+├── src/qoder-transport.js        # ★ v3.3 Transport 层（Mock/REST+SSE/WS + mount）
+├── examples/backend-demo.mjs     # ★ v3.3 零依赖演示后端（Node ≥18）
+├── examples/backend-axum.rs      # ★ v3.3 Rust axum 参考后端
+├── tests/transport.test.mjs      # ★ v3.3 transport 单测（12 用例）
+└── dist/                         # 4 格式产物全部包含 transport
+```

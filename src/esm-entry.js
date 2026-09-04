@@ -9,6 +9,7 @@ import './qoder-interactions.js';
 import './qoder-wc.js';
 import './qoder-features.js';
 import './qoder-diff.js';
+import './qoder-transport.js';
 
 const _g = typeof globalThis !== 'undefined' ? globalThis : {};
 const QoderUI = ((typeof window !== 'undefined' ? window : _g).QoderUI) || {};
@@ -37,6 +38,9 @@ export const {
   WC,
   shadow,
   config,
+  transport,
+  createTransport,
+  mount,
   ShadowElement,
   core
 } = QoderUI;

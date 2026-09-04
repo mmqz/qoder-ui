@@ -154,6 +154,104 @@ export interface QoderTerminalApi {
 export interface QoderColorpickerApi { init(): void }
 export interface QoderShortcutsPanelApi { open(): void; close(): void }
 
+/* ============================================================
+   v3.3 Transport — 后端无关数据通道（Rust / TS / 任意后端）
+   ============================================================ */
+/** 协议 v1 信封：{ v, id, type, channel, payload, ts } */
+export interface QoderEnvelope {
+  v: number;
+  id: string;
+  type: string;
+  channel: string | null;
+  payload: Record<string, any>;
+  ts: number;
+}
+
+export type QoderTransportStatus = 'idle' | 'connecting' | 'open' | 'closed' | 'error';
+
+export interface QoderChatHandlers {
+  onStart?(): void;
+  onDelta?(delta: string, full: string): void;
+  onDone?(content: string, meta?: { done?: boolean }): void;
+  onError?(err: { message: string }): void;
+}
+
+export interface QoderExecHandlers {
+  onOutput?(data: string, stream?: 'stdout' | 'stderr'): void;
+  onExit?(code: number): void;
+  onCwd?(cwd: string): void;
+  onError?(err: { message: string }): void;
+}
+
+export interface QoderTransportInstance {
+  name: 'mock' | 'rest' | 'ws' | (string & {});
+  status: QoderTransportStatus;
+  supportsTerminal: boolean;
+  connect(): Promise<void>;
+  close(): Promise<void>;
+  onStatus(cb: (s: QoderTransportStatus) => void): () => void;
+  /** 流式对话（AI 回复），返回可 abort 句柄 */
+  chat(text: string, handlers: QoderChatHandlers, ctx?: { sessionId?: string }): { abort(): void };
+  /** 执行终端命令（rest/一次返回 或 ws/流式） */
+  exec(cmd: string, cwd: string, handlers: QoderExecHandlers, ctx?: { tabId?: string }): { abort(): void };
+  /** 自定义协议逃生口：监听原始信封 / 发送原始信封 */
+  raw?(cb: (env: QoderEnvelope) => void): () => void;
+  sendRaw?(env: QoderEnvelope | string): void;
+}
+
+export interface QoderRestTransportOptions {
+  baseUrl: string;
+  chatUrl?: string;
+  terminalUrl?: string;
+  headers?: Record<string, string>;
+  fetchImpl?: typeof fetch;
+}
+
+export interface QoderWSTransportOptions {
+  url: string;
+  reconnect?: boolean;
+  reconnectDelay?: number;
+  maxRetries?: number;
+  wsImpl?: any;
+}
+
+export interface QoderTransportApi {
+  PROTOCOL_VERSION: number;
+  MockTransport: typeof MockTransport;
+  RestTransport: typeof RestTransport;
+  WSTransport: typeof WSTransport;
+  active: QoderTransportInstance | null;
+  create(type: 'mock' | 'rest' | 'ws' | QoderTransportInstance, opts?: any): QoderTransportInstance;
+  use(type: 'mock' | 'rest' | 'ws' | QoderTransportInstance, opts?: any): Promise<QoderTransportInstance>;
+  get(): QoderTransportInstance | null;
+  clear(): void;
+  restore(): Promise<QoderTransportInstance | null>;
+}
+
+declare class MockTransport { constructor(opts?: any); name: 'mock'; }
+declare class RestTransport { constructor(opts: QoderRestTransportOptions); name: 'rest'; }
+declare class WSTransport { constructor(opts: QoderWSTransportOptions); name: 'ws'; }
+
+/* ============================================================
+   v3.3 mount — 一行接入任意项目
+   ============================================================ */
+export interface QoderMountOptions {
+  cssUrl?: string;
+  theme?: QoderThemeId;
+  transport?: 'mock' | 'rest' | 'ws' | QoderTransportInstance;
+  transportOpts?: QoderRestTransportOptions | QoderWSTransportOptions | Record<string, any>;
+  features?: boolean;
+}
+
+export interface QoderMountHandle {
+  el: HTMLElement;
+  cssLink: HTMLLinkElement | null;
+  ready(): Promise<QoderTransportInstance | null>;
+  setTheme(theme: QoderThemeId): void;
+  useTransport(type: 'mock' | 'rest' | 'ws' | QoderTransportInstance, opts?: any): Promise<QoderTransportInstance>;
+  destroy(): void;
+}
+
 export interface QoderDiffApi {
   /** 增强现有 .qoder-diff：相邻增删行配对做行内 word-level 高亮 */
   enhance(root?: ParentNode): void;
@@ -210,6 +308,9 @@ export interface QoderUIApi {
   colorpicker: QoderColorpickerApi;
   shortcutsPanel: QoderShortcutsPanelApi;
   diff: QoderDiffApi;
+  transport: QoderTransportApi;
+  createTransport: QoderTransportApi['create'];
+  mount(target: string | HTMLElement, options?: QoderMountOptions): QoderMountHandle;
   WC: QoderWCRegistry;
   shadowEnabled(el?: HTMLElement): boolean;
   escapeHtml(s: unknown): string;

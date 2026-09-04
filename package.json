@@ -1,7 +1,7 @@
 {
   "name": "qoder-ui",
-  "version": "3.2.0",
-  "description": "原汁原味的 Qoder 前端风格原生组件库，8 个官方主题，400+ 图标，50+ 组件（聊天/命令面板/侧边栏/设置/表单/终端/通知/Diff/Agent工作流/数据可视化），21 个 Web Components（属性响应 + Shadow DOM 样式隔离），完整交互逻辑（拖拽/快捷键/a11y/响应式），零依赖纯 CSS+JS 实现",
+  "version": "3.3.0",
+  "description": "原汁原味的 Qoder 前端风格原生组件库，8 个官方主题，400+ 图标，50+ 组件（聊天/命令面板/侧边栏/设置/表单/终端/通知/Diff/Agent工作流/数据可视化），21 个 Web Components（属性响应 + Shadow DOM 样式隔离），完整交互逻辑（拖拽/快捷键/a11y/响应式），后端无关 Transport 层（REST+SSE / WebSocket / Mock，可接 Rust / TS / 任意后端），零依赖纯 CSS+JS 实现",
   "main": "dist/qoder-ui.cjs.js",
   "module": "dist/qoder-ui.esm.js",
   "types": "types/index.d.ts",
@@ -9,12 +9,12 @@
   "browser": "dist/qoder-ui.min.js",
   "unpkg": "dist/qoder-ui.min.js",
   "jsdelivr": "dist/qoder-ui.min.js",
+  "sideEffects": true,
   "exports": {
     ".": {
       "types": "./types/index.d.ts",
       "import": "./dist/qoder-ui.esm.js",
       "require": "./dist/qoder-ui.cjs.js",
-      "browser": "./dist/qoder-ui.min.js",
       "default": "./dist/qoder-ui.esm.js"
     },
     "./dist/qoder-ui.min.css": "./dist/qoder-ui.min.css",
@@ -51,7 +51,11 @@
     "diff",
     "agent",
     "data-viz",
-    "command-palette"
+    "command-palette",
+    "transport",
+    "backend-agnostic",
+    "rust",
+    "streaming"
   ],
   "author": "",
   "license": "MIT",

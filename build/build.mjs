@@ -17,7 +17,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const dist = join(root, 'dist');
 mkdirSync(dist, { recursive: true });
 
-const banner = `/* Qoder UI v3.2.0 | MIT License | https://github.com/mmqz/qoder-ui */`;
+const banner = `/* Qoder UI v3.3.0 | MIT License | https://github.com/mmqz/qoder-ui */`;
 
 async function run() {
   // 1. CSS 打包 + 压缩（@import 展开，字体资产复制并重写 url）
@@ -33,13 +33,14 @@ async function run() {
     metafile: true,
   });
 
-  // 2. JS IIFE（script 标签直接引入）
+  // 2. JS IIFE（script 标签直接引入，挂 window.QoderUI / globalThis.QoderUI）
   await build({
     entryPoints: [join(root, 'src/esm-entry.js')],
     outfile: join(dist, 'qoder-ui.min.js'),
     bundle: true,
     minify: true,
     format: 'iife',
+    globalName: 'QoderUI',
     target: ['es2019'],
     banner: { js: banner },
     logLevel: 'info',

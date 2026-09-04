@@ -23,6 +23,7 @@
   <script src="../src/qoder-wc.js"></script>
   <script src="../src/qoder-features.js"></script>
   <script src="../src/qoder-diff.js"></script>
+  <script src="../src/qoder-transport.js"></script>
   <style>
     * { box-sizing: border-box; }
     body { margin: 0; font-family: 'Instrument Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg-page); color: var(--text-primary); transition: background 0.3s, color 0.3s; }
@@ -78,7 +79,7 @@
     <h1>
       <span class="qoder-icon qoder-icon--sparkle" style="color: var(--accent);"></span>
       Qoder UI 完整组件库
-      <span class="badge">v3.2</span>
+      <span class="badge">v3.3 · Transport</span>
     </h1>
     <div class="theme-switcher" id="themeSwitcher">
       <div class="theme-btn active" data-theme="forest-light" data-name="Forest" style="background: linear-gradient(135deg, #e8f5ee, #358e62);"></div>
@@ -1079,6 +1080,95 @@ function hello() {
         if (window.QoderUI && QoderUI.shortcutsPanel) QoderUI.shortcutsPanel.open();
       }
     });
+
+    /* ============================================================
+       v3.3 后端连接器 — 一键把演示页接到真实后端（Rust / TS / 任意）
+       启动演示后端： node examples/backend-demo.mjs
+       ============================================================ */
+    (function backendConnector() {
+      const panel = document.createElement('div');
+      panel.innerHTML = `
+        <style>
+          .bc-panel { position: fixed; right: 20px; bottom: 20px; z-index: 900; width: 320px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 12px 32px rgba(0,0,0,.14); font-size: 12.5px; overflow: hidden; }
+          .bc-head { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid var(--border-subtle); font-weight: 600; cursor: pointer; user-select: none; }
+          .bc-head .bc-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text-tertiary); transition: background .2s; flex: none; }
+          .bc-head .bc-dot--open { background: var(--success, #358e62); box-shadow: 0 0 0 3px rgba(53,142,98,.15); }
+          .bc-head .bc-dot--connecting { background: var(--warning, #d97706); }
+          .bc-head .bc-dot--error, .bc-head .bc-dot--closed { background: var(--error, #dc2626); }
+          .bc-head small { font-weight: 400; color: var(--text-tertiary); margin-left: auto; }
+          .bc-body { padding: 12px 14px; display: grid; gap: 8px; }
+          .bc-panel--collapsed .bc-body { display: none; }
+          .bc-row { display: flex; gap: 8px; }
+          .bc-row select, .bc-row input { flex: 1; min-width: 0; padding: 6px 8px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-page); color: var(--text-primary); font-size: 12.5px; }
+          .bc-btn { padding: 6px 14px; border: none; border-radius: 8px; background: var(--primary, #358e62); color: #fff; font-size: 12.5px; cursor: pointer; font-weight: 600; }
+          .bc-btn--ghost { background: var(--bg-page); color: var(--text-primary); border: 1px solid var(--border); }
+          .bc-tip { color: var(--text-tertiary); line-height: 1.5; }
+          .bc-tip code { background: var(--bg-page); padding: 1px 5px; border-radius: 4px; font-family: var(--qoder-font-mono, monospace); font-size: 11.5px; }
+        </style>
+        <div class="bc-panel" id="bcPanel">
+          <div class="bc-head" id="bcHead">
+            <span class="bc-dot" id="bcDot"></span>
+            <span>后端连接器</span>
+            <small id="bcStatus">Mock 本地</small>
+            <span style="color:var(--text-tertiary);">▾</span>
+          </div>
+          <div class="bc-body">
+            <div class="bc-row">
+              <select id="bcType">
+                <option value="mock">Mock（本地模拟）</option>
+                <option value="rest">REST + SSE（HTTP）</option>
+                <option value="ws">WebSocket（全双工）</option>
+              </select>
+              <button class="bc-btn" id="bcConnect">连接</button>
+            </div>
+            <div class="bc-row">
+              <input id="bcUrl" placeholder="http://localhost:8787/api 或 ws://…" value="http://localhost:8787/api">
+              <button class="bc-btn bc-btn--ghost" id="bcMock">断开</button>
+            </div>
+            <div class="bc-tip">
+              先运行 <code>node examples/backend-demo.mjs</code>，再点「连接」。
+              之后聊天与终端的每条消息都会经过你的后端 —— Rust / TS 均可，前端零改动。
+            </div>
+          </div>
+        </div>`;
+      document.body.appendChild(panel);
+
+      const $ = (id) => document.getElementById(id);
+      const dot = $('bcDot'), statusEl = $('bcStatus');
+      $('bcHead').addEventListener('click', () => $('bcPanel').classList.toggle('bc-panel--collapsed'));
+
+      function paint(status) {
+        dot.className = 'bc-dot' + (status ? ' bc-dot--' + status : '');
+        const t = QoderUI.transport.get();
+        statusEl.textContent = !t ? 'Mock 本地' : (t.name + ' · ' + (status || t.status));
+      }
+      QoderUI.transport.MockTransport && paint(QoderUI.transport.get() ? QoderUI.transport.get().status : null);
+      window.addEventListener('qoder-transport-change', (e) => {
+        const t = e.detail.transport;
+        if (t && t.onStatus) t.onStatus((s) => paint(s));
+        paint(t ? t.status : null);
+      });
+
+      $('bcConnect').addEventListener('click', async () => {
+        const type = $('bcType').value;
+        const url = $('bcUrl').value.trim();
+        try {
+          await QoderUI.transport.use(type, type === 'ws' ? { url } : { baseUrl: url });
+          if (QoderUI.toast) QoderUI.toast.show('后端已连接：' + type + ' → ' + url, 'success');
+        } catch (err) {
+          if (QoderUI.toast) QoderUI.toast.show('连接失败：' + err.message, 'error');
+          paint('error');
+        }
+      });
+      $('bcMock').addEventListener('click', () => {
+        QoderUI.transport.clear();
+        if (QoderUI.toast) QoderUI.toast.show('已断开后端，回到本地 Mock', 'info');
+        paint(null);
+      });
+
+      // 刷新后自动恢复上次连接（WS/REST）
+      QoderUI.transport.restore().then((t) => { if (t) { $('bcType').value = t.name; if (QoderUI.toast) QoderUI.toast.show('已恢复后端连接：' + t.name, 'info'); } paint(t ? t.status : null); });
+    })();
   </script>
 </body>
 </html>
