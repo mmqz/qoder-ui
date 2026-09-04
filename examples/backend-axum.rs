@@ -161,7 +161,7 @@ struct TermResult {
     cwd: String,
 }
 
-const ALLOWED: &[&str] = &["ls", "pwd", "echo", "date", "whoami", "cat", "head", "wc"];
+const ALLOWED: &[&str] = &["help", "ls", "pwd", "echo", "date", "whoami", "cat", "head", "wc"];
 
 async fn terminal(
     State(sandbox): State<Arc<PathBuf>>,
@@ -183,7 +183,15 @@ async fn terminal(
     let parts: Vec<&str> = p.cmd.split_whitespace().collect();
     let bin = parts.first().copied().unwrap_or("");
 
-    let result = if !ALLOWED.contains(&bin) {
+    let result = if bin == "help" {
+        TermResult {
+            tab_id,
+            stdout: "沙箱白名单命令：help ls pwd echo date whoami cat head wc\n另有 cd <dir>（目录切换）；clear / exit 由前端本地处理。".to_string(),
+            stderr: String::new(),
+            exit_code: 0,
+            cwd: p.cwd.clone(),
+        }
+    } else if !ALLOWED.contains(&bin) {
         TermResult {
             tab_id,
             stdout: String::new(),

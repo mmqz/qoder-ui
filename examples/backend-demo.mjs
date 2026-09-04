@@ -75,7 +75,7 @@ function handleChat(req, res) {
 }
 
 /* ---------- POST /api/terminal：白名单沙箱命令 ---------- */
-const ALLOWED = new Set(['ls', 'pwd', 'echo', 'date', 'whoami', 'cat', 'node', 'npm', 'git', 'head', 'wc']);
+const ALLOWED = new Set(['help', 'ls', 'pwd', 'echo', 'date', 'whoami', 'cat', 'node', 'npm', 'git', 'head', 'wc']);
 
 function resolveCwd(cwd) {
   if (!cwd || cwd === '~' || cwd === '/') return SANDBOX;
@@ -107,6 +107,9 @@ async function handleTerminal(req, res) {
 
   const parts = cmd.split(/\s+/);
   const bin = parts[0];
+  if (bin === 'help') {
+    return json({ tabId: p.tabId, stdout: '沙箱白名单命令：help ls pwd echo date whoami cat node npm git head wc\n另有 cd <dir>（目录切换）；clear / exit 由前端本地处理。', exitCode: 0, cwd: p.cwd });
+  }
   if (!ALLOWED.has(bin)) return json({ tabId: p.tabId, stderr: `command not found（演示沙箱白名单：${[...ALLOWED].join(' ')}）: ${bin}`, exitCode: 127, cwd: p.cwd });
   // 参数越界防护：拒绝 .. 或绝对路径参数
   if (parts.slice(1).some((a) => a.includes('..') || /^\/(?!$)/.test(a))) {
