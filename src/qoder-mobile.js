@@ -94,7 +94,7 @@
       'new_task.prompt.categories': '找出Q3增长最快的三个品类',
       'new_task.prompt.poster': '设计一张产品发布会的主视觉海报',
       'new_task.prompt.report': '把本周 tasks 整理成周报，遗留问题列为待办',
-      'new_task.prompt.video': '把“梯度下降”做成一段动画讲解视频',
+      'new_task.prompt.video': '把"梯度下降"做成一段动画讲解视频',
       'new_task.choose_repo': '选择 Git 仓库', 'new_task.choose_branch': '选择分支',
       'new_task.default_branch': '默认分支', 'new_task.attachment.spec': 'Spec',
       'tasks.filter.all': '全部', 'tasks.filter.running': '进行中',
@@ -107,7 +107,7 @@
       'tasks.rc.title': '远程控制', 'tasks.rc.subtitle': 'Qoder Desktop & CLI',
       'tasks.count': '%d 个任务',
       'tasks.empty.title': '准备开始',
-      'tasks.empty.description': '点击 + 开始任务，或开启 Remote Control 同步任务',
+      'tasks.empty.description': '点击 + 启动任务，或在 Qoder CLI 中开启 Remote Control 同步任务',
       'tasks.approval.enter_plan_mode.description': '你可以选择先生成并审核 Spec，再开始执行；也可以跳过 Spec，直接开始执行任务。Spec 用于明确任务范围和执行规范，帮助确认方向是否正确。',
       'tasks.approval.enter_plan_mode.generate_spec': '生成 Spec',
       'tasks.approval.enter_plan_mode.run_directly': '直接执行',
@@ -117,12 +117,12 @@
       'tasks.approval.feedback_placeholder': '告诉 Qoder 要做什么',
       'tasks.approval.feedback_reject_and_send': '拒绝并发送',
       'tasks.approval.approved': '已批准',
-      'tasks.approval.pending': '需要授权',
+      'tasks.approval.pending': '等待审批',
       'approval.title.run_command': 'Qoder 请求执行命令',
       'approval.title.edit': 'Qoder 请求编辑文件',
       'approval.title.mcp': 'Qoder 请求执行 MCP 工具',
       'approval.title.enter_plan_mode': '执行方式选择',
-      'tool.bash': '执行命令', 'tool.read': '读取文件', 'tool.edit': '编辑文件',
+      'tool.bash': '执行命令', 'tool.read': '读取', 'tool.edit': '编辑',
       'tool.search': '搜索', 'tool.web_search': '网页搜索', 'tool.web_fetch': '网页抓取',
       'tool.image': '生成图片', 'tool.skill': '技能', 'tool.mcp': 'MCP',
       'tool.todo': '更新待办', 'tool.subagent': '子智能体', 'tool.plan': '请求进入 Plan 模式',
@@ -132,7 +132,7 @@
       'tool.group.writes': '写入 %d 个文件', 'tool.group.ops': '已处理 %d 个操作',
       'todo.title': '待办列表', 'todo.empty': '暂无待办项。',
       'workspace.metric.active': '活跃', 'workspace.metric.closed': '已关闭',
-      'workspace.feedback': '描述你的任务…', 'workspace.interrupt_session': '终止回复',
+      'workspace.feedback': '输入消息或按住说话…', 'workspace.interrupt_session': '终止回复',
       'workspace.empty_session': '现在可以开始你的任务了！',
       'conversation.thinking.title': '深度思考',
       'conversation.sources.title': '来源',
@@ -229,93 +229,204 @@
       'workspace.read_files': '读取 %d 个文件',
       /* ---- v3.7.0 mermaid 流程图卡（conversation_mermaid_* / cd_mermaid_*） ---- */
       'mermaid.render': '渲染图表',
-      'mermaid.unavailable': '该图已失效，请返回后重新打开。'
+      'mermaid.unavailable': '该图已失效，请返回后重新打开。',
+      /* ---- v3.8.0 审批状态机逐字（approval_*） ---- */
+      'approval.pending': '等待审批', 'approval.approved': '已批准',
+      'approval.rejected': '已拒绝', 'approval.submitted': '已提交',
+      'approval.submitting': '提交中…',
+      'approval.execution_lead': '允许执行',
+      'approval.feedback.reject': '拒绝',
+      'approval.title.permission_required': '需要权限',
+      'approval.title.request': '请求审批',
+      /* ---- v3.8.0 产物异常/回退态逐字（artifact_*） ---- */
+      'artifact.loading': '加载中…', 'artifact.load_failed': '加载失败',
+      'artifact.list_load_failed': '产物列表加载失败',
+      'artifact.download_failed': '产物下载失败',
+      'artifact.retry': '重试', 'artifact.not_found': '产物不存在或已过期',
+      'artifact.preview_unavailable': '暂不支持预览',
+      'artifact.open_external_unavailable': '没有可用于打开此文件的兼容应用。',
+      'artifact.remote_local_resource_unavailable': '该产物暂无法在手机端查看，请在任务运行设备上打开。',
+      'artifact.share_failed': '无法分享文件',
+      'artifact.share_restricted': '受企业安全策略限制，无法分享或下载',
+      'artifact.stale_fallback': '已显示最近可用版本',
+      'artifact.too_large_download_to_view': '请下载后查看此文件',
+      'artifact.low_memory_download_to_view': '当前内存不足，请下载后查看此文件',
+      'artifact.pdf_page_description': '%@，第 %@ 页，共 %@ 页',
+      /* ---- v3.8.0 通用按钮与错误文案（common_* / error_* 逐字） ---- */
+      'common.cancel': '取消', 'common.confirm': '确认', 'common.close': '关闭',
+      'common.ok': '好', 'common.retry': '重试', 'common.clear_all': '清空',
+      'common.open_on_phone': '在手机上打开', 'common.error': '错误',
+      'error.account_banned': '账户已被禁用，请联系客服',
+      'error.captcha_failed': '验证失败，请重试',
+      'error.device_not_registered': '设备未注册',
+      'error.device_offline_message_not_sent': '设备已离线。消息未发送。',
+      'error.environment_offline': '所选环境已离线，请重新连接或选择其他环境。',
+      'error.environment_session_limit_reached': '已达到环境会话数量上限，请删除旧会话后重试',
+      'error.feedback_failed': '提交失败，请重试',
+      'error.generic': '出了点问题，请重试',
+      'error.google_no_credential': '当前设备没有可用的 Google 账号。',
+      'error.google_sign_in_failed': 'Google 登录失败，请重试。',
+      'error.google_sign_in_interrupted': 'Google 登录被中断，请重试。',
+      'error.google_sign_in_unavailable': '当前设备无法使用 Google 登录。',
+      'error.network_unavailable': '网络连接失败，请检查网络后重试',
+      'error.no_permission': '无权访问此会话',
+      'error.page_not_found': '页面不存在',
+      'error.page_not_found_with_path': '页面不存在：%@',
+      'error.service_unavailable': '服务暂时不可用，请稍后重试',
+      'error.session_busy': '会话正在忙碌，请稍后重试',
+      'error.session_expired': '登录已过期，请重新登录',
+      'error.session_not_found': '会话已不存在',
+      'error.sign_in_failed': '登录失败，请重试',
+      'error.sign_in_timeout': '登录超时，请重试',
+      'error.something_went_wrong': '出了点问题',
+      'error.try_again': '请重试。',
+      /* ---- v3.8.0 设置屏逐字（settings_*） ---- */
+      'settings.title': '设置', 'settings.language': '语言',
+      'settings.notification': '通知', 'settings.privacy': '隐私',
+      'settings.billing': '账单', 'settings.machine': '设备', 'settings.usage': '用量',
+      'settings.edit_profile': '编辑资料', 'settings.feedback': '反馈',
+      'settings.check_update': '检查更新', 'settings.cache_cleanup': '清理缓存',
+      'settings.sign_out': '退出登录',
+      'settings.sign_out_confirm_title': '退出登录',
+      'settings.sign_out_confirm_message': '确定要退出登录吗？',
+      'settings.guest': '访客', 'settings.plan_community': '社区版',
+      'settings.placeholder': '此功能在初始框架中仍为占位项。',
+      'settings.about': '关于 Qoder', 'settings.about_cn': '关于 Qoder CN',
+      'settings.device_qr.accessibility': '配对 Qoder 眼镜',
+      'settings.device_qr.caption': '支持与智能眼镜配对',
+      'settings.device_qr.confirmed': '眼镜已配对',
+      'settings_integrations.title': '集成',
+      'settings_integrations.github_title': 'GitHub',
+      'settings_integrations.github_connect': '连接 GitHub', 'settings_integrations.github_connected': '已连接',
+      'settings_integrations.github_connecting': '连接中…',
+      'settings_integrations.github_disconnect': '断开 GitHub 连接',
+      'settings_integrations.github_disconnecting': '断开连接中…',
+      'settings_integrations.github_disconnected': '未连接',
+      'settings_integrations.github_loading': '正在检查连接…',
+      'settings_integrations.github_configure': '在 GitHub 上配置',
+      'settings_integrations.disconnect_confirm_title': '断开 GitHub 连接',
+      'settings_integrations.disconnect_confirm_message': '要从当前 Qoder 账号断开 GitHub 连接吗？',
+      'update.install.installer_unavailable': '系统安装器暂时不可用，请重试；若持续失败，请提交反馈。',
+      'update.install.package_access_failed': '无法访问安装包，请重新下载；若仍失败，请提交反馈。',
+      'update.install.package_unavailable': '安装包已失效或被清理，请重新下载后安装。',
+      'update.install.permission_required': '尚未允许 Qoder 安装应用。请在系统设置中开启“允许来自此来源的应用”，返回后将继续安装。',
+      'update.install.system_blocked': '系统暂时阻止打开安装程序，请重试；若持续失败，请提交反馈。',
+      'update.action.download_again': '重新下载',
+      'update.action.open_settings': '去设置', 'update.action.try_again': '重试',
+      /* ---- v3.8.0 清理缓存子页（settings.cache_cleanup.* 官方键名） ---- */
+      'settings.cache_cleanup.app_title': '应用缓存', 'settings.cache_cleanup.app_description': '会话与消息的本地缓存',
+      'settings.cache_cleanup.artifact_title': '产物缓存', 'settings.cache_cleanup.artifact_description': '已下载的产物文件与图片',
+      'settings.cache_cleanup.all_title': '全部清理', 'settings.cache_cleanup.all_description': '清理此设备上的全部本地缓存',
+      'settings.cache_cleanup.calculating': '计算中…', 'settings.cache_cleanup.clear': '清理',
+      'settings.cache_cleanup.confirm_title': '清理缓存',
+      'settings.cache_cleanup.confirm_app_message': '将清除本地会话与消息缓存，不影响云端数据。',
+      'settings.cache_cleanup.confirm_artifact_message': '将清除已下载的产物与图片缓存，需要时会重新下载。',
+      'settings.cache_cleanup.confirm_all_message': '将清除当前账号的本地会话与消息缓存，以及此设备上的已下载产物和临时文件，不影响云端数据。',
+      'settings.cache_cleanup.cleared': '已清理', 'settings.cache_cleanup.failed': '清理失败，请重试',
+      /* ---- v3.8.0 任务详情·远程控制逐字（tasks_rc_*，官方键名） ---- */
+      'tasks.rc.cli': 'Qoder CLI', 'tasks.rc.cli_device': 'CLI',
+      'tasks.rc.desktop': 'Qoder Desktop', 'tasks.rc.desktop_device': '桌面端',
+      'tasks.rc.guidance_cli_intro': '在终端中选择一种方式，启用远程控制：',
+      'tasks.rc.guidance_cli_command': '在终端运行命令「%@」',
+      'tasks.rc.guidance_cli_connect_current': '连接当前会话',
+      'tasks.rc.guidance_cli_new_sessions': '手机端新建最多 32 个会话',
+      'tasks.rc.guidance_coming_soon': '即将上线',
+      'tasks.rc.guidance_download': '在电脑上下载 Qoder 应用',
+      'tasks.rc.guidance_enable': '在 %@ 设置中开启「Qoder Mobile」/ 远程控制',
+      'tasks.rc.guidance_history_sync': '历史会话同步',
+      'tasks.rc.guidance_install': '在电脑上安装 %@ 并使用同一账号登录',
+      'tasks.rc.guidance_login': '使用同一账号登录',
+      'tasks.rc.guidance_open_settings': '打开 Quest – {settings} 设置 – {smartphone} Mobile – 开启',
+      'tasks.action.archive': '归档', 'tasks.action.delete': '删除',
+      'tasks.action.mark_read': '标记为已读', 'tasks.action.mark_unread': '标记为未读',
+      'tasks.detail.env': '运行环境', 'tasks.detail.remote_control': '远程控制',
+      'tasks.detail.connected_to': '已连接至 %@'
     },
     en: {
       'app.tab.home': 'Home', 'app.tab.tasks': 'Tasks',
       'app.tab.sessions': 'Workspace', 'app.tab.me': 'Me',
       'new_task.tab.cloud': 'Cloud', 'new_task.tab.local': 'Local PC',
-      'new_task.cloud_hero_title': 'Say it, ship it',
-      'new_task.cloud_hero_subtitle': "I'm Xiao Q, your all-purpose work buddy — ready in the cloud whenever you need me!",
-      'new_task.local_hero_title': 'Deep thinking, craftsman creation',
-      'new_task.local_hero_subtitle': 'Control your PC from your phone — your tasks, files and skills on the computer are all set.',
+      'new_task.cloud_hero_title': 'Chat, or send a task',
+      'new_task.cloud_hero_subtitle': "I'm Little Q, your go-to work partner. Always in the cloud, ready to hit the ground running!",
+      'new_task.local_hero_title': 'Think deeper, Build better',
+      'new_task.local_hero_subtitle': 'Start on phone. Your computer is ready when you are — with tasks, files, and skills all set.',
       'new_task.input_placeholder': 'Describe your task...',
-      'new_task.prompt.digest': 'Push a competitor briefing every Monday',
-      'new_task.prompt.feedback': 'Classify 200 customer feedback items by issue and sentiment',
-      'new_task.prompt.monitor': 'Monitor public opinion; notify on negativity',
-      'new_task.prompt.agent': 'Deploy a support agent to answer inquiries',
-      'new_task.prompt.categories': 'Find the three fastest-growing categories in Q3',
-      'new_task.prompt.poster': 'Design a key visual poster for the launch event',
-      'new_task.prompt.report': 'Turn this week\'s tasks into a report with open issues as todos',
-      'new_task.prompt.video': 'Turn "gradient descent" into an animated explainer',
-      'new_task.choose_repo': 'Choose a Git repository', 'new_task.choose_branch': 'Choose a branch',
+      'new_task.prompt.digest': 'Push a competition digest every Monday',
+      'new_task.prompt.feedback': 'Sort 200 feedbacks by issue and sentiment',
+      'new_task.prompt.monitor': 'Watch brand mentions, ping me on negatives',
+      'new_task.prompt.agent': 'Deploy a support agent to handle FAQs',
+      'new_task.prompt.categories': '"Find Q3\'s top 3 fastest-growing categories"',
+      'new_task.prompt.poster': 'Design a product launch hero poster',
+      'new_task.prompt.report': 'Compile tasks into a weekly report, flag leftovers as to-dos',
+      'new_task.prompt.video': 'Animate gradient descent step by step',
+      'new_task.choose_repo': 'Choose git repository', 'new_task.choose_branch': 'Choose branch',
       'new_task.default_branch': 'Default branch', 'new_task.attachment.spec': 'Spec',
       'tasks.filter.all': 'All', 'tasks.filter.running': 'Running',
       'tasks.filter.pending': 'Pending', 'tasks.filter.idle': 'Idle',
       'tasks.group.today': 'Today', 'tasks.group.yesterday': 'Yesterday',
-      'tasks.group.week': 'Last 7 days', 'tasks.group.earlier': 'Earlier',
-      'tasks.phase.running': 'Running', 'tasks.phase.completed': 'Completed',
-      'tasks.phase.failed': 'Failed', 'tasks.phase.idle': 'Idle',
-      'tasks.phase.waiting': 'Awaiting approval',
+      'tasks.group.week': 'Previous 7 Days', 'tasks.group.earlier': 'Earlier',
+      'tasks.phase.running': 'running', 'tasks.phase.completed': 'completed',
+      'tasks.phase.failed': 'failed', 'tasks.phase.idle': 'idle',
+      'tasks.phase.waiting': 'waiting for approval',
       'tasks.rc.title': 'Remote Control', 'tasks.rc.subtitle': 'Qoder Desktop & CLI',
       'tasks.count': '%d tasks',
       'tasks.empty.title': 'Ready to start',
-      'tasks.empty.description': 'Tap + to start a task, or enable Remote Control to sync tasks',
-      'tasks.approval.enter_plan_mode.description': 'Generate and review a Spec first, or skip it and run directly. The Spec clarifies scope and conventions so you can confirm the direction.',
-      'tasks.approval.enter_plan_mode.generate_spec': 'Generate Spec',
+      'tasks.empty.description': 'Tap + to launch a task, or turn on Remote Control in Qoder CLI to sync tasks',
+      'tasks.approval.enter_plan_mode.description': 'Choose how Quest should proceed: create a Spec before execution, or start running the task directly. A Spec helps clarify scope and implementation approaches, quickly confirming the direction before execution.',
+      'tasks.approval.enter_plan_mode.generate_spec': 'Spec first',
       'tasks.approval.enter_plan_mode.run_directly': 'Run directly',
       'tasks.approval.option.allow': 'Allow', 'tasks.approval.option.allow_once': 'Allow once',
       'tasks.approval.option.allow_session': 'Always allow in this session', 'tasks.approval.option.reject': 'Reject',
       'tasks.approval.option.recommended': 'Recommended',
-      'tasks.approval.feedback_placeholder': 'Tell Qoder what to do',
+      'tasks.approval.feedback_placeholder': 'Type feedback',
       'tasks.approval.feedback_reject_and_send': 'Reject and send',
       'tasks.approval.approved': 'Approved',
-      'tasks.approval.pending': 'Approval required',
-      'approval.title.run_command': 'Qoder wants to run a command',
-      'approval.title.edit': 'Qoder wants to edit a file',
-      'approval.title.mcp': 'Qoder wants to run an MCP tool',
-      'approval.title.enter_plan_mode': 'Choose how to run',
-      'tool.bash': 'Run command', 'tool.read': 'Read file', 'tool.edit': 'Edit file',
-      'tool.search': 'Search', 'tool.web_search': 'Web search', 'tool.web_fetch': 'Web fetch',
+      'tasks.approval.pending': 'Waiting for approval',
+      'approval.title.run_command': 'Qoder wants to run command',
+      'approval.title.edit': 'Qoder wants to edit',
+      'approval.title.mcp': 'Qoder wants to execute MCP tool',
+      'approval.title.enter_plan_mode': 'Execution Suggestion',
+      'tool.bash': 'Bash', 'tool.read': 'Read', 'tool.edit': 'Edit',
+      'tool.search': 'Search', 'tool.web_search': 'Web Search', 'tool.web_fetch': 'Web Fetch',
       'tool.image': 'Generate image', 'tool.skill': 'Skill', 'tool.mcp': 'MCP',
       'tool.todo': 'Update todos', 'tool.subagent': 'Sub-agent', 'tool.plan': 'Request Plan mode',
       'tool.status.running': 'Running', 'tool.status.completed': 'Completed',
-      'tool.status.failed': 'Failed', 'tool.status.pending': 'Waiting',
+      'tool.status.failed': 'Failed', 'tool.status.pending': 'Pending',
       'tool.group.tools': 'Ran %d tools', 'tool.group.files': 'Read %d files',
       'tool.group.writes': 'Wrote %d files', 'tool.group.ops': 'Processed %d operations',
-      'todo.title': 'Todo list', 'todo.empty': 'No todos yet.',
+      'todo.title': 'Todo List', 'todo.empty': 'No todo items found.',
       'workspace.metric.active': 'Active', 'workspace.metric.closed': 'Closed',
-      'workspace.feedback': 'Describe your task…', 'workspace.interrupt_session': 'Stop reply',
+      'workspace.feedback': 'Type a message or hold to talk …', 'workspace.interrupt_session': 'Stop reply',
       'workspace.empty_session': "You're all set — start your task now!",
-      'conversation.thinking.title': 'Deep thinking',
+      'conversation.thinking.title': 'Deep Thinking',
       'conversation.sources.title': 'Sources',
       'conversation.turn_activity.agents_count': '%d agents',
-      'conversation.turn_activity.experts_count': '%d experts',
+      'conversation.turn_activity.experts_count': '%d Experts',
       'conversation.turn_activity.todo_progress': '%d/%d',
-      'conversation.remote_control_ready': "You're all set — start your task now!",
+      'conversation.remote_control_ready': 'Ready for your task now!',
       'conversation.turn.copy_success': 'Copied',
-      'conversation.interrupt.stopped': 'Stopped by user',
+      'conversation.interrupt.stopped': 'Stopped by user.',
       'conversation.disconnected_composer_placeholder': 'Disconnected',
-      'cloud_sandbox_boot.stage.download_install': 'Creating cloud container',
-      'cloud_sandbox_boot.stage.repository_install': 'Cloning repository',
-      'cloud_sandbox_boot.stage.run_install': 'Starting cloud container',
-      'cloud_sandbox_boot.setup_hint': 'Add a setup script to install dependencies and configure the environment.',
-      'cloud_sandbox_boot.preparing': 'Waiting for initialization progress…',
-      'cloud_sandbox_boot.composer_disabled': 'Waiting for cloud sandbox initialization',
-      'artifact.title': 'Artifacts', 'artifact.empty': 'Generated files will appear here',
-      'artifact.section_presented': 'Final delivery', 'artifact.section_changed': 'Intermediate edits',
+      'cloud_sandbox_boot.stage.download_install': 'Set up a cloud container',
+      'cloud_sandbox_boot.stage.repository_install': 'Cloned repository',
+      'cloud_sandbox_boot.stage.run_install': 'Started cloud container',
+      'cloud_sandbox_boot.setup_hint': 'Add a setup script to install dependencies and configure your environment.',
+      'cloud_sandbox_boot.preparing': 'Waiting for setup progress…',
+      'cloud_sandbox_boot.composer_disabled': 'Waiting for cloud sandbox setup',
+      'artifact.title': 'Artifacts', 'artifact.empty': 'Files generated will appear here',
+      'artifact.section_presented': 'Deliverables', 'artifact.section_changed': 'Changes',
       'artifact.view_preview': 'Preview', 'artifact.view_source': 'Source',
       'artifact.open_external': 'Open with another app',
       'diff.summary': '%d additions, %d deletions',
       'session.details.title': 'Details', 'session.details.general': 'General',
       'session.details.metadata': 'Metadata', 'session.details.model': 'Model',
-      'session.details.running_on': 'Running on', 'session.details.created': 'Created',
-      'session.details.last_updated': 'Last updated', 'session.details.session_id': 'Session ID',
+      'session.details.running_on': 'Running On', 'session.details.created': 'Created',
+      'session.details.last_updated': 'Last Updated', 'session.details.session_id': 'Session ID',
       'session.details.id_copied': 'Session ID copied',
-      'composer.choose_mode': 'Choose mode', 'composer.choose_model': 'Choose model',
-      'composer.code_with_plan': 'Plan before coding',
-      'composer.mode.ask': 'Ask permissions', 'composer.mode.auto': 'Auto-approve',
-      'composer.mode.auto_edits': 'Auto-accept edits', 'composer.mode.bypass': 'Bypass permissions',
+      'composer.choose_mode': 'Choose Mode', 'composer.choose_model': 'Choose Model',
+      'composer.code_with_plan': 'Code with Plan',
+      'composer.mode.ask': 'Ask permissions', 'composer.mode.auto': 'Auto',
+      'composer.mode.auto_edits': 'Auto accept edits', 'composer.mode.bypass': 'Bypass permissions',
       'composer.mode.plan': 'Plan mode',
       'composer.model.auto': 'Auto', 'composer.model.efficient': 'Efficient',
       'composer.model.lite': 'Lite', 'composer.model.performance': 'Performance',
@@ -382,7 +493,118 @@
       'workspace.read_files': 'Read %d files',
       /* ---- v3.7.0 mermaid ---- */
       'mermaid.render': 'Render diagram',
-      'mermaid.unavailable': 'This diagram is no longer available. Go back and open it again.'
+      'mermaid.unavailable': 'This diagram is no longer available. Go back and open it again.',
+      /* ---- v3.8.0 approval（strings.xml en verbatim） ---- */
+      'approval.pending': 'Waiting for approval', 'approval.approved': 'Approved',
+      'approval.rejected': 'Rejected', 'approval.submitted': 'Submitted',
+      'approval.submitting': 'Submitting…',
+      'approval.execution_lead': 'Allow execution of',
+      'approval.feedback.reject': 'Reject',
+      'approval.title.permission_required': 'Permission required',
+      'approval.title.request': 'Approval request',
+      /* ---- v3.8.0 artifact（en verbatim） ---- */
+      'artifact.loading': 'Loading…', 'artifact.load_failed': 'Load Failed',
+      'artifact.list_load_failed': 'Failed to load artifacts',
+      'artifact.download_failed': 'Download failed',
+      'artifact.retry': 'Retry', 'artifact.not_found': 'This artifact no longer exists or has expired',
+      'artifact.preview_unavailable': 'Preview not supported',
+      'artifact.open_external_unavailable': 'No compatible app is available for this file.',
+      'artifact.remote_local_resource_unavailable': 'This artifact is currently unavailable on mobile. Please open it on the device running the task.',
+      'artifact.share_failed': 'Unable to share file',
+      'artifact.share_restricted': 'Your organization’s security policy prevents sharing or downloading',
+      'artifact.stale_fallback': 'Showing the last available version',
+      'artifact.too_large_download_to_view': 'Please download to view this file',
+      'artifact.low_memory_download_to_view': 'Low memory — please download to view this file',
+      'artifact.pdf_page_description': '%@ page %@ of %@',
+      /* ---- v3.8.0 common / error（en verbatim） ---- */
+      'common.cancel': 'Cancel', 'common.confirm': 'Confirm', 'common.close': 'Close',
+      'common.ok': 'OK', 'common.retry': 'Retry', 'common.clear_all': 'Clear all',
+      'common.open_on_phone': 'Open on phone', 'common.error': 'Error',
+      'error.account_banned': 'Your account has been disabled. Please contact support.',
+      'error.captcha_failed': 'Verification failed. Please try again.',
+      'error.device_not_registered': 'Device not registered',
+      'error.device_offline_message_not_sent': 'Device is offline. Message not sent.',
+      'error.environment_offline': 'The selected environment is offline. Reconnect it or choose another environment.',
+      'error.environment_session_limit_reached': 'You have reached the maximum number of environment sessions. Delete old sessions and try again.',
+      'error.feedback_failed': 'Failed to submit feedback. Please try again.',
+      'error.generic': 'Something went wrong. Please try again.',
+      'error.google_no_credential': 'No Google account is available on this device.',
+      'error.google_sign_in_failed': 'Google Sign-In failed. Please try again.',
+      'error.google_sign_in_interrupted': 'Google Sign-In was interrupted. Please try again.',
+      'error.google_sign_in_unavailable': 'Google Sign-In is not available on this device.',
+      'error.network_unavailable': 'Network connection failed. Please check your network and try again.',
+      'error.no_permission': 'You do not have permission to access this session.',
+      'error.page_not_found': 'Page not found',
+      'error.page_not_found_with_path': 'Page not found: %@',
+      'error.service_unavailable': 'Service temporarily unavailable. Please try again later.',
+      'error.session_busy': 'Session is busy. Please wait and try again.',
+      'error.session_expired': 'Your session has expired. Please sign in again.',
+      'error.session_not_found': 'This session no longer exists.',
+      'error.sign_in_failed': 'Sign in failed. Please try again.',
+      'error.sign_in_timeout': 'Sign in timed out. Please try again.',
+      'error.something_went_wrong': 'Something went wrong',
+      'error.try_again': 'Please try again.',
+      /* ---- v3.8.0 settings（en verbatim） ---- */
+      'settings.title': 'Settings', 'settings.language': 'Language',
+      'settings.notification': 'Notification', 'settings.privacy': 'Privacy',
+      'settings.billing': 'Billing', 'settings.machine': 'Machine', 'settings.usage': 'Usage',
+      'settings.edit_profile': 'Edit profile', 'settings.feedback': 'Feedback',
+      'settings.check_update': 'Check Update', 'settings.cache_cleanup': 'Clear Cache',
+      'settings.sign_out': 'Sign out',
+      'settings.sign_out_confirm_title': 'Sign out',
+      'settings.sign_out_confirm_message': 'Are you sure you want to sign out?',
+      'settings.guest': 'Guest', 'settings.plan_community': 'Community',
+      'settings.placeholder': 'This destination is still a placeholder in the starter shell.',
+      'settings.about': 'About Qoder', 'settings.about_cn': 'About Qoder CN',
+      'settings.device_qr.accessibility': 'Pair Qoder Glasses',
+      'settings.device_qr.caption': 'Supports pairing with smart glasses',
+      'settings.device_qr.confirmed': 'Glasses paired',
+      'settings_integrations.title': 'Integrations',
+      'settings_integrations.github_title': 'GitHub',
+      'settings_integrations.github_connect': 'Connect GitHub', 'settings_integrations.github_connected': 'Connected',
+      'settings_integrations.github_connecting': 'Connecting…',
+      'settings_integrations.github_disconnect': 'Disconnect GitHub',
+      'settings_integrations.github_disconnecting': 'Disconnecting…',
+      'settings_integrations.github_disconnected': 'Not connected',
+      'settings_integrations.github_loading': 'Checking connection…',
+      'settings_integrations.github_configure': 'Configure on GitHub',
+      'settings_integrations.disconnect_confirm_title': 'Disconnect GitHub',
+      'settings_integrations.disconnect_confirm_message': 'Disconnect GitHub from this Qoder account?',
+      'update.install.installer_unavailable': 'The system installer is currently unavailable. Try again; if this keeps happening, send feedback.',
+      'update.install.package_access_failed': 'Qoder can’t access the installation package. Download it again; if this keeps happening, send feedback.',
+      'update.install.package_unavailable': 'The installation package is no longer available. Download it again to continue.',
+      'update.install.permission_required': 'Qoder isn’t allowed to install apps yet. In system settings, turn on “Allow from this source.” Installation will continue when you return.',
+      'update.install.system_blocked': 'The system blocked the installer from opening. Try again; if this keeps happening, send feedback.',
+      'update.action.download_again': 'Download again',
+      'update.action.open_settings': 'Settings', 'update.action.try_again': 'Try again',
+      /* ---- v3.8.0 cache cleanup（en verbatim） ---- */
+      'settings.cache_cleanup.app_title': 'App cache', 'settings.cache_cleanup.app_description': 'Local cache of sessions and messages',
+      'settings.cache_cleanup.artifact_title': 'Artifact cache', 'settings.cache_cleanup.artifact_description': 'Downloaded artifact files and images',
+      'settings.cache_cleanup.all_title': 'Clear all', 'settings.cache_cleanup.all_description': 'Clear all local cache on this device',
+      'settings.cache_cleanup.calculating': 'Calculating…', 'settings.cache_cleanup.clear': 'Clear',
+      'settings.cache_cleanup.confirm_title': 'Clear Cache',
+      'settings.cache_cleanup.confirm_app_message': 'This clears the local cache of sessions and messages. Cloud data is not affected.',
+      'settings.cache_cleanup.confirm_artifact_message': 'This clears the cache of downloaded artifacts and images. They will be re-downloaded when needed.',
+      'settings.cache_cleanup.confirm_all_message': 'This clears the local cache of sessions and messages for the current account, plus downloaded artifacts and temp files on this device. Cloud data is not affected.',
+      'settings.cache_cleanup.cleared': 'Cleared', 'settings.cache_cleanup.failed': 'Clear failed, try again',
+      /* ---- v3.8.0 tasks_rc（en verbatim，官方键名） ---- */
+      'tasks.rc.cli': 'Qoder CLI', 'tasks.rc.cli_device': 'CLI',
+      'tasks.rc.desktop': 'Qoder Desktop', 'tasks.rc.desktop_device': 'Desktop',
+      'tasks.rc.guidance_cli_intro': 'In the terminal, pick one way to enable remote control:',
+      'tasks.rc.guidance_cli_command': 'Run command ‘%@’ in the terminal.',
+      'tasks.rc.guidance_cli_connect_current': 'Connect the current session',
+      'tasks.rc.guidance_cli_new_sessions': 'Create up to 32 sessions from your phone',
+      'tasks.rc.guidance_coming_soon': 'Coming soon',
+      'tasks.rc.guidance_download': 'Download Qoder app on your computer',
+      'tasks.rc.guidance_enable': "\"Enable 'Qoder Mobile' / Remote Control in %@ settings\"",
+      'tasks.rc.guidance_history_sync': 'Session history sync',
+      'tasks.rc.guidance_install': 'Install %@ on your computer and log in with the same account',
+      'tasks.rc.guidance_login': 'Log in with the same account',
+      'tasks.rc.guidance_open_settings': 'Open Quest – {settings} Settings – {smartphone} Mobile – Switch on',
+      'tasks.action.archive': 'Archive', 'tasks.action.delete': 'Delete',
+      'tasks.action.mark_read': 'Mark as Read', 'tasks.action.mark_unread': 'Mark as Unread',
+      'tasks.detail.env': 'Running On', 'tasks.detail.remote_control': 'Remote Control',
+      'tasks.detail.connected_to': 'Connected to %@'
     }
   };
   let _locale = 'zh';
@@ -1210,7 +1432,7 @@
      kind="action"(命令) | "edit" | "mcp" | "plan"|"spec"(Spec 双按钮)
      ============================================================ */
   class QmApproval extends Base {
-    static get observedAttributes() { return ['kind', 'open', 'title', 'command', 'theme']; }
+    static get observedAttributes() { return ['kind', 'open', 'state', 'title', 'command', 'theme']; }
     static get hostCss() {
       return baseCss(
         '.qm-appr{background:var(--qm-surface);border:1px solid var(--qm-line);border-radius:var(--qm-radius);' +
@@ -1218,6 +1440,9 @@
         '.qm-appr__hd{padding:13px 15px 4px;font-weight:700;font-size:15.5px;display:flex;justify-content:space-between;align-items:center;gap:8px;}' +
         '.qm-appr__badge{flex:none;font-size:10.5px;color:var(--qm-accent-attention);border:1px solid currentColor;' +
         'border-radius:999px;padding:0 7px;font-weight:600;}' +
+        '.qm-appr__badge--done{color:var(--qm-accent-completed);}' +
+        '.qm-appr__badge--err{color:var(--qm-error);}' +
+        '.qm-appr__lead{margin:10px 15px 0;font-size:12px;color:var(--qm-text-2);}' +
         '.qm-appr__cmd{margin:8px 15px 0;background:var(--qm-surface-2);border-radius:var(--qm-radius-sm);' +
         'padding:9px 11px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;color:var(--qm-text);' +
         'overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}' +
@@ -1241,8 +1466,11 @@
       const kind = this.getAttribute('kind') || 'action';
       const open = this.getAttribute('open') !== 'false';
       const planLike = kind === 'plan' || kind === 'spec';
-      const TITLES = { action: 'approval.title.run_command', edit: 'approval.title.edit', mcp: 'approval.title.mcp', plan: 'approval.title.enter_plan_mode', spec: 'approval.title.enter_plan_mode' };
+      const TITLES = { action: 'approval.title.run_command', edit: 'approval.title.edit', mcp: 'approval.title.mcp', plan: 'approval.title.enter_plan_mode', spec: 'approval.title.enter_plan_mode', request: 'approval.title.request', permission: 'approval.title.permission_required' };
       const title = this.getAttribute('title') || t(TITLES[kind] || TITLES.action);
+      const state = this.getAttribute('state') || 'pending';
+      const STATE_KEY = { pending: 'approval.pending', submitting: 'approval.submitting', submitted: 'approval.submitted', rejected: 'approval.rejected', approved: 'approval.approved' };
+      const badgeCls = state === 'submitted' || state === 'approved' ? ' qm-appr__badge--done' : state === 'rejected' ? ' qm-appr__badge--err' : '';
       const rec = '<span class="qm-opt__rec">' + esc(t('tasks.approval.option.recommended')) + '</span>';
       const opts = [
         ['allow', t('tasks.approval.option.allow'), rec],
@@ -1253,8 +1481,8 @@
       const cmd = this.getAttribute('command');
       return '<div class="qm-appr' + (open ? '' : ' qm-appr--hidden') + '" part="panel">' +
         '<div class="qm-appr__hd"><span>' + esc(title) + '</span>' +
-        '<span class="qm-appr__badge">' + esc(t('tasks.approval.pending')) + '</span></div>' +
-        (!planLike && cmd ? '<div class="qm-appr__cmd">' + esc(cmd) + '</div>' : '') +
+        '<span class="qm-appr__badge' + badgeCls + '">' + esc(t(STATE_KEY[state] || STATE_KEY.pending)) + '</span></div>' +
+        (!planLike && cmd ? '<div class="qm-appr__lead">' + esc(t('approval.execution_lead')) + '</div><div class="qm-appr__cmd">' + esc(cmd) + '</div>' : '') +
         (planLike
           ? '<div class="qm-appr__bd">' + esc(t('tasks.approval.enter_plan_mode.description')) + '</div>' +
             '<div class="qm-appr__btns">' +
@@ -1341,7 +1569,7 @@
     general: { c: '#8E8C99', l: 'F' }
   };
   class QmArtifact extends Base {
-    static get observedAttributes() { return ['files', 'view', 'theme']; }
+    static get observedAttributes() { return ['files', 'view', 'state', 'theme']; }
     static get hostCss() {
       return baseCss(
         '.qm-art__hd{display:flex;justify-content:space-between;align-items:center;padding:12px 16px 8px;}' +
@@ -1356,11 +1584,21 @@
         'font-size:10px;font-weight:800;color:#fff;flex:none;letter-spacing:.3px;}' +
         '.qm-file__nm{font-size:13.5px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}' +
         '.qm-file__meta{font-size:11.5px;color:var(--qm-text-2);}' +
-        '.qm-empty{padding:44px 0;text-align:center;color:var(--qm-text-2);font-size:13.5px;}');
+        '.qm-empty{padding:44px 0;text-align:center;color:var(--qm-text-2);font-size:13.5px;}' +
+        '.qm-art__state{padding:46px 24px;text-align:center;color:var(--qm-text-2);font-size:13.5px;line-height:1.6;}' +
+        '.qm-art__retry{margin-top:12px;padding:8px 26px;border-radius:var(--qm-radius-sm);font-size:13px;font-weight:600;'
+ +
+        'background:var(--qm-primary);color:var(--qm-on-primary);}' +
+        '.qm-art__banner{margin:4px 16px 10px;padding:9px 12px;border-radius:var(--qm-radius-sm);'
+ +
+        'font-size:12.5px;line-height:1.55;background:color-mix(in srgb,var(--qm-accent-attention) 10%,transparent);'
+ +
+        'color:var(--qm-accent-attention);}');
     }
     template() {
       const files = json(this.getAttribute('files'), []) || [];
       const view = this.getAttribute('view') || 'preview';
+      const state = this.getAttribute('state') || '';
       const seg = ['preview', 'source'].map((v) =>
         '<button class="' + (view === v ? 'on' : '') + '" data-view="' + v + '">' +
         esc(v === 'preview' ? t('artifact.view_preview') : t('artifact.view_source')) + '</button>').join('');
@@ -1376,9 +1614,24 @@
               '<span class="qm-file__meta">' + esc(f.size || '') + '</span></span></button>';
           }).join('');
         }).join('');
+      const FULL = {
+        loading: 'artifact.loading', error: 'artifact.load_failed',
+        not_found: 'artifact.not_found', unavailable: 'artifact.remote_local_resource_unavailable'
+      };
+      const BANNER = {
+        restricted: 'artifact.share_restricted', stale: 'artifact.stale_fallback',
+        too_large: 'artifact.too_large_download_to_view', low_memory: 'artifact.low_memory_download_to_view'
+      };
+      let body = '';
+      if (FULL[state]) {
+        body = '<div class="qm-art__state">' + esc(t(FULL[state])) +
+          (state === 'error' ? '<br><button class="qm-art__retry" data-act="retry">' + esc(t('artifact.retry')) + '</button>' : '') + '</div>';
+      } else {
+        if (BANNER[state]) body += '<div class="qm-art__banner">' + esc(t(BANNER[state])) + '</div>';
+        body += (groups || '<div class="qm-empty">' + esc(t('artifact.empty')) + '</div>');
+      }
       return '<div class="qm-art__hd"><span class="qm-art__t">' + esc(t('artifact.title')) + '</span>' +
-        '<div class="qm-art__seg">' + seg + '</div></div>' +
-        (groups || '<div class="qm-empty">' + esc(t('artifact.empty')) + '</div>');
+        '<div class="qm-art__seg">' + seg + '</div></div>' + body;
     }
     _bind(root) {
       root.querySelectorAll('[data-view]').forEach((b) => {
@@ -1390,6 +1643,8 @@
       root.querySelectorAll('.qm-file').forEach((f) => {
         f.addEventListener('click', () => this.emit('file-open', { name: f.dataset.name }));
       });
+      const retry = root.querySelector('[data-act="retry"]');
+      if (retry) retry.addEventListener('click', () => this.emit('retry', {}));
     }
     get files() { return json(this.getAttribute('files'), []); }
     set files(v) { this.setAttribute('files', JSON.stringify(v || [])); }
@@ -1442,46 +1697,173 @@
   }
 
   /* ============================================================
-     <qm-settings> — 设置页（外观三选项 / 用量订阅 / 集成 / 账号安全 /
-     注销账号 / 隐私协议 / 服务条款 / 版本，全部实证文案）
+     <qm-settings> — 设置屏完整版（v3.8.0，对齐 T6/F.java 官方 IA）
+     结构：settings.title 标题 → 资料卡(guest/plan_community/edit_profile)
+       → 通用(appearance/language/usage/cache_cleanup)
+       → settings_integrations.title(GitHub 状态机)
+       → 设备(device_qr 眼镜配对) → 支持(check_update 更新失败态/
+       feedback/notification/privacy/machine/billing 占位)
+       → 关于(privacy/terms/version) → sign_out 确认
+     属性：appearance=dark|light|system  github-state=loading|connecting|
+       connected|disconnecting|disconnected(默认)  device-paired(布尔)
+       update-state=install.error 键名后缀(installer_unavailable 等)  panel=cache
+     事件：appearance-change / item(向后兼容) / github-action /
+       device-pair / update-action / cache-clear / sign-out
      ============================================================ */
   class QmSettings extends Base {
-    static get observedAttributes() { return ['appearance', 'theme']; }
+    static get observedAttributes() { return ['appearance', 'github-state', 'device-paired', 'update-state', 'panel', 'confirm', 'theme']; }
     static get hostCss() {
       return baseCss(
         '.qm-set__hd{padding:14px 16px 6px;font-size:24px;font-weight:700;}' +
         '.qm-set__grp{margin:8px 12px;background:var(--qm-surface);border:1px solid var(--qm-line);' +
         'border-radius:var(--qm-radius);overflow:hidden;}' +
+        '.qm-set__cap{margin:14px 16px 2px;font-size:12px;font-weight:600;color:var(--qm-text-2);letter-spacing:.2px;}' +
         '.qm-set__row{display:flex;justify-content:space-between;align-items:center;width:100%;padding:13px 15px;' +
         'font-size:14.5px;text-align:left;border-top:1px solid var(--qm-line);}' +
         '.qm-set__grp .qm-set__row:first-child{border-top:none;}' +
-        '.qm-set__v{color:var(--qm-text-2);font-size:13px;}' +
-        '.qm-seg{display:flex;background:var(--qm-surface-2);border-radius:8px;padding:2px;gap:2px;}' +
-        '.qm-seg button{font-size:12px;padding:4px 10px;border-radius:6px;color:var(--qm-text-2);}' +
-        '.qm-seg button.on{background:var(--qm-surface);color:var(--qm-text);font-weight:600;box-shadow:var(--qm-shadow);}' +
-        '.qm-set__note{padding:12px 18px;font-size:11.5px;color:var(--qm-text-2);line-height:1.6;}');
+        '.qm-set__sub{display:block;font-size:11.5px;color:var(--qm-text-2);margin-top:3px;font-weight:400;}' +
+        '.qm-set__v{color:var(--qm-text-2);font-size:13px;flex:none;}' +
+        '.qm-set__badge{flex:none;font-size:10.5px;font-weight:700;color:var(--qm-primary);' +
+        'border:1px solid currentColor;border-radius:999px;padding:1px 8px;margin-left:8px;}' +
+        '.qm-set__ava{width:44px;height:44px;border-radius:50%;background:color-mix(in srgb,var(--qm-primary) 22%,transparent);' +
+        'color:var(--qm-primary);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;flex:none;}' +
+        '.qm-set__prof{display:flex;align-items:center;gap:12px;padding:14px 15px;}' +
+        '.qm-set__nm{font-size:16.5px;font-weight:700;display:flex;align-items:center;}' +
+        '.qm-set__ghdot{width:7px;height:7px;border-radius:50%;flex:none;margin-right:7px;}' +
+        '.qm-set__seg{display:flex;background:var(--qm-surface-2);border-radius:8px;padding:2px;gap:2px;}' +
+        '.qm-set__seg button{font-size:12px;padding:4px 10px;border-radius:6px;color:var(--qm-text-2);}' +
+        '.qm-set__seg button.on{background:var(--qm-surface);color:var(--qm-text);font-weight:600;box-shadow:var(--qm-shadow);}' +
+        '.qm-set__updbar{padding:11px 15px;border-top:1px solid var(--qm-line);font-size:12.5px;line-height:1.55;' +
+        'color:var(--qm-accent-attention);background:color-mix(in srgb,var(--qm-accent-attention) 8%,transparent);}' +
+        '.qm-set__updbtns{display:flex;gap:8px;margin-top:9px;}' +
+        '.qm-set__updbtns button{flex:1;padding:8px 0;border-radius:var(--qm-radius-sm);font-size:12.5px;font-weight:600;' +
+        'background:var(--qm-primary);color:var(--qm-on-primary);}' +
+        '.qm-set__note{padding:12px 18px;font-size:11.5px;color:var(--qm-text-2);line-height:1.6;}' +
+        '.qm-set__out{margin:16px 12px 8px;width:calc(100% - 24px);padding:13px 0;text-align:center;font-size:14.5px;' +
+        'font-weight:600;color:var(--qm-error);background:var(--qm-surface);border:1px solid var(--qm-line);' +
+        'border-radius:var(--qm-radius);}' +
+        '.qm-mask{position:fixed;inset:0;background:var(--qm-mask);display:flex;align-items:center;justify-content:center;z-index:99;}' +
+        '.qm-dlg{width:min(320px,86%);background:var(--qm-surface);border-radius:16px;padding:16px;box-shadow:var(--qm-shadow);}' +
+        '.qm-dlg__t{font-size:15.5px;font-weight:700;margin-bottom:8px;}' +
+        '.qm-dlg__m{font-size:13px;color:var(--qm-text-2);line-height:1.6;}' +
+        '.qm-dlg__btns{display:flex;gap:9px;margin-top:14px;}' +
+        '.qm-dlg__b{flex:1;padding:10px 0;border-radius:10px;font-size:14px;font-weight:600;}' +
+        '.qm-dlg__b--primary{background:var(--qm-primary);color:var(--qm-on-primary);}' +
+        '.qm-dlg__b--ghost{background:var(--qm-surface-2);color:var(--qm-text);}' +
+        '.qm-dlg__b--danger{background:color-mix(in srgb,var(--qm-error) 14%,transparent);color:var(--qm-error);}' +
+        '.qm-cc__val{font-size:12px;color:var(--qm-text-3);margin-top:2px;display:block;font-weight:400;}' +
+        '.qm-cc__go{flex:none;font-size:12px;font-weight:700;color:var(--qm-primary);border:1px solid var(--qm-primary);' +
+        'border-radius:999px;padding:4px 14px;}');
     }
     template() {
       const cur = this.getAttribute('appearance') || 'system';
+      const ghState = this.getAttribute('github-state') || 'disconnected';
+      const paired = this.hasAttribute('device-paired') && this.getAttribute('device-paired') !== 'false';
+      const updState = this.getAttribute('update-state') || '';
+      const panel = this.getAttribute('panel') || '';
       const seg = ['dark', 'light', 'system'].map((v) =>
         '<button class="' + (cur === v ? 'on' : '') + '" data-appearance="' + v + '">' +
         esc(t('appearance.' + v)) + '</button>').join('');
-      const row = (label, value, act) =>
-        '<button class="qm-set__row" data-act="' + act + '"><span>' + esc(label) + '</span>' +
+      const row = (label, value, act, sub) =>
+        '<button class="qm-set__row" data-act="' + act + '"><span>' + esc(label) +
+        (sub ? '<span class="qm-set__sub">' + esc(sub) + '</span>' : '') + '</span>' +
         '<span class="qm-set__v">' + esc(value || '') + ' ›</span></button>';
-      return '<div class="qm-set__hd">' + esc(t('app.tab.me')) + '</div>' +
-        '<div class="qm-set__grp"><div class="qm-set__row"><span>' + esc(t('settings.appearance')) + '</span>' +
-        '<div class="qm-seg">' + seg + '</div></div></div>' +
-        '<div class="qm-set__grp">' +
-        row(t('usage.title') + ' · ' + t('billing.current_plan'), '', 'usage') +
-        row(t('settings.integrations'), 'GitHub', 'integrations') +
-        row(t('account_security.title'), '', 'account') +
-        row(t('account_security.delete_account'), '', 'delete-account') + '</div>' +
-        '<div class="qm-set__grp">' +
-        row(t('about.privacy_agreement'), '', 'privacy') +
-        row(t('about.service_agreement'), '', 'terms') +
-        row(fmt(t('about.version'), ['0.2.8']), '', 'version') + '</div>' +
-        '<div class="qm-set__note">' + esc(t('about.ai_generated_content_notice')) + '</div>';
+      /* GitHub 状态行（状态机：disconnected→connect / loading / connecting /
+         connected→disconnect+configure / disconnecting） */
+      const GH_COLOR = { connected: 'var(--qm-accent-completed)', loading: 'var(--qm-text-3)', connecting: 'var(--qm-accent-attention)', disconnecting: 'var(--qm-accent-attention)', disconnected: 'var(--qm-text-3)' };
+      const GH_LABEL = { loading: 'settings_integrations.github_loading', connecting: 'settings_integrations.github_connecting', connected: 'settings_integrations.github_connected', disconnecting: 'settings_integrations.github_disconnecting', disconnected: 'settings_integrations.github_disconnected' };
+      const ghLabel = t(GH_LABEL[ghState] || GH_LABEL.disconnected);
+      let ghRow = '<button class="qm-set__row" data-act="github" part="github-row">' +
+        '<span><span style="display:flex;align-items:center;font-weight:600">' +
+        '<span class="qm-set__ghdot" style="background:' + (GH_COLOR[ghState] || GH_COLOR.disconnected) + '"></span>' +
+        esc(t('settings_integrations.github_title')) + '</span>' +
+        (ghState === 'connected' ? '<span class="qm-set__sub">' + esc(t('settings_integrations.github_configure')) + '</span>' : '') +
+        '</span><span class="qm-set__v">' + esc(ghLabel) + '</span></button>';
+      /* 更新失败横幅（update-state = update.install.* 后缀） */
+      let updBar = '';
+      if (updState) {
+        const acts = [['update.action.download_again', 'download-again'], ['update.action.open_settings', 'open-settings'], ['update.action.try_again', 'try-again']];
+        updBar = '<div class="qm-set__updbar" part="update-error">' + esc(t('update.install.' + updState)) +
+          '<div class="qm-set__updbtns">' + acts.map(([k, a]) =>
+            '<button data-update="' + a + '">' + esc(t(k)) + '</button>').join('') + '</div></div>';
+      }
+      /* 主面板 */
+      let body;
+      if (panel === 'cache') {
+        /* 清理缓存子面板（settings.cache_cleanup.* 官方 14 键） */
+        const item = (key, val) =>
+          '<button class="qm-set__row" data-cache="' + key + '"><span>' +
+          esc(t('settings.cache_cleanup.' + key + '_title')) +
+          '<span class="qm-cc__val">' + esc(t('settings.cache_cleanup.' + key + '_description')) + '</span></span>' +
+          '<span class="qm-cc__go">' + esc(t('settings.cache_cleanup.clear')) + '</span></button>';
+        body = '<div class="qm-set__hd">' + esc(t('settings.cache_cleanup.confirm_title')) + '</div>' +
+          '<div class="qm-set__grp">' +
+          item('app', this.getAttribute('cache-app') || '') +
+          item('artifact', this.getAttribute('cache-artifact') || '') +
+          item('all', this.getAttribute('cache-all') || '') + '</div>' +
+          '<div class="qm-set__note">' + esc(t('settings.placeholder')) + '</div>';
+      } else {
+        body = '<div class="qm-set__hd">' + esc(t('settings.title')) + '</div>' +
+          /* 资料卡 */
+          '<div class="qm-set__grp"><div class="qm-set__prof">' +
+          '<span class="qm-set__ava">Q</span>' +
+          '<span style="flex:1;min-width:0"><span class="qm-set__nm">' + esc(t('settings.guest')) +
+          '<span class="qm-set__badge">' + esc(t('settings.plan_community')) + '</span></span></span>' +
+          '<button class="qm-set__v" data-act="edit-profile" style="font-weight:600">' + esc(t('settings.edit_profile')) + ' ›</button></div></div>' +
+          /* 通用 */
+          '<div class="qm-set__cap">' + esc(t('session.details.general')) + '</div>' +
+          '<div class="qm-set__grp"><div class="qm-set__row"><span>' + esc(t('settings.appearance')) + '</span>' +
+          '<div class="qm-set__seg">' + seg + '</div></div>' +
+          row(t('settings.language'), '', 'language') +
+          row(t('settings.usage'), t('settings.plan_community'), 'usage') +
+          row(t('settings.cache_cleanup'), '', 'cache') + '</div>' +
+          /* 集成 */
+          '<div class="qm-set__cap">' + esc(t('settings_integrations.title')) + '</div>' +
+          '<div class="qm-set__grp">' + ghRow + '</div>' +
+          /* 设备 */
+          '<div class="qm-set__cap">' + esc(t('settings.machine')) + '</div>' +
+          '<div class="qm-set__grp"><button class="qm-set__row" data-act="device-qr">' +
+          '<span>' + esc(paired ? t('settings.device_qr.confirmed') : t('settings.device_qr.accessibility')) +
+          (paired ? '' : '<span class="qm-set__sub">' + esc(t('settings.device_qr.caption')) + '</span>') + '</span>' +
+          '<span class="qm-set__v">' + (paired ? '✓' : '') + ' ›</span></button></div>' +
+          /* 支持 */
+          '<div class="qm-set__cap">' + esc(t('settings.feedback')) + '</div>' +
+          '<div class="qm-set__grp">' +
+          row(t('settings.check_update'), '', 'check-update') +
+          row(t('settings.notification'), '', 'notification') +
+          row(t('settings.privacy'), '', 'privacy-row') +
+          row(t('settings.machine'), '', 'machine') +
+          row(t('settings.billing'), '', 'billing') +
+          row(t('settings.feedback'), '', 'feedback-row') + '</div>' +
+          (updBar ? '<div class="qm-set__grp">' + updBar + '</div>' : '') +
+          /* 关于 */
+          '<div class="qm-set__cap">' + esc(t('settings.about')) + '</div>' +
+          '<div class="qm-set__grp">' +
+          row(t('about.privacy_agreement'), '', 'privacy') +
+          row(t('about.service_agreement'), '', 'terms') +
+          row(fmt(t('about.version'), ['0.2.8']), '', 'version') + '</div>' +
+          '<div class="qm-set__note">' + esc(t('about.ai_generated_content_notice')) + '</div>' +
+          '<button class="qm-set__out" data-act="sign-out">' + esc(t('settings.sign_out')) + '</button>';
+      }
+      /* 对话框：sign-out / github 断开 / cache 确认 */
+      let dlg = '';
+      const dlgHtml = (titleKey, msgKey, okAct, danger) =>
+        '<div class="qm-mask" data-mask="1" data-dlg="' + okAct + '"><div class="qm-dlg" part="dialog">' +
+        '<div class="qm-dlg__t">' + esc(t(titleKey)) + '</div>' +
+        '<div class="qm-dlg__m">' + esc(t(msgKey)) + '</div>' +
+        '<div class="qm-dlg__btns"><button class="qm-dlg__b qm-dlg__b--ghost" data-dlg-cancel="1">' +
+        esc(t('common.cancel')) + '</button>' +
+        '<button class="qm-dlg__b ' + (danger ? 'qm-dlg__b--danger' : 'qm-dlg__b--primary') + '" data-dlg-ok="' + okAct + '">' +
+        esc(t('common.confirm')) + '</button></div></div></div>';
+      if (this.hasAttribute('confirm') ) {
+        const c = this.getAttribute('confirm');
+        if (c === 'sign-out') dlg = dlgHtml('settings.sign_out_confirm_title', 'settings.sign_out_confirm_message', 'sign-out-confirm', true);
+        else if (c === 'github-disconnect') dlg = dlgHtml('settings_integrations.disconnect_confirm_title', 'settings_integrations.disconnect_confirm_message', 'github-disconnect-confirm', true);
+        else if (c === 'cache-app') dlg = dlgHtml('settings.cache_cleanup.confirm_title', 'settings.cache_cleanup.confirm_app_message', 'cache-clear-app', false);
+        else if (c === 'cache-artifact') dlg = dlgHtml('settings.cache_cleanup.confirm_title', 'settings.cache_cleanup.confirm_artifact_message', 'cache-clear-artifact', false);
+        else if (c === 'cache-all') dlg = dlgHtml('settings.cache_cleanup.confirm_title', 'settings.cache_cleanup.confirm_all_message', 'cache-clear-all', false);
+      }
+      return '<div class="qm-set" part="panel">' + body + '</div>' + dlg;
     }
     _bind(root) {
       root.querySelectorAll('[data-appearance]').forEach((b) => {
@@ -1491,8 +1873,147 @@
         });
       });
       root.querySelectorAll('[data-act]').forEach((b) => {
-        b.addEventListener('click', () => this.emit('item', { action: b.dataset.act }));
+        b.addEventListener('click', () => {
+          const a = b.dataset.act;
+          if (a === 'sign-out') { this.setAttribute('confirm', 'sign-out'); return; }
+          if (a === 'github' && (this.getAttribute('github-state') || 'disconnected') === 'connected') { this.setAttribute('confirm', 'github-disconnect'); return; }
+          if (a === 'cache') { this.setAttribute('panel', 'cache'); this.emit('item', { action: 'cache' }); return; }
+          this.emit('item', { action: a });
+        });
       });
+      root.querySelectorAll('[data-update]').forEach((b) => {
+        b.addEventListener('click', () => this.emit('update-action', { action: b.dataset.update }));
+      });
+      root.querySelectorAll('[data-cache]').forEach((b) => {
+        b.addEventListener('click', () => this.setAttribute('confirm', 'cache-' + b.dataset.cache));
+      });
+      root.querySelectorAll('[data-dlg-ok]').forEach((b) => {
+        b.addEventListener('click', () => {
+          const act = b.dataset.dlgOk;
+          this.removeAttribute('confirm');
+          if (act === 'sign-out-confirm') this.emit('sign-out', {});
+          else if (act === 'github-disconnect-confirm') { this.setAttribute('github-state', 'disconnecting'); this.emit('github-action', { action: 'disconnect' }); }
+          else if (act.startsWith('cache-clear-')) this.emit('cache-clear', { scope: act.slice(12) });
+        });
+      });
+      const mask = root.querySelector('[data-mask]');
+      if (mask) mask.addEventListener('click', (e) => { if (e.target === mask) this.removeAttribute('confirm'); });
+      root.querySelectorAll('[data-dlg-cancel]').forEach((b) => {
+        b.addEventListener('click', () => this.removeAttribute('confirm'));
+      });
+    }
+  }
+
+  /* ============================================================
+     <qm-task-detail> — 任务详情 + 远程控制引导（v3.8.0，tasks_rc_*）
+     实证：tasks_rc_title/subtitle、guidance_install/enable/login/download/
+       open_settings/cli_intro/cli_command/cli_connect_current/
+       cli_new_sessions/history_sync/coming_soon、tasks.action.*、
+       tasks.detail.*、tasks.phase.*
+     属性：title  phase=running|completed|failed|idle|waiting|attention|error
+       env=desktop|cli  updated  rc=off|on  rc-device="MacBook Pro"
+       cli-command="qoder connect"
+     事件：action(archive|delete|mark-read|mark-unread) / rc-connect
+     槽：slot="artifacts" 放置 <qm-artifact>
+     ============================================================ */
+  class QmTaskDetail extends Base {
+    static get observedAttributes() { return ['title', 'phase', 'env', 'updated', 'rc', 'rc-device', 'cli-command', 'theme']; }
+    static get hostCss() {
+      return baseCss(
+        '.qm-td__hd{padding:14px 16px 4px;display:flex;align-items:flex-start;gap:10px;}' +
+        '.qm-td__back{flex:none;font-size:20px;line-height:1;color:var(--qm-text);padding:2px 6px 2px 0;}' +
+        '.qm-td__t{font-size:19px;font-weight:700;line-height:1.35;flex:1;min-width:0;word-break:break-word;}' +
+        '.qm-td__phase{flex:none;font-size:11px;font-weight:600;border-radius:999px;padding:2px 9px;margin-top:3px;}' +
+        '.qm-td__meta{padding:0 16px 10px;font-size:12.5px;color:var(--qm-text-2);display:flex;gap:12px;flex-wrap:wrap;}' +
+        '.qm-td__sec{margin:6px 12px;background:var(--qm-surface);border:1px solid var(--qm-line);' +
+        'border-radius:var(--qm-radius);overflow:hidden;}' +
+        '.qm-td__rc{margin:6px 12px;background:var(--qm-surface);border:1px solid var(--qm-line);' +
+        'border-radius:var(--qm-radius);padding:14px 15px;}' +
+        '.qm-td__rct{font-size:15.5px;font-weight:700;display:flex;align-items:center;gap:8px;}' +
+        '.qm-td__rcs{font-size:12px;color:var(--qm-text-2);margin-top:2px;}' +
+        '.qm-td__intro{font-size:13px;color:var(--qm-text-2);margin:10px 0 4px;}' +
+        '.qm-td__way{font-size:13.5px;font-weight:700;margin:10px 0 4px;display:flex;align-items:center;gap:7px;}' +
+        '.qm-td__soon{flex:none;font-size:9.5px;font-weight:700;color:var(--qm-accent-attention);' +
+        'border:1px solid currentColor;border-radius:999px;padding:0 6px;}' +
+        '.qm-td__step{display:flex;gap:9px;padding:6px 0;font-size:13px;line-height:1.55;color:var(--qm-text);align-items:flex-start;}' +
+        '.qm-td__n{flex:none;width:17px;height:17px;border-radius:50%;background:var(--qm-surface-2);' +
+        'color:var(--qm-text-2);font-size:10.5px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px;}' +
+        '.qm-td__cmd{margin:4px 0 2px;background:var(--qm-surface-2);border-radius:var(--qm-radius-sm);' +
+        'padding:7px 10px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11.5px;' +
+        'overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}' +
+        '.qm-td__feat{display:inline-flex;align-items:center;gap:5px;margin-top:8px;font-size:11.5px;' +
+        'color:var(--qm-text-2);border:1px dashed var(--qm-line-strong);border-radius:999px;padding:3px 10px;}' +
+        '.qm-td__on{display:flex;align-items:center;gap:9px;font-size:13.5px;font-weight:600;}' +
+        '.qm-td__okdot{width:8px;height:8px;border-radius:50%;background:var(--qm-accent-completed);flex:none;}' +
+        '.qm-td__acts{display:flex;gap:8px;padding:4px 12px 6px;flex-wrap:wrap;}' +
+        '.qm-td__act{flex:1;min-width:74px;padding:9px 0;border-radius:var(--qm-radius-sm);font-size:12.5px;' +
+        'font-weight:600;background:var(--qm-surface);border:1px solid var(--qm-line);color:var(--qm-text);}' +
+        '.qm-td__act--danger{color:var(--qm-error);}' +
+        '.qm-td__art{padding:4px 0 8px;}');
+    }
+    template() {
+      const title = this.getAttribute('title') || '';
+      const phaseRaw = this.getAttribute('phase') || 'idle';
+      const phaseKey = ({ attention: 'waiting', error: 'failed' })[phaseRaw] || phaseRaw;
+      const color = statusColor(phaseRaw === 'closed' ? 'idle' : phaseRaw);
+      const env = this.getAttribute('env') || 'desktop';
+      const rcOn = this.getAttribute('rc') === 'on';
+      const rcDevice = this.getAttribute('rc-device') || '';
+      const cliCmd = this.getAttribute('cli-command') || 'qoder connect';
+      const step = (n, txt) => '<div class="qm-td__step"><span class="qm-td__n">' + n + '</span><span>' + txt + '</span></div>';
+      const meta = '<div class="qm-td__meta">' +
+        '<span>' + esc(t('tasks.detail.env')) + ' · ' +
+        esc(t(env === 'cli' ? 'tasks.rc.cli_device' : 'tasks.rc.desktop_device')) + '</span>' +
+        (this.getAttribute('updated') ? '<span>' + esc(t('session.details.last_updated')) + ' ' + esc(this.getAttribute('updated')) + '</span>' : '') +
+        '</div>';
+      /* RC 引导序列（rc=off）：Desktop 三步 + CLI 四步（官方 guidance_* 键序） */
+      const rcCard = rcOn
+        ? '<div class="qm-td__rc" part="remote-control"><div class="qm-td__on">' +
+          '<span class="qm-td__okdot"></span>' +
+          esc(rcDevice ? fmt(t('tasks.detail.connected_to'), [rcDevice]) : t('tasks.detail.remote_control')) +
+          '</div><div class="qm-td__rcs">' + esc(t('tasks.rc.subtitle')) + '</div></div>'
+        : '<div class="qm-td__rc" part="remote-control">' +
+          '<div class="qm-td__rct">' + esc(t('tasks.rc.title')) +
+          '<span class="qm-td__soon">' + esc(t('tasks.rc.guidance_coming_soon')) + '</span></div>' +
+          '<div class="qm-td__rcs">' + esc(t('tasks.rc.subtitle')) + '</div>' +
+          '<div class="qm-td__intro">' + esc(t('tasks.rc.guidance_cli_intro')) + '</div>' +
+          '<div class="qm-td__way">' + esc(t('tasks.rc.desktop')) + '</div>' +
+          step(1, esc(t('tasks.rc.guidance_download'))) +
+          step(2, esc(fmt(t('tasks.rc.guidance_install'), [t('tasks.rc.desktop')]))) +
+          step(3, esc(t('tasks.rc.guidance_login'))) +
+          step(4, esc(fmt(t('tasks.rc.guidance_enable'), [t('tasks.rc.desktop')]))) +
+          step(5, esc(t('tasks.rc.guidance_open_settings').replace('{settings}', '⚙').replace('{smartphone}', '📱'))) +
+          '<div class="qm-td__way">' + esc(t('tasks.rc.cli')) + '</div>' +
+          step(1, esc(t('tasks.rc.guidance_download'))) +
+          step(2, '<span>' + esc(t('tasks.rc.guidance_cli_command')).replace('%@', '') +
+            '<span class="qm-td__cmd">' + esc(cliCmd) + '</span></span>') +
+          step(3, esc(t('tasks.rc.guidance_cli_connect_current')) + ' · ' +
+            esc(t('tasks.rc.guidance_cli_new_sessions'))) +
+          '<span class="qm-td__feat">⇅ ' + esc(t('tasks.rc.guidance_history_sync')) + '</span>' +
+          '</div>';
+      const acts = [
+        ['mark-read', 'tasks.action.mark_read', ''],
+        ['mark-unread', 'tasks.action.mark_unread', ''],
+        ['archive', 'tasks.action.archive', ''],
+        ['delete', 'tasks.action.delete', 'qm-td__act--danger']
+      ];
+      return '<div class="qm-td" part="panel">' +
+        '<div class="qm-td__hd"><button class="qm-td__back" data-act-back="1">‹</button>' +
+        '<span class="qm-td__t">' + esc(title) + '</span>' +
+        '<span class="qm-td__phase" style="color:' + color + ';background:color-mix(in srgb,' + color + ' 12%,transparent)">' +
+        esc(t('tasks.phase.' + phaseKey)) + '</span></div>' +
+        meta + rcCard +
+        '<div class="qm-td__acts">' + acts.map(([a, k, cls]) =>
+          '<button class="qm-td__act ' + cls + '" data-action="' + a + '">' + esc(t(k)) + '</button>').join('') + '</div>' +
+        '<div class="qm-td__art"><slot name="artifacts"></slot></div>' +
+        '</div>';
+    }
+    _bind(root) {
+      root.querySelectorAll('[data-action]').forEach((b) => {
+        b.addEventListener('click', () => this.emit('action', { action: b.dataset.action }));
+      });
+      const back = root.querySelector('[data-act-back]');
+      if (back) back.addEventListener('click', () => this.emit('back', {}));
     }
   }
 
@@ -1707,6 +2228,7 @@
   def('qm-artifact', QmArtifact);
   def('qm-session-detail', QmSessionDetail);
   def('qm-settings', QmSettings);
+  def('qm-task-detail', QmTaskDetail);
   def('qm-session-list', QmSessionList);
   def('qm-mermaid', QmMermaid);
 
@@ -1717,7 +2239,7 @@
     locale: () => _locale,
     statusColor,
     parseMermaid, renderMermaidSvg,
-    version: '3.7.1'
+    version: '3.8.0'
   };
   register();
 

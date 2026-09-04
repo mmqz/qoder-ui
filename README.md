@@ -808,3 +808,34 @@ qoder-ui/
 - 本机 Node 24 加 `--no-experimental-detect-module`（等价 Node 18 严格扩展名语义）：`.mjs` ESM 导入 31 项导出齐全，CJS require 正常
 - 测试 182/182 全绿；构建四产物；npm pack 36 文件（qoder-ui-3.7.1.tgz）
 - CI Node 18/20/22 矩阵由本提交重新触发复验
+
+## v3.8.0 移动端逐字对齐 + 设置屏完整版 + 任务详情（2026-09-04）
+
+> 目标：移动端复现面从"组件级近似"推进到"文案零漂移 + 主干屏全覆盖"。业务键覆盖率 25.9% → **40.8%**（372/912）。
+
+### ① 逐字率对齐（57 条漂移清零）
+- 新增逐字对账脚本 `scripts/verify_verbatim.py`：官方键名映射 + 实证映射表 + 值相似度模糊配对（阈值 0.6）三层解析，全量 317 键 × zh+en 双语对账
+- **修复 57 条漂移**（zh 6 + en 51）：大小写（'Choose mode'→'Choose Mode'）、措辞（'Auto-approve'→'Auto'）、整段重写（Spec 说明段 / tasks.empty.description）、引号形态（弯引号→直引号）等四类
+- 修复后 **522 处逐字一致、0 漂移**；测试永久守卫（86 个断言直接锁定 APK 原文）
+
+### ② 官方键名权威对齐（重大发现）
+- 在混淆类 `T6/F.java` 发现官方 App 自带 R.string → 运行时点键名映射表（**852 对**，导出 `scripts/official_keymap.txt`）
+- JS 键名对齐官方规范：`settings_integrations.github_*`、`settings.device_qr.*`、`update.install.*` / `update.action.*`、`tasks.rc.guidance_*`
+
+### ③ 设置屏完整版（qm-settings 重写）
+- 对齐官方 `T6/F.java` IA：资料卡（访客/社区版/编辑资料）→ 通用（外观/语言/用量/清理缓存）→ 集成（**GitHub 五态状态机**）→ 设备（眼镜配对）→ 支持（**更新失败三动作横幅**）→ 关于 → 退出登录确认
+- 新增清理缓存子面板（官方 cache_cleanup 14 键全量）+ 五种确认对话框
+- 属性 API：`github-state` / `device-paired` / `update-state` / `panel=cache` / `confirm`；事件向后兼容（`item`）
+
+### ④ 任务详情 + 远程控制引导（qm-task-detail 新组件）
+- RC 引导官方键序：Desktop 五步（下载→安装→登录→开启→系统设置）+ CLI 三步（下载→`qoder connect` 命令回显→连接当前会话/32 会话）
+- 已连接态（`rc=on` + `rc-device`）、四操作行（归档/删除/已读/未读）、`slot=artifacts` 内嵌 qm-artifact
+- **修复**：`confirm` 属性漏注册 observedAttributes（模板测试无法暴露，E2E 捕获）
+
+### ⑤ 正式《覆盖率审计报告》
+- 入库 `docs/coverage-audit.md`：方法论三版迭代（键匹配→en 值匹配→双语+SDK 剥离）、按键族/按屏明细、未覆盖 TOP 分布、后续路线、PC/iOS 状态、复跑指南
+
+### 验证
+- 测试 **198/198 全绿**（+16：审批状态机/产物七态/设置屏/RC 引导/XSS）
+- E2E（Playwright + Chromium）**14 项断言全过、零 console 错误**（9 屏全量 + GitHub 行点击 + 退出确认对话框）
+- 构建四产物；npm pack 36 文件（qoder-ui-3.8.0.tgz）

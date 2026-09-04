@@ -183,15 +183,28 @@
       </div>
     </div></div>
   </section>
+  <!-- ⑨ 任务详情 · 远程控制引导（v3.8.0） -->
+  <section>
+    <p class="cap"><b>⑨ 任务详情 · 远程控制引导</b><span class="tag">qm-task-detail + tasks_rc_*</span></p>
+    <div class="phone"><div class="screen">
+      <div class="notch"></div>
+      <div class="statusbar"><span>9:41</span><span>5G · 100%</span></div>
+      <div class="scroll">
+        <qm-task-detail id="td1" title="200条客户反馈按问题与情绪分类" phase="waiting" env="desktop" updated="今天 14:20" theme="light">
+          <qm-artifact slot="artifacts" id="art-td" theme="light"></qm-artifact>
+        </qm-task-detail>
+      </div>
+    </div></div>
+  </section>
 </div>
 
 <footer>
-  复现依据：《Qoder Mobile 移动端逆向分析报告》+ v3.6.0/v3.7.0 二次深挖。文案逐字取自安装包
-  <code>assets/dynamic-content/qoder-mobile.zh.json</code> 与 <code>res/values*/strings.xml</code>；
-  色板解码自混淆主题类（浅色 primary #5CBD61 / 深色 #2ADB5C，暖灰文字阶 #141414/#636261/#838280，
+  复现依据：《Qoder Mobile 移动端逆向分析报告》+ v3.6.0/v3.7.0/v3.8.0 深挖。文案逐字取自安装包
+  <code>assets/dynamic-content/qoder-mobile.zh.json</code> 与 <code>res/values*/strings.xml</code>（键名对齐官方
+  T6/F.java 键名映射表）；色板解码自混淆主题类（浅色 primary #5CBD61 / 深色 #2ADB5C，暖灰文字阶 #141414/#636261/#838280，
   页面底 #FDFDFD/#161612，状态色 error #FF4D4F / warning #FAAD14 / info #0B83F1 / success #5BB98B）；
-  信息架构对应深链 <code>qodercn://home|tasks|sessions</code>；plus 面板与流程图卡文案取自
-  <code>composer_plus_*</code> / <code>conversation_mermaid_*</code>。仅供学习研究，不含官方资产，不得商用。
+  信息架构对应深链 <code>qodercn://home|tasks|sessions</code>；plus 面板/流程图卡/设置屏/任务详情文案取自
+  <code>composer_plus_*</code> / <code>conversation_mermaid_*</code> / <code>settings_*</code> / <code>tasks_rc_*</code>。仅供学习研究，不含官方资产，不得商用。
 </footer>
 
 <script src="../dist/qoder-ui.min.js"></script>
@@ -293,7 +306,16 @@
 
     /* 产物 + 会话详情 */
     q('#art1').files = files;
+    var artTd = q('#art-td');
+    if (artTd) artTd.files = [files[0]];
     q('#sd1').session = { id: 'sess_9f21c8', model: '通义千问', env: '云端沙箱 · 容器 c-2fa1', created: '2026-09-04 09:12', updated: '2 分钟前' };
+
+    /* 任务详情（v3.8.0）：操作/返回 事件演示 */
+    var td = q('#td1');
+    if (td) {
+      td.addEventListener('action', function (e) { console.log('[qm] task-detail action', e.detail); });
+      td.addEventListener('back', function () { console.log('[qm] task-detail back'); });
+    }
 
     /* 沙箱启动演示：每 1.6s 推进一阶段 */
     var st = 2;
@@ -335,7 +357,7 @@
       document.documentElement.style.setProperty('--muted', t === 'dark' ? '#95958F' : '#636261');
       document.documentElement.style.setProperty('--card', t === 'dark' ? '#171716' : '#fff');
       document.documentElement.style.setProperty('--line', t === 'dark' ? '#2A2926' : '#e5e5e5');
-      document.querySelectorAll('qm-app, qm-task-list, qm-new-task, qm-conversation, qm-composer, qm-approval, qm-sandbox-boot, qm-artifact, qm-session-detail, qm-settings, qm-session-list, qm-mermaid')
+      document.querySelectorAll('qm-app, qm-task-list, qm-new-task, qm-conversation, qm-composer, qm-approval, qm-sandbox-boot, qm-artifact, qm-session-detail, qm-settings, qm-task-detail, qm-session-list, qm-mermaid')
         .forEach(function (c) { c.setAttribute('theme', t); });
       q('#thLight').classList.toggle('on', t === 'light');
       q('#thDark').classList.toggle('on', t === 'dark');
@@ -356,7 +378,7 @@
       M.setLocale('en');
       q('#langZh').classList.remove('on'); q('#langEn').classList.add('on');
       /* locale 晚于组件首次渲染 → 重设已观察属性触发整体重渲染 */
-      document.querySelectorAll('qm-app, qm-task-list, qm-new-task, qm-conversation, qm-composer, qm-approval, qm-sandbox-boot, qm-artifact, qm-session-detail, qm-settings, qm-session-list, qm-mermaid')
+      document.querySelectorAll('qm-app, qm-task-list, qm-new-task, qm-conversation, qm-composer, qm-approval, qm-sandbox-boot, qm-artifact, qm-session-detail, qm-settings, qm-task-detail, qm-session-list, qm-mermaid')
         .forEach(function (c) { c.setAttribute('theme', currentTheme); });
     }
   }

@@ -216,6 +216,6 @@
     render,
     inline,
     escapeHtml,
-    version: '3.7.1'
+    version: '3.8.0'
   };
 })();

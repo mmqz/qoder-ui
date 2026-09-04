@@ -43,15 +43,15 @@ describe('v3.7.0 移动端组件注册', () => {
     assert.equal(typeof M.statusColor, 'function');
     assert.equal(typeof M.parseMermaid, 'function');
     assert.equal(typeof M.renderMermaidSvg, 'function');
-    assert.equal(M.version, '3.7.1');
+    assert.equal(M.version, '3.8.0');
   });
 
-  test('12 个 qm-* 组件全部注册', () => {
+  test('13 个 qm-* 组件全部注册', () => {
     const names = ['qm-app', 'qm-task-list', 'qm-new-task', 'qm-conversation',
       'qm-composer', 'qm-approval', 'qm-sandbox-boot', 'qm-artifact',
-      'qm-session-detail', 'qm-settings', 'qm-session-list', 'qm-mermaid'];
+      'qm-session-detail', 'qm-settings', 'qm-task-detail', 'qm-session-list', 'qm-mermaid'];
     for (const n of names) assert.ok(M.WC[n], '缺少组件 ' + n);
-    assert.equal(Object.keys(M.WC).length, 12);
+    assert.equal(Object.keys(M.WC).length, 13);
   });
 
   test('SSR 安全：源码无 document/window 顶层直接调用', () => {
@@ -76,7 +76,7 @@ describe('v3.6.0 实证文案保真（对照 APK qoder-mobile.zh.json 与 string
     'new_task.prompt.feedback': '200条客户反馈按问题与情绪分类',
     'new_task.prompt.monitor': '全网舆情监控，负面立刻通知',
     'new_task.prompt.agent': '部署一个客服 Agent 自动回复咨询',
-    'new_task.prompt.video': '把“梯度下降”做成一段动画讲解视频',
+    'new_task.prompt.video': '把"梯度下降"做成一段动画讲解视频',
     /* 任务列表（tasks_tab_* / tasks_group_* / tasks_phase_* / tasks_rc_*） */
     'tasks.filter.all': '全部', 'tasks.filter.running': '进行中',
     'tasks.filter.pending': '待审批', 'tasks.filter.idle': '空闲',
@@ -84,7 +84,7 @@ describe('v3.6.0 实证文案保真（对照 APK qoder-mobile.zh.json 与 string
     'tasks.phase.waiting': '等待审批',
     'tasks.rc.title': '远程控制', 'tasks.rc.subtitle': 'Qoder Desktop & CLI',
     /* 工具卡片（tool_use_* / tool_group_*） */
-    'tool.bash': '执行命令', 'tool.edit': '编辑文件', 'tool.read': '读取文件',
+    'tool.bash': '执行命令', 'tool.edit': '编辑', 'tool.read': '读取',
     'tool.web_search': '网页搜索', 'tool.subagent': '子智能体',
     'tool.plan': '请求进入 Plan 模式',
     'tool.status.pending': '等待中',
@@ -93,7 +93,7 @@ describe('v3.6.0 实证文案保真（对照 APK qoder-mobile.zh.json 与 string
     /* 审批（approval.title.* / tasks.approval.*） */
     'approval.title.run_command': 'Qoder 请求执行命令',
     'approval.title.mcp': 'Qoder 请求执行 MCP 工具',
-    'tasks.approval.pending': '需要授权',
+    'tasks.approval.pending': '等待审批',
     'tasks.approval.option.allow_once': '仅本次允许',
     'tasks.approval.enter_plan_mode.generate_spec': '生成 Spec',
     'tasks.approval.enter_plan_mode.description': '你可以选择先生成并审核 Spec，再开始执行；也可以跳过 Spec，直接开始执行任务。Spec 用于明确任务范围和执行规范，帮助确认方向是否正确。',
@@ -233,13 +233,14 @@ describe('v3.6.0 组件模板渲染', () => {
     assert.ok(html.includes('display:none')); // 非活动插槽隐藏
   });
 
-  test('qm-approval(kind=action): 标题/命令回显/需授权徽标/四级选项', () => {
+  test('qm-approval(kind=action): 标题/命令回显/等待审批徽标/四级选项', () => {
     const El = M.WC['qm-approval'];
     const el = fakeEl(El, { kind: 'action', command: 'pnpm test' });
     const html = El.prototype.template.call(el);
     assert.ok(html.includes('Qoder 请求执行命令'));
     assert.ok(html.includes('pnpm test'));
-    assert.ok(html.includes('需要授权'));
+    assert.ok(html.includes('等待审批'));
+    assert.ok(html.includes('允许执行'));
     assert.ok(html.includes('仅本次允许'));
     assert.ok(html.includes('本会话内始终允许'));
     assert.ok(html.includes('拒绝并发送'));
@@ -309,7 +310,7 @@ describe('v3.6.0 组件模板渲染', () => {
     assert.ok(html.includes('2/4'));
     assert.ok(html.includes('运行 3 个工具'));
     assert.ok(html.includes('执行命令') && html.includes('已完成'));
-    assert.ok(html.includes('读取文件') && html.includes('运行中'));
+    assert.ok(html.includes('读取') && html.includes('运行中'));
     assert.ok(html.includes('请求进入 Plan 模式') && html.includes('等待中'));
     assert.ok(html.includes('待办列表') && html.includes('聚类'));
     assert.ok(html.includes('qm-todocard__i done'));
@@ -343,6 +344,46 @@ describe('v3.6.0 组件模板渲染', () => {
     assert.ok(El.prototype.template.call(el2).includes('生成的文件将在这里展示'));
   });
 
+  test('qm-artifact v3.8.0 异常态: loading/error 重试/not_found/unavailable 全屏态', () => {
+    const El = M.WC['qm-artifact'];
+    const s = (st) => El.prototype.template.call(fakeEl(El, { state: st }));
+    assert.ok(s('loading').includes('加载中…'));
+    const err = s('error');
+    assert.ok(err.includes('加载失败') && err.includes('重试') && err.includes('data-act="retry"'));
+    assert.ok(s('not_found').includes('产物不存在或已过期'));
+    assert.ok(s('unavailable').includes('该产物暂无法在手机端查看，请在任务运行设备上打开。'));
+  });
+
+  test('qm-artifact v3.8.0 横幅态: restricted/stale/too_large/low_memory 与正常列表共存', () => {
+    const El = M.WC['qm-artifact'];
+    const attrs = { files: JSON.stringify([{ name: 'a.pdf', kind: 'pdf', section: 'presented' }]) };
+    for (const [st, txt] of [
+      ['restricted', '受企业安全策略限制，无法分享或下载'],
+      ['stale', '已显示最近可用版本'],
+      ['too_large', '请下载后查看此文件'],
+      ['low_memory', '当前内存不足，请下载后查看此文件']
+    ]) {
+      const html = El.prototype.template.call(fakeEl(El, { ...attrs, state: st }));
+      assert.ok(html.includes(txt), 'banner ' + st);
+      assert.ok(html.includes('a.pdf')); // 横幅不吞列表
+      assert.ok(html.includes('qm-art__banner'));
+    }
+  });
+
+  test('qm-approval v3.8.0 状态机: submitted/approved/rejected 徽标 + 允许执行导语 + permission/request kind', () => {
+    const El = M.WC['qm-approval'];
+    const html = (attrs) => El.prototype.template.call(fakeEl(El, attrs));
+    const done = html({ kind: 'action', state: 'approved', command: 'pnpm test' });
+    assert.ok(done.includes('已批准') && done.includes('qm-appr__badge--done'));
+    assert.ok(done.includes('允许执行'));
+    assert.ok(html({ kind: 'action', state: 'rejected' }).includes('已拒绝'));
+    assert.ok(html({ kind: 'action', state: 'rejected' }).includes('qm-appr__badge--err'));
+    assert.ok(html({ kind: 'action', state: 'submitted' }).includes('已提交'));
+    assert.ok(html({ kind: 'action', state: 'submitting' }).includes('提交中…'));
+    assert.ok(html({ kind: 'permission' }).includes('需要权限'));
+    assert.ok(html({ kind: 'request' }).includes('请求审批'));
+  });
+
   test('qm-session-detail: 常规/元数据分组 + 空值占位', () => {
     const El = M.WC['qm-session-detail'];
     const el = fakeEl(El, { session: JSON.stringify({ id: 'sess_9f2', model: 'qwen-max' }) });
@@ -353,12 +394,15 @@ describe('v3.6.0 组件模板渲染', () => {
     assert.ok(html.includes('—')); // 运行环境为空 → 占位
   });
 
-  test('qm-settings: 外观三选项 + 注销账号 + 版本行 + AI 声明', () => {
+  test('qm-settings v3.8.0: 标题/资料卡/通用组/集成/设备/关于/退出登录', () => {
     const El = M.WC['qm-settings'];
     const el = fakeEl(El, { appearance: 'dark' });
     const html = El.prototype.template.call(el);
-    assert.ok(html.includes('深色') && html.includes('浅色') && html.includes('跟随系统'));
-    assert.ok(html.includes('注销账号'));
+    assert.ok(html.includes('设置') && html.includes('访客') && html.includes('社区版'));
+    assert.ok(html.includes('编辑资料') && html.includes('语言') && html.includes('用量') && html.includes('清理缓存'));
+    assert.ok(html.includes('集成') && html.includes('GitHub') && html.includes('未连接'));
+    assert.ok(html.includes('配对 Qoder 眼镜') && html.includes('支持与智能眼镜配对'));
+    assert.ok(html.includes('检查更新') && html.includes('退出登录'));
     assert.ok(html.includes('Version: 0.2.8'));
     assert.ok(html.includes('服务生成的所有内容均由人工智能生成'));
   });
@@ -627,5 +671,151 @@ describe('v3.7.0 mermaid 净室渲染器（parseMermaid / renderMermaidSvg）', 
     const yA = Number(svg.match(/<text x="([\d.]+)" y="([\d.]+)"[^>]*>开始/)[2]);
     const yB = Number(svg.match(/<text x="([\d.]+)" y="([\d.]+)"[^>]*>结束/)[2]);
     assert.ok(yB > yA, 'TD 子节点 y 应大于父节点');
+  });
+});
+
+/* ==================== v3.8.0 新增（设置屏完整版 + 任务详情·远程控制） ==================== */
+describe('v3.8.0 设置屏完整版（官方 T6/F.java IA + settings_integrations/cache_cleanup/update 状态机）', () => {
+  const M = loadMobile();
+  const fake = (attrs) => {
+    const Cls = M.WC['qm-settings'];
+    return { getAttribute: (k) => (k in attrs ? attrs[k] : null), hasAttribute: (k) => k in attrs, emit: () => {} };
+  };
+  const htmlOf = (attrs) => M.WC['qm-settings'].prototype.template.call(fake(attrs));
+
+  test('逐字保真：settings_integrations.github_* 状态机五态', () => {
+    assert.equal(M.t('settings_integrations.github_loading'), '正在检查连接…');
+    assert.equal(M.t('settings_integrations.github_connecting'), '连接中…');
+    assert.equal(M.t('settings_integrations.github_connected'), '已连接');
+    assert.equal(M.t('settings_integrations.github_disconnecting'), '断开连接中…');
+    assert.equal(M.t('settings_integrations.github_disconnected'), '未连接');
+    assert.equal(M.t('settings_integrations.github_configure'), '在 GitHub 上配置');
+    assert.equal(M.t('settings_integrations.disconnect_confirm_message'), '要从当前 Qoder 账号断开 GitHub 连接吗？');
+  });
+
+  test('逐字保真：cache_cleanup 14 键官方值', () => {
+    assert.equal(M.t('settings.cache_cleanup.app_title'), '应用缓存');
+    assert.equal(M.t('settings.cache_cleanup.app_description'), '会话与消息的本地缓存');
+    assert.equal(M.t('settings.cache_cleanup.artifact_title'), '产物缓存');
+    assert.equal(M.t('settings.cache_cleanup.artifact_description'), '已下载的产物文件与图片');
+    assert.equal(M.t('settings.cache_cleanup.all_title'), '全部清理');
+    assert.equal(M.t('settings.cache_cleanup.all_description'), '清理此设备上的全部本地缓存');
+    assert.equal(M.t('settings.cache_cleanup.calculating'), '计算中…');
+    assert.equal(M.t('settings.cache_cleanup.clear'), '清理');
+    assert.equal(M.t('settings.cache_cleanup.cleared'), '已清理');
+    assert.equal(M.t('settings.cache_cleanup.failed'), '清理失败，请重试');
+    assert.equal(M.t('settings.cache_cleanup.confirm_app_message'), '将清除本地会话与消息缓存，不影响云端数据。');
+  });
+
+  test('逐字保真：update.install/action 失败态 + settings.usage', () => {
+    assert.equal(M.t('update.install.permission_required'), '尚未允许 Qoder 安装应用。请在系统设置中开启“允许来自此来源的应用”，返回后将继续安装。');
+    assert.equal(M.t('update.action.download_again'), '重新下载');
+    assert.equal(M.t('update.action.open_settings'), '去设置');
+    assert.equal(M.t('update.action.try_again'), '重试');
+    assert.equal(M.t('settings.usage'), '用量');
+  });
+
+  test('GitHub 状态机渲染：connected → 徽标变绿 + configure 副行', () => {
+    const h = htmlOf({ 'github-state': 'connected' });
+    assert.ok(h.includes('已连接') && h.includes('在 GitHub 上配置'));
+    assert.ok(h.includes('--qm-accent-completed'));
+  });
+
+  test('更新失败横幅：update-state=permission_required 渲染错误文案 + 三动作', () => {
+    const h = htmlOf({ 'update-state': 'permission_required' });
+    assert.ok(h.includes('尚未允许 Qoder 安装应用'));
+    assert.ok(h.includes('重新下载') && h.includes('去设置') && h.includes('data-update="try-again"'));
+  });
+
+  test('清理缓存子面板：panel=cache 渲染三缓存项 + 清理按钮', () => {
+    const h = htmlOf({ panel: 'cache' });
+    assert.ok(h.includes('应用缓存') && h.includes('产物缓存') && h.includes('全部清理'));
+    assert.ok(h.includes('已下载的产物文件与图片') && h.includes('清理'));
+    assert.ok(h.includes('data-cache="all"'));
+  });
+
+  test('退出登录确认对话框：confirm=sign-out 渲染标题/正文/取消/确认', () => {
+    const h = htmlOf({ confirm: 'sign-out' });
+    assert.ok(h.includes('退出登录') && h.includes('确定要退出登录吗？'));
+    assert.ok(h.includes('data-dlg-ok="sign-out-confirm"') && h.includes('取消'));
+  });
+
+  test('设备配对态：device-paired 显示已配对 ✓', () => {
+    const h = htmlOf({ 'device-paired': '' });
+    assert.ok(h.includes('眼镜已配对'));
+    assert.ok(!h.includes('支持与智能眼镜配对'));
+  });
+});
+
+describe('v3.8.0 任务详情 + 远程控制引导（tasks_rc_* 官方键序）', () => {
+  const M = loadMobile();
+  const fake = (attrs) => {
+    const Cls = M.WC['qm-task-detail'];
+    return { getAttribute: (k) => (k in attrs ? attrs[k] : null), hasAttribute: (k) => k in attrs, emit: () => {} };
+  };
+  const htmlOf = (attrs) => M.WC['qm-task-detail'].prototype.template.call(fake(attrs));
+
+  test('逐字保真：tasks_rc_* 17 键官方值', () => {
+    assert.equal(M.t('tasks.rc.title'), '远程控制');
+    assert.equal(M.t('tasks.rc.subtitle'), 'Qoder Desktop & CLI');
+    assert.equal(M.t('tasks.rc.guidance_cli_intro'), '在终端中选择一种方式，启用远程控制：');
+    assert.equal(M.t('tasks.rc.guidance_cli_command'), '在终端运行命令「%@」');
+    assert.equal(M.t('tasks.rc.guidance_cli_connect_current'), '连接当前会话');
+    assert.equal(M.t('tasks.rc.guidance_cli_new_sessions'), '手机端新建最多 32 个会话');
+    assert.equal(M.t('tasks.rc.guidance_coming_soon'), '即将上线');
+    assert.equal(M.t('tasks.rc.guidance_download'), '在电脑上下载 Qoder 应用');
+    assert.equal(M.t('tasks.rc.guidance_history_sync'), '历史会话同步');
+    assert.equal(M.t('tasks.rc.guidance_login'), '使用同一账号登录');
+    assert.equal(M.t('tasks.rc.cli_device'), 'CLI');
+    assert.equal(M.t('tasks.rc.desktop_device'), '桌面端');
+    assert.equal(M.t('tasks.action.archive'), '归档');
+    assert.equal(M.t('tasks.action.delete'), '删除');
+  });
+
+  test('rc=off 渲染引导序列：Desktop 5 步 + CLI 3 步 + 即将上线徽标 + 命令回显', () => {
+    const h = htmlOf({ title: '重构登录模块', phase: 'running', env: 'desktop' });
+    assert.ok(h.includes('远程控制') && h.includes('即将上线'));
+    assert.ok(h.includes('在电脑上下载 Qoder 应用'));
+    assert.ok(h.includes('在电脑上安装 Qoder Desktop 并使用同一账号登录'));
+    assert.ok(h.includes('在 Qoder Desktop 设置中开启「Qoder Mobile」/ 远程控制'));
+    assert.ok(h.includes('打开 Quest – ⚙ 设置 – 📱 Mobile – 开启'));
+    assert.ok(h.includes('Qoder CLI') && h.includes('qoder connect'));
+    assert.ok(h.includes('连接当前会话') && h.includes('历史会话同步'));
+  });
+
+  test('rc=on 渲染已连接卡（connected_to 设备名）且不渲染引导', () => {
+    const h = htmlOf({ title: 'T', phase: 'running', rc: 'on', 'rc-device': 'MacBook Pro' });
+    assert.ok(h.includes('已连接至 MacBook Pro'));
+    assert.ok(!h.includes('在电脑上下载 Qoder 应用'));
+  });
+
+  test('元信息与操作行：运行环境/最后更新时间/四操作 + 产物槽', () => {
+    const h = htmlOf({ title: 'T', phase: 'completed', env: 'cli', updated: '5 分钟前' });
+    assert.ok(h.includes('运行环境 · CLI'));
+    assert.ok(h.includes('最后更新时间 5 分钟前'));
+    assert.ok(h.includes('标记为已读') && h.includes('标记为未读') && h.includes('归档') && h.includes('删除'));
+    assert.ok(h.includes('<slot name="artifacts">'));
+    assert.ok(h.includes('已完成'));
+  });
+
+  test('XSS 安全：标题/设备名经 esc 转义（带真实 escapeHtml 的沙箱）', () => {
+    const sandbox = {};
+    const fn = new Function('globalThis', `
+      this.QoderCore = { escapeHtml: (s) => String(s == null ? '' : s)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') };
+      this.QoderUI = { ShadowElement: class {
+        constructor() {} static get observedAttributes() { return []; }
+        emit() {} $(sel) { return null; } $$(sel) { return []; }
+      } };
+      const g = this;
+      ${src}
+    `);
+    fn.call(sandbox, sandbox);
+    const M2 = sandbox.QoderUI.Mobile;
+    const el = { getAttribute: (k) => ({ title: '<img src=x onerror=alert(1)>', 'rc-device': '<b>x</b>', rc: 'on', phase: 'idle' })[k] || null, hasAttribute: (k) => k in { rc: 'on' }, emit: () => {} };
+    const h = M2.WC['qm-task-detail'].prototype.template.call(el);
+    assert.ok(!h.includes('<img src=x'), '标题被转义');
+    assert.ok(h.includes('&lt;img'), '标题已转义输出');
+    assert.ok(!h.includes('<b>x</b>'), '设备名被转义');
   });
 });
