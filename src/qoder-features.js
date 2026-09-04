@@ -7,6 +7,12 @@
   if (typeof window === 'undefined') return; // SSR 安全
   const QF = window.QoderUI = window.QoderUI || {};
 
+  // v3.3.1 审计修复（L3）：innerHTML 拼接点统一转义
+  const esc = (s) => (window.QoderCore && window.QoderCore.escapeHtml
+    ? window.QoderCore.escapeHtml(s)
+    : String(s == null ? '' : s).replace(/[&<>"']/g, (c) =>
+      ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])));
+
   /* ============================================================
      1. 聊天系统 ChatManager
      ============================================================ */
@@ -331,10 +337,10 @@
         return;
       }
       list.innerHTML = this._sessions.map(s => `
-        <div class="qoder-session-item ${s.active ? 'qoder-session-item--active' : ''}" data-id="${s.id}">
-          <span class="qoder-session-item__title">${s.title}</span>
-          <span class="qoder-session-item__time">${s.time}</span>
-          <button class="qoder-session-item__delete" data-id="${s.id}" style="display:none;background:none;border:none;color:var(--text-tertiary);cursor:pointer;padding:0 4px;">×</button>
+        <div class="qoder-session-item ${s.active ? 'qoder-session-item--active' : ''}" data-id="${esc(s.id)}">
+          <span class="qoder-session-item__title">${esc(s.title)}</span>
+          <span class="qoder-session-item__time">${esc(s.time)}</span>
+          <button class="qoder-session-item__delete" data-id="${esc(s.id)}" style="display:none;background:none;border:none;color:var(--text-tertiary);cursor:pointer;padding:0 4px;">×</button>
         </div>`).join('');
       list.querySelectorAll('.qoder-session-item').forEach(item => {
         item.addEventListener('click', (e) => {
@@ -486,7 +492,7 @@
         item.style.cssText = 'display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--bg-surface);border-radius:6px;margin-bottom:6px;font-size:12px;';
         item.innerHTML = `
           <span class="qoder-icon qoder-icon--file-text" style="font-size:14px;"></span>
-          <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${file.name}</span>
+          <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(file.name)}</span>
           <span style="color:var(--text-tertiary);">${(file.size / 1024).toFixed(1)}KB</span>
           <div class="qoder-upload__progress" style="width:60px;height:4px;background:var(--border);border-radius:2px;overflow:hidden;"><div class="qoder-upload__progress-bar" style="height:100%;background:var(--accent);width:0%;transition:width 0.3s;"></div></div>
           <button class="qoder-upload__remove" style="background:none;border:none;color:var(--text-tertiary);cursor:pointer;">×</button>`;
@@ -744,11 +750,15 @@
         state.split = false;
         state.splitTabId = null;
       } else {
-        // 右栏优先选当前激活标签之外的标签，否则自动新建
+        // v3.3.1 审计修复（H3）：单标签时新建右栏标签后，
+        // createTab 会把 activeId 抢走 → 左右栏同一标签、右栏空白。
+        // 先记住当前激活标签，右栏就位后恢复。
         let other = state.tabs.find(t => t.id !== state.activeId);
+        const prevActive = state.activeId;
         if (!other) other = this.createTab(el);
         state.split = true;
         state.splitTabId = other.id;
+        if (state.activeId !== prevActive && other.id !== prevActive) state.activeId = prevActive;
       }
       this._renderTabs(state);
       this._syncBodies(state);
@@ -817,8 +827,10 @@
     _bindInput(inputEl, line, tab, state) {
       const submit = () => {
         const cmd = inputEl.textContent.trim();
-        line.querySelector('.qoder-terminal__cursor')?.remove();
+        // v3.3.1 审计修复（L4）：彻底冻结已提交行（父级 false 会被子级显式 true 覆盖）
+        inputEl.setAttribute('contenteditable', 'false');
         line.setAttribute('contenteditable', 'false');
+        line.querySelector('.qoder-terminal__cursor')?.remove();
         if (cmd) {
           tab.history.push(cmd);
           tab.historyIdx = tab.history.length;
@@ -872,6 +884,17 @@
       body.scrollTop = body.scrollHeight;
     },
 
+    /* ---------- v3.3.1 审计修复（H2）：本地输出统一走 textContent ----------
+       此前 echo / 未知命令经 innerHTML 插入且未完整转义，
+       `echo <img onerror=…>` 可执行任意脚本（已实测复现的 XSS）。 */
+    _printLocal(body, text, isError) {
+      const line = document.createElement('div');
+      line.className = 'qoder-terminal__line' + (isError ? ' qoder-terminal__line--err' : '');
+      line.textContent = text;
+      body.appendChild(line);
+      body.scrollTop = body.scrollHeight;
+    },
+
     /* ---------- 命令执行（按标签独立 cwd/输出） ---------- */
     _execute(tab, cmd) {
       const body = tab.body;
@@ -892,9 +915,8 @@
         return;
       }
 
-      const output = document.createElement('div');
-      output.className = 'qoder-terminal__line';
-      let result = '';
+      // v3.3.1 审计修复（H2）：本地输出改用 textContent（isError 标记替代内联 HTML）
+      let result = ''; let isErr = false;
       if (cmd === 'help') {
         result = '可用命令: help, clear, echo, date, whoami, ls, pwd, cd, exit';
       } else if (cmd === 'clear') {
@@ -930,11 +952,10 @@
         if (lastLine) lastLine.textContent = tab.cwd;
         return;
       } else {
-        result = '<span style="color:var(--error);">command not found: ' + cmd.replace(/</g, '&lt;') + '</span>';
+        result = 'command not found: ' + cmd;
+        isErr = true;
       }
-      output.innerHTML = result;
-      body.appendChild(output);
-      body.scrollTop = body.scrollHeight;
+      this._printLocal(body, result, isErr);
     },
 
     _groupOf(tab) {
@@ -980,14 +1001,14 @@
         return;
       }
       list.innerHTML = filtered.map(n => `
-        <div class="qoder-notification-item ${n.unread ? 'qoder-notification-item--unread' : ''}" data-id="${n.id}">
-          <div class="qoder-notification-item__icon qoder-notification-item__icon--${n.type}">${n.type === 'success' ? '✓' : n.type === 'error' ? '✕' : n.type === 'warning' ? '!' : 'i'}</div>
+        <div class="qoder-notification-item ${n.unread ? 'qoder-notification-item--unread' : ''}" data-id="${esc(String(n.id))}">
+          <div class="qoder-notification-item__icon qoder-notification-item__icon--${esc(n.type)}">${n.type === 'success' ? '✓' : n.type === 'error' ? '✕' : n.type === 'warning' ? '!' : 'i'}</div>
           <div class="qoder-notification-item__body">
-            <div class="qoder-notification-item__title">${n.title}</div>
-            <div class="qoder-notification-item__desc">${n.desc}</div>
-            <div class="qoder-notification-item__time">${n.time}</div>
+            <div class="qoder-notification-item__title">${esc(n.title)}</div>
+            <div class="qoder-notification-item__desc">${esc(n.desc)}</div>
+            <div class="qoder-notification-item__time">${esc(n.time)}</div>
           </div>
-          <button class="qoder-notification-item__close" data-id="${n.id}" style="background:none;border:none;color:var(--text-tertiary);cursor:pointer;font-size:16px;padding:0 4px;align-self:flex-start;">×</button>
+          <button class="qoder-notification-item__close" data-id="${esc(String(n.id))}" style="background:none;border:none;color:var(--text-tertiary);cursor:pointer;font-size:16px;padding:0 4px;align-self:flex-start;">×</button>
         </div>`).join('');
       list.querySelectorAll('.qoder-notification-item__close').forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -1078,8 +1099,8 @@
       const all = [...defaults, ...bindings.map(b => ({ keys: this._formatKeys(b.keys), description: b.description || '' }))];
       list.innerHTML = all.map(s => `
         <div class="qoder-palette__item" style="cursor:default;">
-          <span class="qoder-palette__item-label">${s.description}</span>
-          <span class="qoder-palette__item-shortcut">${s.keys}</span>
+          <span class="qoder-palette__item-label">${esc(s.description)}</span>
+          <span class="qoder-palette__item-shortcut">${esc(s.keys)}</span>
         </div>`).join('');
       this._el.classList.add('qoder-palette--open');
       document.body.style.overflow = 'hidden';
@@ -1127,8 +1148,8 @@
         }
       });
     }
-    // 快捷键 ? 打开帮助面板
-    if (QF.hotkeys) {
+    // 快捷键 ? 打开帮助面板（v3.3.1 审计修复（L5）：防重复注册）
+    if (QF.hotkeys && !QF.hotkeys._bindings.some(b => b.keys === '?')) {
       QF.hotkeys.register('?', () => QF.shortcutsPanel.open(), '显示快捷键帮助');
     }
     // 全局代码块复制

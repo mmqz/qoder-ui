@@ -233,6 +233,32 @@ describe('WSTransport', () => {
     off();
     await t.close();
   });
+
+  test('审计 L6：未连接时 chat/exec 立即报错而非静默丢弃', async () => {
+    const m = loadModule();
+    FakeWS.instances = [];
+    // chat：未连接 → onStart 后立即 onError，且不遗留 pending
+    const t2 = new m.transport.WSTransport({ url: 'ws://x', wsImpl: FakeWS });
+    let started = false;
+    const got = await new Promise(r => {
+      t2.chat('x', {
+        onStart() { started = true; },
+        onError(e) { r({ started, message: e.message }); },
+      });
+    });
+    assert.equal(got.started, true, '未连接也应触发 onStart');
+    assert.ok(got.message && got.message.length > 0, '未连接 chat 应有明确错误信息');
+    assert.equal(t2._pending.size, 0, '未连接 chat 不应遗留 pending 条目');
+    // exec：未连接 → stderr 输出 + exitCode 1
+    const t3 = new m.transport.WSTransport({ url: 'ws://x', wsImpl: FakeWS });
+    const ex = await new Promise(r => {
+      t3.exec('ls', '~', {
+        onOutput(d, s) { r({ stream: s }); },
+        onExit(code) { r({ exit: code }); },
+      });
+    });
+    assert.ok(ex.stream === 'stderr' || ex.exit === 1, '未连接 exec 应走 stderr/exit 通道');
+  });
 });
 
 describe('transport 管理器生命周期', () => {

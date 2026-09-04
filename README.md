@@ -599,3 +599,36 @@ qoder-ui/
 ├── tests/transport.test.mjs      # ★ v3.3 transport 单测（12 用例）
 └── dist/                         # 4 格式产物全部包含 transport
 ```
+
+## v3.3.1 代码审计与加固（2026-09-04）
+
+> 对全部源码（9 个 JS 模块 + 构建 + 类型 + 双参考后端）做逐行审计，**先在无头浏览器实测复现、再修复、再以测试锁死**。
+> 新增 9 条审计回归用例，套件 43 → **52 用例**。
+
+### 高危（实测复现的运行时 Bug / 安全）
+| # | 问题 | 修复 |
+|---|------|------|
+| H1 | **每次按 ESC 抛 TypeError** —— ESC 快捷键调用 `QoderDialog.closeAll()`，该方法从未实现 | 补实现 `closeAll()`（含 body 滚动锁恢复） |
+| H2 | **本地终端 echo XSS** —— `echo <img onerror=…>` 经 innerHTML 注入可执行脚本（已实测弹出） | 本地输出统一走 `_printLocal`（textContent），错误行用 `--err` 类 |
+| H3 | **单标签分屏右栏空白** —— `toggleSplit` 自动新建的标签抢走 activeId，左右栏同一标签 | 记住/恢复激活标签，左右栏必然不同 |
+
+### 中危（泄漏 / 协议 / 重连）
+| # | 问题 | 修复 |
+|---|------|------|
+| M1 | `<qoder-slider>` 每次重渲染向 document 追加 4 个监听器且永不清理（拖拽中每帧 setAttribute → O(帧数²) 累积） | document 监听实例级只挂一次 + disconnected 可重挂；min/max 事件时动态读取 |
+| M2 | `<qoder-select>` 同型泄漏（每次重渲染追加 document click 监听） | 同型修复；外部点击关闭功能回归验证通过 |
+| M3 | `examples/backend-axum.rs` 按默认蛇形序列化（`exit_code`/`tab_id`），前端读驼峰 → exitCode 恒 0、tabId 路由失效 | `#[serde(rename_all = "camelCase")]` |
+| M4 | `<qoder-dialog>` / `<qoder-theme-switcher>` 断开重连后 ESC / 主题同步永久失效 | disconnectedCallback 复位绑定标志 |
+
+### 低危（加固）
+- **L3 XSS 面收敛**：toast、通知中心（基础+增强双实现）、上下文菜单、命令面板（含 `_highlight` 三段转义）、会话列表、上传文件名、`<qoder-user-card>` / `<qoder-dialog>` WC 模板 —— 所有 innerHTML 拼接点全部经 `esc()` 转义
+- **L4** 终端已提交输入行彻底冻结（父级 `contenteditable=false` 会被子级显式 `true` 覆盖）
+- **L5** `features.init()` / `interactions.init()` 重复调用不再叠加 document 监听 / 重复 `<style>` / 重复快捷键注册（`initResponsive`、`hotkeys.init`、`ctrl+shift+p`、`escape`、`?` 全部防重入）
+- **L6** WS 未连接时 `chat/exec` 立即报错（onError / stderr+exit 1），不再静默丢消息，`_pending` 不再泄漏
+- **类型对齐** `types/index.d.ts` 移除幻影 API（`theme.get()`/`onChange()`/`chat.send`/`markAllRead`…），补齐实际 API（`clearAll`/`getUnreadCount`/`sessions.create…`），WC 注册表键名改为元素名
+- **版本一致** `package.json` = 运行时 `QoderUI.version` = 构建横幅 = **3.3.1**（由新增测试强制）
+
+### 审计统计
+- **发现 14 项问题：3 高危（含 1 个 XSS）、4 中危、7 低危 —— 全部修复**
+- 全部修复先在无头浏览器复现 → 修复 → 复验（ESC 零报错、XSS payload 以纯文本渲染、分屏双栏可见、拖拽 5 帧新增监听器 0）
+- 测试套件 43 → **52 用例**（新增 9 条审计回归，锁死每个修复点）；构建四格式全量重建

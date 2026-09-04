@@ -145,7 +145,10 @@ struct TermPayload {
     cwd: String,
 }
 
+// v3.3.1 审计修复（M3）：协议 v1 字段为 camelCase（exitCode/tabId），
+// 此前按 Rust 默认 snake_case 序列化，前端读不到 exitCode（恒为 0）
 #[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
 struct TermResult {
     #[serde(skip_serializing_if = "Option::is_none")]
     tab_id: Option<String>,

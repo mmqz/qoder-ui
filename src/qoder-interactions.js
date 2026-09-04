@@ -9,6 +9,12 @@
 
   const QI = window.QoderUI = window.QoderUI || {};
 
+  // v3.3.1 审计修复（L3）：innerHTML 拼接点统一转义
+  const esc = (s) => (window.QoderCore && window.QoderCore.escapeHtml
+    ? window.QoderCore.escapeHtml(s)
+    : String(s == null ? '' : s).replace(/[&<>"']/g, (c) =>
+      ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])));
+
   /* ============================================================
      1. 命令面板 Command Palette
      ============================================================ */
@@ -91,12 +97,12 @@
       this._filtered.forEach((item, i) => {
         if (item.group && item.group !== currentGroup) {
           currentGroup = item.group;
-          html += `<div class="qoder-palette__group-label">${currentGroup}</div>`;
+          html += `<div class="qoder-palette__group-label">${esc(currentGroup)}</div>`;
         }
         const active = i === this._activeIndex ? ' qoder-palette__item--active' : '';
-        const icon = item.icon ? `<span class="qoder-palette__item-icon">${item.icon}</span>` : '';
-        const shortcut = item.shortcut ? `<span class="qoder-palette__item-shortcut">${item.shortcut}</span>` : '';
-        const detail = item.detail ? `<span class="qoder-palette__item-detail">${item.detail}</span>` : '';
+        const icon = item.icon ? `<span class="qoder-palette__item-icon">${esc(item.icon)}</span>` : '';
+        const shortcut = item.shortcut ? `<span class="qoder-palette__item-shortcut">${esc(item.shortcut)}</span>` : '';
+        const detail = item.detail ? `<span class="qoder-palette__item-detail">${esc(item.detail)}</span>` : '';
         html += `<div class="qoder-palette__item${active}" data-index="${i}">
           ${icon}<span class="qoder-palette__item-label">${this._highlight(item.label)}</span>${detail}${shortcut}
         </div>`;
@@ -112,10 +118,11 @@
 
     _highlight(text) {
       const q = this._input.value;
-      if (!q) return text;
+      if (!q) return esc(text);
       const idx = text.toLowerCase().indexOf(q.toLowerCase());
-      if (idx < 0) return text;
-      return text.slice(0, idx) + '<mark>' + text.slice(idx, idx + q.length) + '</mark>' + text.slice(idx + q.length);
+      if (idx < 0) return esc(text);
+      // v3.3.1 审计修复（L3）：三段分别转义后再拼 <mark>，避免标签注入
+      return esc(text.slice(0, idx)) + '<mark>' + esc(text.slice(idx, idx + q.length)) + '</mark>' + esc(text.slice(idx + q.length));
     },
 
     _onKeydown(e) {
@@ -161,10 +168,10 @@
         } else {
           const disabled = item.disabled ? ' qoder-context-menu__item--disabled' : '';
           const danger = item.danger ? ' qoder-context-menu__item--danger' : '';
-          const icon = item.icon ? `<span class="qoder-context-menu__icon">${item.icon}</span>` : '<span class="qoder-context-menu__icon"></span>';
-          const shortcut = item.shortcut ? `<span class="qoder-context-menu__shortcut">${item.shortcut}</span>` : '';
-          html += `<div class="qoder-context-menu__item${disabled}${danger}" data-action="${item.action || ''}">
-            ${icon}<span class="qoder-context-menu__label">${item.label}</span>${shortcut}
+          const icon = item.icon ? `<span class="qoder-context-menu__icon">${esc(item.icon)}</span>` : '<span class="qoder-context-menu__icon"></span>';
+          const shortcut = item.shortcut ? `<span class="qoder-context-menu__shortcut">${esc(item.shortcut)}</span>` : '';
+          html += `<div class="qoder-context-menu__item${disabled}${danger}" data-action="${esc(item.action || '')}">
+            ${icon}<span class="qoder-context-menu__label">${esc(item.label)}</span>${shortcut}
           </div>`;
         }
       });
@@ -281,9 +288,9 @@
             ${n.type === 'success' ? '✓' : n.type === 'error' ? '✕' : n.type === 'warning' ? '!' : 'i'}
           </div>
           <div class="qoder-notification-item__body">
-            <div class="qoder-notification-item__title">${n.title}</div>
-            <div class="qoder-notification-item__desc">${n.desc}</div>
-            <div class="qoder-notification-item__time">${n.time}</div>
+            <div class="qoder-notification-item__title">${esc(n.title)}</div>
+            <div class="qoder-notification-item__desc">${esc(n.desc)}</div>
+            <div class="qoder-notification-item__time">${esc(n.time)}</div>
           </div>
         </div>`).join('');
     }
@@ -580,28 +587,34 @@
     initThinking();
     initSettingsNav();
     initActivityBar();
-    initResponsive();
-    QI.hotkeys.init();
+    // v3.3.1 审计修复（L5）：initResponsive / hotkeys.init 均为 document 级副作用，
+    // 只执行一次（mount() 重复调 init 时不再叠加监听器 / 重复 <style>）
+    if (!autoInit._responsiveDone) { initResponsive(); autoInit._responsiveDone = true; }
+    if (!autoInit._hotkeysBound) { QI.hotkeys.init(); autoInit._hotkeysBound = true; }
 
-    // 默认快捷键
-    QI.hotkeys.register('ctrl+shift+p', () => {
-      QI.palette.open([
-        { icon: '🎨', label: '切换主题', group: '外观', shortcut: 'Ctrl+K T' },
-        { icon: '💬', label: '新建会话', group: '聊天', shortcut: 'Ctrl+N' },
-        { icon: '⚙️', label: '打开设置', group: '系统', shortcut: 'Ctrl+,' },
-        { icon: '🔔', label: '通知中心', group: '系统', shortcut: 'Ctrl+Shift+U' },
-        { icon: '📋', label: '切换终端', group: '视图', shortcut: 'Ctrl+`' },
-        { icon: '🔍', label: '全局搜索', group: '编辑', shortcut: 'Ctrl+Shift+F' }
-      ], (item) => {
-        if (QI.toast) QI.toast.show('执行: ' + item.label, 'info');
-      });
-    }, '打开命令面板');
+    // 默认快捷键（防重复注册）
+    if (!QI.hotkeys._bindings.some(b => b.keys === 'ctrl+shift+p')) {
+      QI.hotkeys.register('ctrl+shift+p', () => {
+        QI.palette.open([
+          { icon: '🎨', label: '切换主题', group: '外观', shortcut: 'Ctrl+K T' },
+          { icon: '💬', label: '新建会话', group: '聊天', shortcut: 'Ctrl+N' },
+          { icon: '⚙️', label: '打开设置', group: '系统', shortcut: 'Ctrl+,' },
+          { icon: '🔔', label: '通知中心', group: '系统', shortcut: 'Ctrl+Shift+U' },
+          { icon: '📋', label: '切换终端', group: '视图', shortcut: 'Ctrl+`' },
+          { icon: '🔍', label: '全局搜索', group: '编辑', shortcut: 'Ctrl+Shift+F' }
+        ], (item) => {
+          if (QI.toast) QI.toast.show('执行: ' + item.label, 'info');
+        });
+      }, '打开命令面板');
+    }
 
-    QI.hotkeys.register('escape', () => {
-      QI.palette.close();
-      QI.contextMenu.hide();
-      if (QI.dialog) QI.dialog.closeAll();
-    }, '关闭弹窗');
+    if (!QI.hotkeys._bindings.some(b => b.keys === 'escape')) {
+      QI.hotkeys.register('escape', () => {
+        QI.palette.close();
+        QI.contextMenu.hide();
+        if (QI.dialog) QI.dialog.closeAll();
+      }, '关闭弹窗');
+    }
   }
 
   if (typeof document !== 'undefined') {

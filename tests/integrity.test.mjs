@@ -159,3 +159,78 @@ test('types/index.d.ts 覆盖全部公共 API', () => {
   assert.ok(dts.includes('QoderTerminalApi'), '缺少终端 API 类型');
   assert.ok(dts.includes('QoderDiffApi'), '缺少 Diff API 类型');
 });
+
+/* ============================================================
+   v3.3.1 审计回归：锁死全部审计修复点
+   ============================================================ */
+
+test('审计 H1：QoderDialog.closeAll 已实现（ESC 快捷键依赖）', () => {
+  const uiSrc = read('src/qoder-ui.js');
+  assert.ok(/closeAll\s*\(/.test(uiSrc), 'QoderDialog 缺少 closeAll 方法');
+});
+
+test('审计 H2：终端本地输出不再经 innerHTML 拼接用户命令', () => {
+  const featSrc = read('src/qoder-features.js');
+  assert.ok(featSrc.includes('_printLocal'), '缺少安全的 _printLocal 输出通道');
+  assert.ok(!/output\.innerHTML\s*=\s*result/.test(featSrc), '本地命令输出仍走 innerHTML（echo XSS）');
+  assert.ok(!/color:var\(--error\);" >' \+ cmd/.test(featSrc), '未知命令拼接仍未转义');
+});
+
+test('审计 M1/M2：slider/select 的 document 监听只挂一次且可清理', () => {
+  const wcSrc = read('src/qoder-wc.js');
+  assert.ok(wcSrc.includes('this._docBound'), 'slider 缺少 document 监听防重入守卫');
+  assert.ok(wcSrc.includes('if (!this._outside)'), 'select 缺少 outside 监听防重入守卫');
+  // disconnectedCallback 必须把标志复位，重连后可重新挂载
+  assert.ok(/_docBound\s*=\s*false/.test(wcSrc), 'slider disconnected 未复位 _docBound');
+  assert.ok(/_outside\s*=\s*null/.test(wcSrc), 'select disconnected 未复位 _outside');
+});
+
+test('审计 M4：WC 断开重连后 document 监听可重新挂载', () => {
+  const uiSrc = read('src/qoder-ui.js');
+  assert.ok(/_escBound\s*=\s*false/.test(uiSrc), 'qoder-dialog 重连后 ESC 失效');
+  assert.ok(/_themeBound\s*=\s*false/.test(uiSrc), 'qoder-theme-switcher 重连后主题同步失效');
+});
+
+test('审计 L3：innerHTML 拼接点全部经 esc 转义', () => {
+  const featSrc = read('src/qoder-features.js');
+  const intSrc = read('src/qoder-interactions.js');
+  const uiSrc = read('src/qoder-ui.js');
+  // 高危数据点位
+  assert.ok(featSrc.includes('esc(file.name)'), '上传文件名未转义');
+  assert.ok(featSrc.includes('esc(s.title)'), '会话标题未转义');
+  assert.ok(featSrc.includes('esc(n.title)'), '通知标题未转义');
+  assert.ok(intSrc.includes('esc(item.label)'), '上下文菜单未转义');
+  assert.ok(intSrc.includes('esc(n.title)'), '通知中心基础版未转义');
+  assert.ok(uiSrc.includes('esc(message)'), 'toast 消息未转义');
+  // 三处模块都应定义 esc 助手
+  for (const [name, src] of [['features', featSrc], ['interactions', intSrc], ['ui', uiSrc]]) {
+    assert.ok(src.includes('const esc ='), `${name} 缺少 esc 转义助手`);
+  }
+});
+
+test('审计 L5：快捷键注册防重入', () => {
+  const intSrc = read('src/qoder-interactions.js');
+  const featSrc = read('src/qoder-features.js');
+  assert.ok(intSrc.includes("some(b => b.keys === 'ctrl+shift+p')"), 'ctrl+shift+p 未防重复注册');
+  assert.ok(intSrc.includes("some(b => b.keys === 'escape')"), 'escape 未防重复注册');
+  assert.ok(featSrc.includes("some(b => b.keys === '?')"), '? 未防重复注册');
+});
+
+test('审计 L6：WS 未连接时 chat/exec 不再静默丢弃', () => {
+  const tpSrc = read('src/qoder-transport.js');
+  assert.ok(tpSrc.includes('readyState !== 1'), 'WS 缺少未连接守卫');
+  const hits = (tpSrc.match(/readyState !== 1/g) || []).length;
+  assert.ok(hits >= 2, 'chat 与 exec 都需要未连接守卫');
+});
+
+test('版本一致性：package.json = 运行时 version = 构建横幅', () => {
+  const pkg = JSON.parse(read('package.json'));
+  const uiSrc = read('src/qoder-ui.js');
+  const buildSrc = read('build/build.mjs');
+  const v = uiSrc.match(/version:\s*'([^']+)'/);
+  assert.ok(v, 'qoder-ui.js 未声明 version');
+  assert.equal(v[1], pkg.version, '运行时 version 与 package.json 不一致');
+  assert.ok(buildSrc.includes('v' + pkg.version), '构建横幅版本与 package.json 不一致');
+  const dts = read('types/index.d.ts');
+  assert.ok(dts.includes('v3.3'), 'types 头注释版本过期');
+});

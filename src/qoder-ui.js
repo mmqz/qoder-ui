@@ -27,6 +27,12 @@
   const $ = (sel, ctx = document) => ctx.querySelector(sel);
   const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
 
+  // v3.3.1 审计修复（L3）：所有 innerHTML 拼接点统一转义
+  const esc = (s) => (window.QoderCore && window.QoderCore.escapeHtml
+    ? window.QoderCore.escapeHtml(s)
+    : String(s == null ? '' : s).replace(/[&<>"']/g, (c) =>
+      ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])));
+
   function debounce(fn, ms) {
     let t;
     return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); };
@@ -169,6 +175,17 @@
       overlay.dispatchEvent(new CustomEvent('qoder-dialog-close'));
     },
 
+    // v3.3.1 审计修复（H1）：interactions 的 ESC 快捷键调用了本方法，
+    // 此前未实现导致每次按 ESC 抛 TypeError。
+    // 注：<qoder-dialog> WC 的 overlay 在 shadow 内，由其自身 ESC 监听负责。
+    closeAll() {
+      let any = false;
+      $$('.qoder-dialog-overlay').forEach(o => {
+        if (o.style.display === 'flex') { o.style.display = 'none'; any = true; }
+      });
+      if (any) document.body.style.overflow = '';
+    },
+
     init() {
       // 点击遮罩关闭
       $$('.qoder-dialog-overlay').forEach(overlay => {
@@ -232,7 +249,8 @@
         pointer-events: auto; min-width: 240px; max-width: 400px;
         animation: qoder-toast-in 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
       `;
-      toast.innerHTML = `<span style="color:${colors[type]};font-weight:700;">${icons[type] || 'ℹ'}</span><span>${message}</span>`;
+      // v3.3.1 审计修复（L3）：message 经 esc 转义（调用方可能传入用户数据）
+      toast.innerHTML = `<span style="color:${colors[type]};font-weight:700;">${icons[type] || 'ℹ'}</span><span>${esc(message)}</span>`;
 
       container.appendChild(toast);
       setTimeout(() => {
@@ -382,12 +400,12 @@
               <div class="qoder-user-card__standard-welcome">WELCOME</div>
               <div class="qoder-user-card__standard-logo">Q</div>
               <div class="qoder-user-card__standard-identity">
-                <p class="qoder-user-card__standard-name">${name || email}</p>
-                <p class="qoder-user-card__standard-role">${role || label}</p>
+                <p class="qoder-user-card__standard-name">${esc(name || email)}</p>
+                <p class="qoder-user-card__standard-role">${esc(role || label)}</p>
               </div>
               <div class="qoder-user-card__standard-metadata">
                 <div><span>ID:</span><span>#0042</span></div>
-                <div><span>Since:</span><span>${time}</span></div>
+                <div><span>Since:</span><span>${esc(time)}</span></div>
               </div>
             </div>
           ` : `
@@ -403,11 +421,11 @@
             </div>
             <div class="qoder-user-card__text-layer">
               <div class="qoder-user-card__identity">
-                <p class="qoder-user-card__email">${email}</p>
-                <p class="qoder-user-card__label">${label}</p>
+                <p class="qoder-user-card__email">${esc(email)}</p>
+                <p class="qoder-user-card__label">${esc(label)}</p>
               </div>
               <div class="qoder-user-card__footer">
-                <p class="qoder-user-card__time">${time}</p>
+                <p class="qoder-user-card__time">${esc(time)}</p>
                 <div class="qoder-user-card__signature">✦</div>
               </div>
             </div>
@@ -457,7 +475,7 @@
         <div class="overlay qoder-dialog-overlay" part="overlay" style="display:${isOpen ? 'flex' : 'none'};">
           <div class="qoder-dialog" part="dialog">
             <div class="qoder-dialog-header">
-              <h3 class="qoder-dialog-title">${title}</h3>
+              <h3 class="qoder-dialog-title">${esc(title)}</h3>
               <button class="qoder-dialog-close" part="close">×</button>
             </div>
             <div class="qoder-dialog-body" part="body">
@@ -487,7 +505,10 @@
     }
 
     disconnectedCallback() {
-      if (this._escHandler) document.removeEventListener('keydown', this._escHandler);
+      if (this._escHandler) {
+        document.removeEventListener('keydown', this._escHandler);
+        this._escBound = false; // v3.3.1 审计修复（M4）：重连后可重新挂载
+      }
     }
 
     attributeChangedCallback(name) {
@@ -566,7 +587,10 @@
     }
 
     disconnectedCallback() {
-      if (this._themeHandler) document.removeEventListener('qoder-theme-change', this._themeHandler);
+      if (this._themeHandler) {
+        document.removeEventListener('qoder-theme-change', this._themeHandler);
+        this._themeBound = false; // v3.3.1 审计修复（M4）：重连后可重新挂载
+      }
     }
   }
 
@@ -610,7 +634,7 @@
     dialog: QoderDialog,
     toast: QoderToast,
     init,
-    version: '3.2.0'
+    version: '3.3.1'
   };
   const _g = (typeof globalThis !== 'undefined' ? globalThis : {});
   const _ns = (typeof window !== 'undefined' ? window : _g);

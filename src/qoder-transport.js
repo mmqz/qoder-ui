@@ -358,6 +358,12 @@
     handlers = handlers || {};
     const self = this;
     const msgId = genId('chat');
+    // v3.3.1 审计修复（L6）：未连接时不再静默丢弃（此前 pending 条目永久泄漏）
+    if (!this._ws || this._ws.readyState !== 1) {
+      if (handlers.onStart) handlers.onStart();
+      if (handlers.onError) handlers.onError({ message: 'WebSocket 未连接，消息未发送' });
+      return { abort: function() {} };
+    }
     this._pending.set(msgId, { handlers: handlers, full: '' });
     if (handlers.onStart) handlers.onStart();
     // msgId 必须随 payload 下发，后端在 chat.delta/done 中原样回传以完成路由
@@ -374,6 +380,12 @@
   WSTransport.prototype.exec = function(cmd, cwd, handlers, ctx) {
     handlers = handlers || {};
     const self = this;
+    // v3.3.1 审计修复（L6）：未连接时直接报错而非静默丢消息
+    if (!this._ws || this._ws.readyState !== 1) {
+      if (handlers.onOutput) handlers.onOutput('WebSocket 未连接，命令未发送', 'stderr');
+      if (handlers.onExit) handlers.onExit(1);
+      return { abort: function() {} };
+    }
     const tabId = (ctx && ctx.tabId) || genId('tab');
     this._termHandlers.set(tabId, { handlers: handlers });
     this.sendRaw(envelope('terminal.input', { tabId: tabId, cmd: cmd, cwd: cwd || '~' }, 'terminal:' + tabId));

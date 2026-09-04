@@ -283,14 +283,23 @@
           this.emit('change', { value: opt.dataset.value, label: opt.textContent });
         });
       });
-      // 点击外部关闭（composed 事件可穿透 shadow 边界）
-      this._outside = (e) => {
-        if (!e.composedPath().includes(this)) wrap.classList.remove('qoder-select--open');
-      };
-      document.addEventListener('click', this._outside);
+      // v3.3.1 审计修复（M2）：document 级点击监听只挂一次（此前每次重渲染
+      // 都追加一个新监听且永不移除 → 泄漏）；关闭时动态取当前 wrap 引用
+      if (!this._outside) {
+        this._outside = (e) => {
+          if (!e.composedPath().includes(this)) {
+            const w = (this.shadowRoot || this).querySelector('.qoder-select');
+            if (w) w.classList.remove('qoder-select--open');
+          }
+        };
+        document.addEventListener('click', this._outside);
+      }
     }
     disconnectedCallback() {
-      if (this._outside) document.removeEventListener('click', this._outside);
+      if (this._outside) {
+        document.removeEventListener('click', this._outside);
+        this._outside = null; // 重连后可重新挂载
+      }
     }
     get value() { return this.getAttribute('value') || ''; }
     set value(v) { this.setAttribute('value', v); }
@@ -318,58 +327,82 @@
       '</div>';
     }
     _bind(root) {
+      // v3.3.1 审计修复（M1）：document 级 mousemove/mouseup 监听只挂一次。
+      // 此前每次重渲染（拖拽中每帧 setAttribute → 重渲染）都追加 4 个
+      // document 监听且永不清理 → O(帧数²) 累积泄漏。
+      // 元素引用改为事件触发时动态查询，重渲染后依然指向最新 DOM。
+      const self = this;
       const track = root.querySelector('.qoder-slider__track');
       const thumb = root.querySelector('.qoder-slider__thumb');
-      const fill = root.querySelector('.qoder-slider__fill');
-      const valueEl = root.querySelector('.qoder-slider__value');
-      const min = parseFloat(this.getAttribute('min') || 0);
-      const max = parseFloat(this.getAttribute('max') || 100);
-      let dragging = false;
+
+      // min/max 事件时动态读取：document 级监听器是长驻的，
+      // 闭包捕获会在 min/max 属性变更后过期
+      const range = () => ({
+        min: parseFloat(this.getAttribute('min') || 0),
+        max: parseFloat(this.getAttribute('max') || 100)
+      });
 
       const update = (v, silent) => {
+        const { min, max } = range();
         v = Core.clamp(v, min, max);
         const pct = max > min ? ((v - min) / (max - min)) * 100 : 0;
-        thumb.style.left = pct + '%';
-        if (fill) fill.style.width = pct + '%';
-        if (valueEl) valueEl.textContent = Math.round(v);
+        const r = (this.shadowRoot || this);
+        const t = r.querySelector('.qoder-slider__thumb');
+        const f = r.querySelector('.qoder-slider__fill');
+        const val = r.querySelector('.qoder-slider__value');
+        if (t) t.style.left = pct + '%';
+        if (f) f.style.width = pct + '%';
+        if (val) val.textContent = Math.round(v);
         // 只更新属性，不触发整体重渲染
         if (this.getAttribute('value') !== String(v)) this.setAttribute('value', v);
         if (!silent) this.emit('input', { value: v });
       };
 
       const onMove = (e) => {
-        if (!dragging) return;
-        const rect = track.getBoundingClientRect();
+        if (!self._dragging) return;
+        const r = self.shadowRoot || self;
+        const tr = r.querySelector('.qoder-slider__track');
+        if (!tr) return;
+        const rect = tr.getBoundingClientRect();
         const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const { min, max } = range();
         update(min + Core.clamp((clientX - rect.left) / rect.width, 0, 1) * (max - min));
       };
       const onUp = () => {
-        if (dragging) {
-          dragging = false;
-          this.emit('change', { value: parseFloat(this.getAttribute('value')) });
+        if (self._dragging) {
+          self._dragging = false;
+          self.emit('change', { value: parseFloat(self.getAttribute('value')) });
         }
       };
 
-      thumb.addEventListener('mousedown', (e) => { e.preventDefault(); dragging = true; });
-      thumb.addEventListener('touchstart', () => { dragging = true; }, { passive: true });
+      if (!this._docBound) {
+        this._docBound = true;
+        document.addEventListener('mousemove', onMove);
+        document.addEventListener('touchmove', onMove, { passive: true });
+        document.addEventListener('mouseup', onUp);
+        document.addEventListener('touchend', onUp);
+        this._sliderCleanup = () => {
+          document.removeEventListener('mousemove', onMove);
+          document.removeEventListener('touchmove', onMove);
+          document.removeEventListener('mouseup', onUp);
+          document.removeEventListener('touchend', onUp);
+        };
+      }
+
+      thumb.addEventListener('mousedown', (e) => { e.preventDefault(); this._dragging = true; });
+      thumb.addEventListener('touchstart', () => { this._dragging = true; }, { passive: true });
       track.addEventListener('click', (e) => {
         const rect = track.getBoundingClientRect();
         update(min + ((e.clientX - rect.left) / rect.width) * (max - min));
         this.emit('change', { value: parseFloat(this.getAttribute('value')) });
       });
-      document.addEventListener('mousemove', onMove);
-      document.addEventListener('touchmove', onMove, { passive: true });
-      document.addEventListener('mouseup', onUp);
-      document.addEventListener('touchend', onUp);
-      this._sliderCleanup = () => {
-        document.removeEventListener('mousemove', onMove);
-        document.removeEventListener('touchmove', onMove);
-        document.removeEventListener('mouseup', onUp);
-        document.removeEventListener('touchend', onUp);
-      };
     }
     disconnectedCallback() {
-      if (this._sliderCleanup) this._sliderCleanup();
+      if (this._sliderCleanup) {
+        this._sliderCleanup();
+        this._sliderCleanup = null;
+        this._docBound = false; // 重连后可重新挂载
+      }
     }
     get value() { return parseFloat(this.getAttribute('value') || 0); }
     set value(v) { this.setAttribute('value', v); }

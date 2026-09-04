@@ -1,6 +1,7 @@
 /**
- * Qoder UI v3.2 类型声明（手写，覆盖全部公共 API）
+ * Qoder UI v3.3 类型声明（手写，覆盖全部公共 API）
  * 零依赖纯 CSS+JS 组件库：8 主题 / 50+ 组件 / 21 Web Components
+ * v3.3.1 审计：类型与实现逐一对齐（移除不存在的方法，补齐实际 API）
  */
 
 /** 主题 ID：forest-light | forest-dark | bee-light | bee-dark | mint-light | mint-dark | light-parchment | parchment-dark */
@@ -88,10 +89,9 @@ export interface QoderThemeApi {
   STORAGE_KEY: string;
   readonly current: QoderThemeId;
   set(theme: QoderThemeId): void;
-  get(): QoderThemeId;
   init(): void;
   toggle(): void;
-  onChange(cb: (theme: QoderThemeId) => void): void;
+  /** 主题变化通过 document 事件监听：addEventListener('qoder-theme-change', cb) */
 }
 
 export interface QoderToastApi {
@@ -118,10 +118,10 @@ export interface QoderContextMenuApi {
 export interface QoderNotificationCenterApi {
   open(): void;
   close(): void;
-  add(n: Omit<QoderNotification, 'id'>): void;
-  markAllRead(): void;
-  unreadCount(): number;
-  getAll(): QoderNotification[];
+  toggle(): void;
+  add(n: { type?: QoderToastType; title?: string; desc?: string }): void;
+  clearAll(): void;
+  getUnreadCount(): number;
 }
 
 export interface QoderDraggableApi { init(container: string | Element, itemSelector: string): void }
@@ -130,8 +130,15 @@ export interface QoderHotkeysApi {
   init(): void;
   getAll(): QoderHotkeyBinding[];
 }
-export interface QoderChatApi { init(containerSelector: string): void; send(container: Element, text: string): void }
-export interface QoderSessionsApi { init(containerSelector: string): void }
+export interface QoderChatApi {
+  init(containerSelector: string): void;
+}
+export interface QoderSessionsApi {
+  init(containerSelector: string): void;
+  create(panel: Element): void;
+  delete(panel: Element, id: string): void;
+  select(panel: Element, id: string): void;
+}
 export interface QoderDatepickerApi { init(): void }
 export interface QoderUploadApi { init(): void }
 
@@ -262,27 +269,29 @@ export interface QoderDiffApi {
   diffLines(oldText: string, newText: string): QoderDiffRow[];
 }
 
-/** Web Components 注册表（v3.2 全部支持属性响应 + Shadow DOM） */
+/** Web Components 注册表（v3.2 全部支持属性响应 + Shadow DOM）
+ *  键为自定义元素名（customElements.define 使用的名称） */
 export interface QoderWCRegistry {
   register(): void;
-  QoderButton: typeof HTMLElement;
-  QoderInput: typeof HTMLElement;
-  QoderBadge: typeof HTMLElement;
-  QoderAvatar: typeof HTMLElement;
-  QoderAlert: typeof HTMLElement;
-  QoderSwitch: typeof HTMLElement;
-  QoderTabs: typeof HTMLElement;
-  QoderProgress: typeof HTMLElement;
-  QoderSpinner: typeof HTMLElement;
-  QoderSelect: typeof HTMLElement;
-  QoderSlider: typeof HTMLElement;
-  QoderTooltip: typeof HTMLElement;
-  QoderCard: typeof HTMLElement;
-  QoderBreadcrumb: typeof HTMLElement;
-  QoderSteps: typeof HTMLElement;
-  QoderTimeline: typeof HTMLElement;
-  QoderEmpty: typeof HTMLElement;
-  QoderPagination: typeof HTMLElement;
+  'qoder-button': typeof HTMLElement;
+  'qoder-input': typeof HTMLElement;
+  'qoder-badge': typeof HTMLElement;
+  'qoder-avatar': typeof HTMLElement;
+  'qoder-alert': typeof HTMLElement;
+  'qoder-switch': typeof HTMLElement;
+  'qoder-tabs': typeof HTMLElement;
+  'qoder-progress': typeof HTMLElement;
+  'qoder-spinner': typeof HTMLElement;
+  'qoder-select': typeof HTMLElement;
+  'qoder-slider': typeof HTMLElement;
+  'qoder-tooltip': typeof HTMLElement;
+  'qoder-card': typeof HTMLElement;
+  'qoder-breadcrumb': typeof HTMLElement;
+  'qoder-steps': typeof HTMLElement;
+  'qoder-timeline': typeof HTMLElement;
+  'qoder-empty': typeof HTMLElement;
+  'qoder-pagination': typeof HTMLElement;
+  [name: string]: typeof HTMLElement | (() => void);
 }
 
 export interface QoderUIApi {
