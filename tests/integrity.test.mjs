@@ -140,7 +140,7 @@ test('v3.2 WC 基类能力：attributeChangedCallback / composed 事件 / Shadow
 /* ---------- 5. 构建产物 ---------- */
 
 test('dist/ 构建产物存在且非空', () => {
-  const files = ['qoder-ui.min.css', 'qoder-ui.min.js', 'qoder-ui.esm.js', 'qoder-ui.cjs.js'];
+  const files = ['qoder-ui.min.css', 'qoder-ui.min.js', 'qoder-ui.esm.mjs', 'qoder-ui.cjs.js'];
   for (const f of files) {
     const p = join(ROOT, 'dist', f);
     assert.ok(existsSync(p), `缺少产物 ${f}（请先 npm run build）`);

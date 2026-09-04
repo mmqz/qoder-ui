@@ -379,7 +379,7 @@ badge / avatar / alert / spinner / select / slider / tooltip / card / breadcrumb
 ```
 dist/qoder-ui.min.css   全部 CSS 打包压缩（@font 字体资产重写）  168KB
 dist/qoder-ui.min.js    IIFE 压缩包，<script> 直接引入           81KB
-dist/qoder-ui.esm.js    ESM（bundler 用）                        82KB
+dist/qoder-ui.esm.mjs   ESM（bundler 用；.mjs 自描述格式）       82KB
 dist/qoder-ui.cjs.js    CJS（SSR 安全，Node require 不崩溃）     82KB
 types/index.d.ts        手写 TS 类型声明（全 API 覆盖）
 ```
@@ -794,3 +794,17 @@ qoder-ui/
 
 ### 逆向合规声明
 分析仅用于学习研究；复现为基于可观察行为与资源事实的重新实现（clean-room），不含官方代码/图片/品牌资产，不得商用。
+
+## v3.7.1 CI Node 18 兼容修复（2026-09-04）
+
+> 根因：ESM 产物以 `.js` 扩展名承载 ESM 语法，且 package.json 未设 `"type": "module"`。Node 21+ 默认开启模块语法探测（detect-module）侥幸通过；Node 18 严格按扩展名以 CJS 解析 ESM 产物 → `Unexpected token 'export'`。表现为 CI 仅 Node 18 矩阵挂（Node 20/22 全绿），本地 Node 24 无法复现。
+
+### 修复
+- **ESM 产物更名 `dist/qoder-ui.esm.js` → `dist/qoder-ui.esm.mjs`**：`.mjs` 扩展名自描述模块格式，全版本 Node 零歧义；CJS 产物（`qoder-ui.cjs.js`）零改动，消费方风险最小
+- 同步 9 处引用：package.json（`module` / `exports.import` / `exports.default`）、build.mjs（outfile + 注释）、ci.yml（产物校验 + SSR smoke）、integrity/exports 两个测试、README 产物表
+- 版本一致性守卫同步升 3.7.1（package.json = qoder-ui.js = qoder-markdown.js = qoder-mobile.js = 构建横幅）
+
+### 验证
+- 本机 Node 24 加 `--no-experimental-detect-module`（等价 Node 18 严格扩展名语义）：`.mjs` ESM 导入 31 项导出齐全，CJS require 正常
+- 测试 182/182 全绿；构建四产物；npm pack 36 文件（qoder-ui-3.7.1.tgz）
+- CI Node 18/20/22 矩阵由本提交重新触发复验

@@ -23,7 +23,7 @@ const EXPECTED_EXPORTS = [
 ];
 
 test('ESM 产物：31 个命名导出全部有值（非 undefined）', async () => {
-  const m = await import(path.join(dist, 'qoder-ui.esm.js'));
+  const m = await import(path.join(dist, 'qoder-ui.esm.mjs'));
   for (const k of EXPECTED_EXPORTS) {
     assert.notEqual(m[k], undefined, `ESM 导出 ${k} 为 undefined`);
   }
@@ -39,7 +39,7 @@ test('CJS 产物：31 个命名导出全部有值（require 不崩溃，SSR 安�
 
 test('Node 下纯逻辑 API 真实可用（非空壳）', async () => {
   const { core, diff, shadow, transport, createTransport, WC, ShadowElement, t: tFn, setLocale } =
-    await import(path.join(dist, 'qoder-ui.esm.js'));
+    await import(path.join(dist, 'qoder-ui.esm.mjs'));
 
   // i18n：t / setLocale 门面可用
   assert.equal(typeof tFn, 'function');
@@ -82,7 +82,7 @@ test('Node 下纯逻辑 API 真实可用（非空壳）', async () => {
 });
 
 test('Node 下 transport 实例 chat/exec 全链路（Mock 流式）', async () => {
-  const { transport } = await import(path.join(dist, 'qoder-ui.esm.js'));
+  const { transport } = await import(path.join(dist, 'qoder-ui.esm.mjs'));
   const t = await transport.use('mock');
   assert.equal(typeof t.chat, 'function');
   assert.equal(typeof t.exec, 'function');
@@ -102,7 +102,7 @@ test('SSR 语义：不触碰 window/document/localStorage 即可完成 import', 
   const { execFileSync } = await import('node:child_process');
   const script = `
     (async () => {
-      const m = await import(${JSON.stringify(path.join(dist, 'qoder-ui.esm.js').replace(/\\/g, '/'))});
+      const m = await import(${JSON.stringify(path.join(dist, 'qoder-ui.esm.mjs').replace(/\\/g, '/'))});
       if (!m.transport || !m.diff || !m.core) process.exit(3);
       const t = m.createTransport('mock');
       if (t.name !== 'mock') process.exit(4);

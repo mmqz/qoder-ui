@@ -3,7 +3,7 @@
  * 产物（dist/）：
  *   qoder-ui.min.css   — 全部 CSS 打包压缩（含字体资产重写）
  *   qoder-ui.min.js    — IIFE 压缩包（<script> 直接引入，挂 window.QoderUI）
- *   qoder-ui.esm.js    — ESM 压缩包（bundler 用）
+ *   qoder-ui.esm.mjs   — ESM 压缩包（bundler 用；.mjs 扩展名自描述模块格式，Node 18 兼容）
  *   qoder-ui.cjs.js    — CJS 压缩包（require 用，浏览器 API 调用时需 DOM）
  *   fonts/             — 图标字体
  * 运行：npm run build
@@ -17,7 +17,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const dist = join(root, 'dist');
 mkdirSync(dist, { recursive: true });
 
-const banner = `/* Qoder UI v3.7.0 | MIT License | https://github.com/mmqz/qoder-ui */`;
+const banner = `/* Qoder UI v3.7.1 | MIT License | https://github.com/mmqz/qoder-ui */`;
 
 async function run() {
   // 1. CSS 打包 + 压缩（@import 展开，字体资产复制并重写 url）
@@ -49,7 +49,7 @@ async function run() {
   // 3. ESM
   await build({
     entryPoints: [join(root, 'src/esm-entry.js')],
-    outfile: join(dist, 'qoder-ui.esm.js'),
+    outfile: join(dist, 'qoder-ui.esm.mjs'),
     bundle: true,
     minify: true,
     format: 'esm',
